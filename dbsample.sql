@@ -48,7 +48,7 @@ CREATE TABLE dbo.[T1-User] (
 	[Password] varchar(30) not null,
 	Privilages int not null,
 	[Company ID] int not null,
-	[Manager ID] int not null
+	[Manager ID] int
 	UNIQUE(Username)
 )
 
@@ -124,12 +124,14 @@ CREATE TABLE [dbo].[T1-Privilages](
 	[Privilage Decription] varchar(20) not null 
 	)
 
+	ALTER TABLE [dbo].[T1-Privilages] ADD
+	CONSTRAINT [PK-Privilages] PRIMARY KEY ([Privilage Number])
 
 	--User constraints added	
 	ALTER TABLE dbo.[T1-User] ADD
 	CONSTRAINT [PK-User] PRIMARY KEY ([User ID]),
-	CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE CASCADE,
-	CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [dbo].[T1-Privilages]([Privilage Number]),
+	CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL,
+	CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]),
 	CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
 
 	--Company constraints added
@@ -173,9 +175,6 @@ CREATE TABLE [dbo].[T1-Privilages](
 	ALTER TABLE dbo.[T1-Completed Questionnaire] ADD
 	CONSTRAINT [FK-Completed-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
-	--Privilages constraints added
-	ALTER TABLE [dbo].[T1-Privilages] ADD
-	CONSTRAINT [PK-Privilages] PRIMARY KEY ([Privilage Number])
 
 	
 	IF OBJECT_ID ('PrivilagesReject', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject;
