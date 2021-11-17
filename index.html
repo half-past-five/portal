@@ -1,0 +1,58 @@
+<?php 
+	session_start(); 
+?>
+
+<html>
+<head>
+	<title>EPL342 project test page</title>
+</head>
+<body>
+
+	<table cellSpacing=0 cellPadding=5 width="100%" border=0>
+	<tr>
+		<td vAlign=top width=170><img height=91 alt=UCY src="images/ucy.jpg" width=94>
+			<h5>
+				<a href="http://www.ucy.ac.cy/">University of Cyprus</a><BR/>
+				<a href="http://www.cs.ucy.ac.cy/">Dept. of Computer Science</a>
+			</h5>
+		</td>
+		<td vAlign=center align=middle><h2>Welcome to the EPL342 project test page</h2></td>
+	</tr>
+    </table>
+	<hr>
+
+<?php
+	$sqlDBname = 'lpapal03';
+	$sqlUser = 'lpapal03';
+	$sqlPass = 'VuVrAvV6';
+
+	$_SESSION["serverName"] = "mssql.cs.ucy.ac.cy";
+	$_SESSION["connectionOptions"] = array(
+				"Database" => $sqlDBname,
+				"Uid" => $sqlUser,
+				"PWD" => $sqlPass);
+?>
+
+Give credentials for Observers system
+    <form action="auth.php" method="get">
+		Sign in Observers system</a><br>
+		Username: <input type="text" name="username" value=""><br>
+		Password: <input type="password" name="password" value="">
+    <input type="submit" name="Authenticate">
+	</form>
+
+	<?php
+		if(isset($_POST['disconnect'])) { 
+			echo "Clossing session and redirecting to start page"; 
+			session_unset();
+			session_destroy();
+			die('<meta http-equiv="refresh" content="2; url=index.php" />');
+		} 
+	?> 
+	
+	<form method="post"> 
+		<input type="submit" name="disconnect" value="Disconnect"/> 
+	</form> 
+</body>
+
+</html>
