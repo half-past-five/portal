@@ -1,67 +1,199 @@
-/****** Object:  Table [dbo].[Employees]    Script Date: 22/10/2021 07:14:11 ******/
-SET ANSI_NULLS ON
+DECLARE @sql nvarchar(MAX) 
+SET @sql = N'' 
+
+SELECT @sql = @sql + N'ALTER TABLE ' + QUOTENAME(KCU1.TABLE_SCHEMA) 
+    + N'.' + QUOTENAME(KCU1.TABLE_NAME) 
+    + N' DROP CONSTRAINT ' -- + QUOTENAME(rc.CONSTRAINT_SCHEMA)  + N'.'  -- not in MS-SQL
+    + QUOTENAME(rc.CONSTRAINT_NAME) + N'; ' + CHAR(13) + CHAR(10) 
+FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC 
+
+INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1 
+    ON KCU1.CONSTRAINT_CATALOG = RC.CONSTRAINT_CATALOG  
+    AND KCU1.CONSTRAINT_SCHEMA = RC.CONSTRAINT_SCHEMA 
+    AND KCU1.CONSTRAINT_NAME = RC.CONSTRAINT_NAME 
+
+-- PRINT @sql 
+EXECUTE(@sql) 
+
+IF OBJECT_ID ('PrivilagesReject', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject
 GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[Employees](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Company] [nvarchar](50) NULL,
-	[Last Name] [nvarchar](50) NULL,
-	[First Name] [nvarchar](50) NULL,
-	[E-mail Address] [nvarchar](50) NULL,
-	[Job Title] [nvarchar](50) NULL,
-	[Business Phone] [nvarchar](25) NULL,
-	[Home Phone] [nvarchar](25) NULL,
-	[Mobile Phone] [nvarchar](25) NULL,
-	[Fax Number] [nvarchar](25) NULL,
-	[Address] [ntext] NULL,
-	[City] [nvarchar](50) NULL,
-	[State/Province] [nvarchar](50) NULL,
-	[ZIP/Postal Code] [nvarchar](15) NULL,
-	[Country/Region] [nvarchar](50) NULL,
-	[Web Page] [ntext] NULL,
-	[Notes] [ntext] NULL,
-	[Attachments] [ntext] NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-SET IDENTITY_INSERT [dbo].[Employees] ON 
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (1, N'Northwind Traders', N'Freehafer', N'Nancy', N'nancy@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 1st Avenue', N'Seattle', N'WA', N'99999', N'USA', N'#http://northwindtraders.com#', NULL, NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (2, N'Northwind Traders', N'Cencini', N'Andrew', N'andrew@northwindtraders.com', N'Vice President, Sales', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 2nd Avenue', N'Bellevue', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Joined the company as a sales representative, was promoted to sales manager and was then named vice president of sales.', NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (3, N'Northwind Traders', N'Kotas', N'Jan', N'jan@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 3rd Avenue', N'Redmond', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Was hired as a sales associate and was promoted to sales representative.', NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (4, N'Northwind Traders', N'Sergienko', N'Mariya', N'mariya@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 4th Avenue', N'Kirkland', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', NULL, NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (5, N'Northwind Traders', N'Thorpe', N'Steven', N'steven@northwindtraders.com', N'Sales Manager', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 5th Avenue', N'Seattle', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Joined the company as a sales representative and was promoted to sales manager.  Fluent in French.', NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (6, N'Northwind Traders', N'Neipper', N'Michael', N'michael@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 6th Avenue', N'Redmond', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Fluent in Japanese and can read and write French, Portuguese, and Spanish.', NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (7, N'Northwind Traders', N'Zare', N'Robert', N'robert@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 7th Avenue', N'Seattle', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', NULL, NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (8, N'Northwind Traders', N'Giussani', N'Laura', N'laura@northwindtraders.com', N'Sales Coordinator', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 8th Avenue', N'Redmond', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Reads and writes French.', NULL)
-GO
-INSERT [dbo].[Employees] ([ID], [Company], [Last Name], [First Name], [E-mail Address], [Job Title], [Business Phone], [Home Phone], [Mobile Phone], [Fax Number], [Address], [City], [State/Province], [ZIP/Postal Code], [Country/Region], [Web Page], [Notes], [Attachments]) VALUES (9, N'Northwind Traders', N'Hellung-Larsen', N'Anne', N'anne@northwindtraders.com', N'Sales Representative', N'(123)555-0100', N'(123)555-0102', NULL, N'(123)555-0103', N'123 9th Avenue', N'Seattle', N'WA', N'99999', N'USA', N'http://northwindtraders.com#http://northwindtraders.com/#', N'Fluent in French and German.', NULL)
-GO
-SET IDENTITY_INSERT [dbo].[Employees] OFF
-GO
-/****** Object:  Index [aaaaaEmployees_PK]    Script Date: 22/10/2021 07:14:11 ******/
-ALTER TABLE [dbo].[Employees] ADD  CONSTRAINT [aaaaaEmployees_PK] PRIMARY KEY NONCLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-/****** Object:  StoredProcedure [dbo].[EmployeesFromCity]    Script Date: 22/10/2021 07:14:11 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE PROCEDURE [dbo].[EmployeesFromCity] (@cityName CHAR(50)=NULL) 
-ASBEGIN    
-	SELECT	[ID], [Last Name], [First Name], [E-mail Address], [Job Title], [City]
-	FROM	Employees
-	WHERE	City = ISNULL(@cityName,City)
-	ORDER BY [Last Name], [First Name]
-END
-GO
+DROP TABLE IF EXISTS [dbo].[T1-Question Questionnaire Pairs]
+DROP TABLE IF EXISTS [dbo].[T1-Log]
+DROP TABLE IF EXISTS [dbo].[T1-Privilages]
+DROP TABLE IF EXISTS [dbo].[T1-Company]
+DROP TABLE IF EXISTS [dbo].[T1-Completed Questionnaire]--removed duplicate
+DROP TABLE IF EXISTS [dbo].[T1-Questionnaire]
+DROP TABLE IF EXISTS [dbo].[T1-User]
+DROP TABLE IF EXISTS [dbo].[T1-Question]
+DROP TABLE IF EXISTS [dbo].[T1-Free Text Question] --"Question" added
+DROP TABLE IF EXISTS [dbo].[T1-Multiple Choice Question] -- "Question" added
+DROP TABLE IF EXISTS [dbo].[T1-Arithmetic Question]
+DROP TABLE IF EXISTS [dbo].[T1-Multiple Choice Answer]
+
+--TABLE QQpairs added
+CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
+	[Question ID] int not null,
+	[Questionnaire ID] int not null,
+	)
+
+
+CREATE TABLE dbo.[T1-User] (
+	[User ID] int IDENTITY(1,1) not null, --IDENTITY added 
+	[Name] varchar(30) not null,
+	[Birth Date] date not null,
+	Sex char(1) not null,
+	Position varchar(30) not null,
+	Username varchar(30) not null,
+	[Password] varchar(30) not null,
+	Privilages int not null,
+	[Company ID] int,
+	[Manager ID] int,
+	UNIQUE(Username),
+	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID])
+)
+
+
+CREATE TABLE [dbo].[T1-Company](
+	[Registration Number] int not null, --NOT SPECIFIED BY US
+	[Brand Name] varchar(50) not null,
+	[Induction Date] date not null,
+	[Inductor ID] int,
+	[Admin ID] int
+	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Registration Number])
+	)
+
+
+CREATE TABLE dbo.[T1-Question] (
+	[Question ID] int IDENTITY(1,1) not null,
+	[Type] varchar(30) not null,
+	[Creator ID] int,
+	[Description] varchar(50) not null,
+	[Text] varchar(100) not null,
+	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID])
+
+)
+	
+
+CREATE TABLE dbo.[T1-Free Text Question] (
+	[Question ID] int not null,
+)	
+
+
+CREATE TABLE dbo.[T1-Multiple Choice Question] (
+	[Question ID] int not null,
+	[Selectable Amount] int not null, 
+)
+	
+
+CREATE TABLE dbo.[T1-Multiple Choice Answer] ( --gia tuto en ekatalava akrivos pos en nan sindedemeno me to multiple choice question 
+	[Answers Table] varchar(30) not null,
+	[Question ID] int not null,	
+)
+	
+
+CREATE TABLE dbo.[T1-Arithmetic Question] (
+	[Question ID] int not null,
+	--[Range] int not null
+	[MIN value] int not null, 
+	[MAX value] int not null, --min & max value added for range	
+)
+	
+
+CREATE TABLE [dbo].[T1-Questionnaire](
+	[Questionnaire ID] int IDENTITY(1,1) not null,
+	[Title] varchar(20) not null,
+	[Version] int not null,
+	[Parent ID] int,
+	[Creator ID] int,
+	UNIQUE (Title, [Version]),
+	CONSTRAINT [PK-Questionnaire] PRIMARY KEY NONCLUSTERED ([Questionnaire ID])
+	)
+	
+
+CREATE TABLE dbo.[T1-Completed Questionnaire] (
+	[Questionnaire ID] int not null,
+	[URL] nvarchar(2083) not null,
+)
+	
+
+CREATE TABLE [dbo].[T1-Log](
+	[Event]	varchar(100) not null,
+	)
+
+
+CREATE TABLE [dbo].[T1-Privilages](
+	[Privilage Number] int not null,
+	[Privilage Decription] varchar(20) not null
+	CONSTRAINT [PK-Privilages] PRIMARY KEY NONCLUSTERED ([Privilage Number])
+	)
+
+
+	--ANY INSERTS
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '1339', '19')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '1772', '20')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '1', '1976', '12')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '1', '1333', '14')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Mariam Buckley', '1968/1/8', 'F', 'Sales', 'M5', 'password M5', '3', '1075', '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Sidney Newton', '1983/5/25', 'F', 'Marketing', 'S6', 'password S6', '1', '1336', '4')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Ismael Thompson', '1955/5/23', 'M', 'Marketing', 'I7', 'password I7', '1', '1009', '14')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Aydan Liu', '1995/6/30', 'M', 'Sales', 'A8', 'password A8', '2', '1734', '15')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('John Brooks', '1956/8/15', 'M', 'Marketing', 'J9', 'password J9', '1', '1229', '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Daniela Anderson', '1987/12/10', 'M', 'Marketing', 'D10', 'password D10', '3', '1632', '13')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Tania Beard', '1998/9/2', 'F', 'Marketing', 'T11', 'password T11', '3', '1660', '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Jennifer Mcconnell', '1983/12/13', 'F', 'Sales', 'J12', 'password J12', '1', '1165', '9')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Irene Mccall', '1992/1/8', 'F', 'Marketing', 'I13', 'password I13', '2', '1273', '10')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Shaylee Decker', '1981/11/28', 'F', 'Development', 'S14', 'password S14', '1', '1967', '9')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Cindy Pratt', '2000/5/21', 'F', 'Development', 'C15', 'password C15', '2', '1914', '4')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Colt Gonzalez', '1991/8/2', 'M', 'Marketing', 'C16', 'password C16', '1', '1342', '16')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kiera Andrade', '1989/7/31', 'F', 'Development', 'K17', 'password K17', '3', '1438', '18')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Bruce Jackson', '1980/8/17', 'M', 'Marketing', 'B18', 'password B18', '2', '1716', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Axel Trujillo', '1950/5/3', 'F', 'Marketing', 'A19', 'password A19', '2', '1883', '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Elaine Allison', '1960/3/8', 'M', 'Marketing', 'E20', 'password E20', '1', '1499', '2')
+
+	--FOREIGN KEYS 
+	ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
+	CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]) ,
+	CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]), --trigger for this
+	CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
+
+	ALTER TABLE dbo.[T1-Company]  ADD 
+	CONSTRAINT [FK-Company-InductorUser] FOREIGN KEY ([Inductor ID]) REFERENCES [dbo].[T1-User]([User ID]),
+	CONSTRAINT [FK-Company-AdminUser]  FOREIGN KEY ([Admin ID]) REFERENCES [dbo].[T1-User]([User ID])
+
+	ALTER TABLE dbo.[T1-Question] ADD
+	CONSTRAINT [FK-Question-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
+
+	ALTER TABLE dbo.[T1-Free Text Question] ADD
+	CONSTRAINT [FK-Free Text-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
+	ALTER TABLE dbo.[T1-Multiple Choice Question] ADD
+    CONSTRAINT [FK-Multiple Choice-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
+	ALTER TABLE dbo.[T1-Multiple Choice Answer] ADD
+	CONSTRAINT [FK-Answer-Multiple Choice Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
+	ALTER TABLE dbo.[T1-Arithmetic Question] ADD
+	CONSTRAINT [FK-Arithmetic-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
+	ALTER TABLE [dbo].[T1-Questionnaire] ADD
+	CONSTRAINT [FK-Questionnaire-ParentQuestionnaire] FOREIGN KEY ([Parent ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]), --ask pankris
+	CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
+
+	ALTER TABLE dbo.[T1-Completed Questionnaire] ADD
+	CONSTRAINT [FK-Completed-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
+	ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
+	CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
+	CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
+
+	--TRIGGERS
+	GO
+	CREATE TRIGGER PrivilagesReject ON [T1-Privilages]
+	AFTER INSERT, UPDATE, DELETE
+	AS
+	BEGIN
+	RAISERROR ('Cannot alter Privilages TABLE', 16, 1);
+	ROLLBACK TRANSACTION;
+	RETURN
+	END;
