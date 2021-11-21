@@ -20,7 +20,8 @@ DROP TRIGGER IF EXISTS dbo.PrivilagesReject;
 
 --DROP SPOCS
 DROP PROCEDURE IF EXISTS dbo.Authenticate;
-DROP PROCEDURE IF EXISTS dbo.Q7;  
+DROP PROCEDURE IF EXISTS dbo.Q7; 
+DROP PROCEDURE IF EXISTS dbo.Q8; 
 DROP PROCEDURE IF EXISTS dbo.Q9;  
 
 --CREATE TABLES 
@@ -219,6 +220,25 @@ q.[Creator ID] = u.[User ID] AND
 u.[User ID] = @user_id
 GROUP BY Title, [Version]
 ORDER BY q_count
+
+GO
+CREATE PROCEDURE dbo.Q8 @company_id varchar(30)
+AS
+SELECT apps_table.[Question ID], q.[Text]
+FROM [T1-Question] q,
+	(
+	SELECT [Question ID], COUNT(qqp.[Questionnaire ID]) as appearances
+	FROM [T1-Question Questionnaire Pairs] qqp, [T1-Completed Questionnaire] cq, [T1-Questionnaire] q, [T1-User] u
+	WHERE
+	qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+	q.[Questionnaire ID] = cq.[Questionnaire ID] AND
+	q.[Creator ID] = u.[User ID] AND
+	u.[Company ID] = @company_id 
+	GROUP BY [Question ID]
+	) apps_table
+WHERE 
+apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AND
+apps_table.[Question ID] = q.[Question ID]
 
 GO
 CREATE PROCEDURE dbo.Q9
