@@ -123,34 +123,19 @@ CREATE TABLE [dbo].[T1-Privilages](
 
 
 --ANY INSERTS
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '1339', '19')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '1772', '20')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '1', '1976', '12')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '1', '1333', '14')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Mariam Buckley', '1968/1/8', 'F', 'Sales', 'M5', 'password M5', '3', '1075', '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Sidney Newton', '1983/5/25', 'F', 'Marketing', 'S6', 'password S6', '1', '1336', '4')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Ismael Thompson', '1955/5/23', 'M', 'Marketing', 'I7', 'password I7', '1', '1009', '14')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Aydan Liu', '1995/6/30', 'M', 'Sales', 'A8', 'password A8', '2', '1734', '15')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('John Brooks', '1956/8/15', 'M', 'Marketing', 'J9', 'password J9', '1', '1229', '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Daniela Anderson', '1987/12/10', 'M', 'Marketing', 'D10', 'password D10', '3', '1632', '13')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Tania Beard', '1998/9/2', 'F', 'Marketing', 'T11', 'password T11', '3', '1660', '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Jennifer Mcconnell', '1983/12/13', 'F', 'Sales', 'J12', 'password J12', '1', '1165', '9')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Irene Mccall', '1992/1/8', 'F', 'Marketing', 'I13', 'password I13', '2', '1273', '10')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Shaylee Decker', '1981/11/28', 'F', 'Development', 'S14', 'password S14', '1', '1967', '9')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Cindy Pratt', '2000/5/21', 'F', 'Development', 'C15', 'password C15', '2', '1914', '4')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Colt Gonzalez', '1991/8/2', 'M', 'Marketing', 'C16', 'password C16', '1', '1342', '16')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kiera Andrade', '1989/7/31', 'F', 'Development', 'K17', 'password K17', '3', '1438', '18')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Bruce Jackson', '1980/8/17', 'M', 'Marketing', 'B18', 'password B18', '2', '1716', '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Axel Trujillo', '1950/5/3', 'F', 'Marketing', 'A19', 'password A19', '2', '1883', '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Elaine Allison', '1960/3/8', 'M', 'Marketing', 'E20', 'password E20', '1', '1499', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '0001', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '1', '0002', '3')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '1', '0002', '3')
 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('3', 'AX')
 
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'Desc', 'Txt')
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'The first question', 'Do you like db?')
 INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
-
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
+INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
@@ -222,7 +207,7 @@ GROUP BY Title, [Version]
 ORDER BY q_count
 
 GO
-CREATE PROCEDURE dbo.Q8 @company_id varchar(30)
+CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
 AS
 SELECT apps_table.[Question ID], q.[Text]
 FROM [T1-Question] q,
@@ -232,8 +217,7 @@ FROM [T1-Question] q,
 	WHERE
 	qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
 	q.[Questionnaire ID] = cq.[Questionnaire ID] AND
-	q.[Creator ID] = u.[User ID] AND
-	u.[Company ID] = @company_id 
+	u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id)
 	GROUP BY [Question ID]
 	) apps_table
 WHERE 
