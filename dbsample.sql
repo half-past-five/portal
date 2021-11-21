@@ -16,13 +16,12 @@ EXEC sp_MSforeachtable 'DROP TABLE ?'
 GO
 
 --DROP TRIGGERS
-IF OBJECT_ID ('PrivilagesReject', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject
-GO
-IF OBJECT_ID ('QuestionTypeInsert', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject
-GO
+DROP TRIGGER IF EXISTS dbo.PrivilagesReject;
 
 --DROP SPOCS
-DROP PROCEDURE IF EXISTS dbo.Authenticate;   
+DROP PROCEDURE IF EXISTS dbo.Authenticate;
+DROP PROCEDURE IF EXISTS dbo.Q7;  
+DROP PROCEDURE IF EXISTS dbo.Q9;  
 
 --CREATE TABLES 
 CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
@@ -191,7 +190,7 @@ CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [db
 
 --TRIGGERS
 GO
-CREATE TRIGGER PrivilagesReject ON [T1-Privilages]
+CREATE TRIGGER dbo.PrivilagesReject ON [T1-Privilages]
 AFTER INSERT, UPDATE, DELETE
 AS
 BEGIN
@@ -207,5 +206,30 @@ AS
 SELECT CONVERT(varchar, Privilages) as Privilages
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
+
+GO
+CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
+AS
+SELECT Title, [Version], COUNT([Question ID]) as q_count
+FROM [T1-Completed Questionnaire] cq,  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
+WHERE 
+cq.[Questionnaire ID] = q.[Questionnaire ID] AND
+qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+q.[Creator ID] = u.[User ID] AND
+u.[User ID] = @user_id
+GROUP BY Title, [Version]
+ORDER BY q_count
+
+GO
+CREATE PROCEDURE dbo.Q9
+AS
+SELECT Title, [Version], COUNT([Question ID]) as q_count
+FROM [T1-Question Questionnaire Pairs] qqp, [T1-Completed Questionnaire] cq, [T1-Questionnaire] q
+WHERE
+cq.[Questionnaire ID] = q.[Questionnaire ID] AND
+qqp.[Questionnaire ID] = cq.[Questionnaire ID]
+GROUP BY Title, [Version]
+
+
 
 
