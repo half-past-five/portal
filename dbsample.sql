@@ -18,6 +18,8 @@ GO
 --DROP TRIGGERS
 IF OBJECT_ID ('PrivilagesReject', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject
 GO
+IF OBJECT_ID ('QuestionTypeInsert', 'TR') IS NOT NULL DROP TRIGGER PrivilagesReject
+GO
 
 --DROP SPOCS
 DROP PROCEDURE IF EXISTS dbo.Authenticate;   
@@ -61,8 +63,8 @@ CREATE TABLE dbo.[T1-Question] (
 	[Type] varchar(30),
 	[Description] varchar(50) not null,
 	[Text] varchar(100) not null,
-	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID])
-
+	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
+	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
 )
 	
 
@@ -147,6 +149,7 @@ INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('3', 'AX')
 
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'Desc', 'Txt')
+INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 
 
 --FOREIGN KEYS 
@@ -204,3 +207,5 @@ AS
 SELECT CONVERT(varchar, Privilages) as Privilages
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
+
+
