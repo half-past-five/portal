@@ -197,6 +197,18 @@ FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
 GO
+CREATE PROCEDURE dbo.Q1 @caller_id int, @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
+@company_reg_num int, @company_brand_name varchar(50), @inductor_id int
+AS --MAY NEED CONVERT
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id)
+DECLARE @user_id int 
+SELECT @user_id = u.[User ID]
+FROM [T1-User] u
+WHERE u.Username = @username AND u.[Password] = @password
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date], [Inductor ID], [Admin ID]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ), @caller_id, @user_id)
+
+GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
 AS
 SELECT Title, [Version], COUNT([Question ID]) as q_count
