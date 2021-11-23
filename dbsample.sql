@@ -227,6 +227,54 @@ INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date],
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
+--QUERY 2a--
+GO
+CREATE PROCEDURE dbo.Q2a @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
+@company_id int
+AS
+IF @action = 'insert'
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
+	RETURN
+IF @action = 'update'
+	UPDATE [T1-User]
+	SET 
+	[Name] = @name,
+	[Birth Date] = @bday,
+	[Sex] = @sex,
+	[Position] = @position,
+	[Username] = @username,
+	[Password] = @password,
+	[Company ID] = @manager_id,
+	[Manager ID] = @company_id
+	WHERE Username = @username;
+	RETURN
+IF @action = 'show'
+	SELECT *
+	FROM [T1-User] U
+	WHERE @username = U.Username
+	RETURN
+
+
+--QUERY 2b--
+GO
+CREATE PROCEDURE dbo.Q2b @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30)
+AS
+IF @action = 'insert'
+	INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_id, @brand_name, CAST( GETDATE() AS Date ))
+	RETURN
+IF @action = 'update'
+	UPDATE [T1-Company]
+	SET
+	[Registration Number] = @company_id,
+	[Brand Name] = @brand_name,
+	[Induction Date] = CAST( @new_date AS Date )
+	RETURN
+IF @action = 'show'
+	SELECT *
+	FROM [T1-Company]
+	WHERE @company_id = [Registration Number]
+	RETURN
 
 --QUERY 3--
 GO
@@ -310,6 +358,7 @@ WHERE NOT EXISTS
 
 
 --QUERY 15--
+/*
 GO
 CREATE PROCEDURE dbo.Q15 @k_min varchar(30)
 AS
@@ -320,7 +369,6 @@ WHERE Q.[Question ID] IN
 	SELECT QQP.[Question ID], COUNT(*) AS q_COUNT
 	FROM [T1-Question Questionnaire Pairs] QQP
 	GROUP BY QQP.[Question ID]
-	ORDER BY COUNT(*) ASC
 )
 
 
@@ -343,7 +391,7 @@ WHERE NOT EXISTS
 	WHERE QQP.[Question ID] = Q.[Question ID]
 	)
 )
-
+*/
 
 ---------- TESTING ----------
 /*
