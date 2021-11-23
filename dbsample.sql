@@ -338,7 +338,7 @@ WHERE NOT EXISTS
 	)
 	EXCEPT
 	--All Questionnaire id of current question
-	(SELECT QQR.[T1-Questionnaire ID]
+	(SELECT QQP.[T1-Questionnaire ID]
 	FROM [T1-Question Questionnaire Pairs] QQP
 	WHERE QQP.[Question ID] = Q.[Question ID]
 	)
