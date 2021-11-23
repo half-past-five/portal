@@ -1,4 +1,6 @@
---DROP ALL TABLES 
+---------- DROP DB ----------
+
+--tables
 DECLARE @Sql NVARCHAR(500) DECLARE @Cursor CURSOR
 SET @Cursor = CURSOR FAST_FORWARD FOR
 SELECT DISTINCT sql = 'ALTER TABLE [' + tc2.TABLE_SCHEMA + '].[' +  tc2.TABLE_NAME + '] DROP [' + rc1.CONSTRAINT_NAME + '];'
@@ -15,17 +17,25 @@ GO
 EXEC sp_MSforeachtable 'DROP TABLE ?'
 GO
 
---DROP TRIGGERS
-DROP TRIGGER IF EXISTS dbo.PrivilagesReject;
+--triggers
+DECLARE @sql VARCHAR(MAX)='';
+SELECT @sql=@sql+'drop trigger ['+name +'];' FROM sys.objects 
+WHERE type = 'tr' AND  is_ms_shipped = 0
+exec(@sql);
+GO
 
---DROP SPOCS
-DROP PROCEDURE IF EXISTS dbo.Authenticate;
-DROP PROCEDURE IF EXISTS dbo.Q1; 
-DROP PROCEDURE IF EXISTS dbo.Q7; 
-DROP PROCEDURE IF EXISTS dbo.Q8; 
-DROP PROCEDURE IF EXISTS dbo.Q9;  
 
---CREATE TABLES 
+--spocs
+DECLARE @sql VARCHAR(MAX)='';
+SELECT @sql=@sql+'drop procedure ['+name +'];' FROM sys.objects 
+WHERE type = 'p' AND  is_ms_shipped = 0
+exec(@sql);
+GO
+
+
+----------CREATE TABLES----------
+
+
 CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
 	[Question ID] int not null,
 	[Questionnaire ID] int not null,
@@ -122,7 +132,8 @@ CREATE TABLE [dbo].[T1-Privilages](
 	)
 
 
---ANY INSERTS
+---------- INSERTS ----------
+
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '0001', '2')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '3', '0002', '3')
@@ -175,7 +186,8 @@ ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
 
---TRIGGERS
+
+---------- TRIGGERS ----------
 GO
 CREATE TRIGGER dbo.PrivilagesReject ON [T1-Privilages]
 AFTER INSERT, UPDATE, DELETE
@@ -186,14 +198,19 @@ ROLLBACK TRANSACTION;
 RETURN
 END;
 
---SPOCS
+
+---------- SPOCS ----------
+
+--QUERY AUTHENTICATE--
 GO
 CREATE PROCEDURE dbo.Authenticate @username varchar(30), @password varchar(30)
 AS
-SELECT CONVERT(varchar, Privilages) as Privilages
+SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as Privilages
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
+
+--QUERY 1--
 GO
 CREATE PROCEDURE dbo.Q1 @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
@@ -210,6 +227,20 @@ INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date],
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
+
+--QUERY 3--
+GO
+CREATE PROCEDURE dbo.Q3 @admin_id int, @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
+AS
+DECLARE @admin_company_id int
+SELECT @admin_company_id = u.[Company ID]
+FROM [T1-User] u
+WHERE u.[User ID] = @admin_id 
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
+
+
+--QUERY 7--
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
 AS
@@ -223,6 +254,8 @@ u.[User ID] = @user_id
 GROUP BY Title, [Version]
 ORDER BY q_count
 
+
+--QUERY 8--
 GO
 CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
 AS
@@ -241,6 +274,8 @@ WHERE
 apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AND
 apps_table.[Question ID] = q.[Question ID]
 
+
+--QUERY 9--
 GO
 CREATE PROCEDURE dbo.Q9
 AS
@@ -251,6 +286,8 @@ cq.[Questionnaire ID] = q.[Questionnaire ID] AND
 qqp.[Questionnaire ID] = cq.[Questionnaire ID]
 GROUP BY Title, [Version]
 
+
+--QUERY 14--
 GO
 CREATE PROCEDURE dbo.Q14 @qn_id varchar(30)
 AS
@@ -271,6 +308,8 @@ WHERE NOT EXISTS
 	)
 )
 
+
+--QUERY 15--
 GO
 CREATE PROCEDURE dbo.Q15 @k_min varchar(30)
 AS
@@ -284,6 +323,8 @@ WHERE Q.[Question ID] IN
 	ORDER BY COUNT(*) ASC
 )
 
+
+--QUERY 16--
 GO
 CREATE PROCEDURE dbo.Q16
 AS
@@ -303,7 +344,15 @@ WHERE NOT EXISTS
 	)
 )
 
+
+---------- TESTING ----------
+/*
 exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
 @position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
 @company_reg_num ='999', @company_brand_name='Noname Company'
+*/
 
+/*
+exec Q3 @admin_id='1', @name='Kostis', @bday='2000/6/26', @sex='M', 
+@position='Sales', @username='kost03', @password='hehehe', @manager_id=NULL
+*/
