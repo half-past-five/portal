@@ -20,6 +20,7 @@ DROP TRIGGER IF EXISTS dbo.PrivilagesReject;
 
 --DROP SPOCS
 DROP PROCEDURE IF EXISTS dbo.Authenticate;
+DROP PROCEDURE IF EXISTS dbo.Q1; 
 DROP PROCEDURE IF EXISTS dbo.Q7; 
 DROP PROCEDURE IF EXISTS dbo.Q8; 
 DROP PROCEDURE IF EXISTS dbo.Q9;  
@@ -51,7 +52,6 @@ CREATE TABLE [dbo].[T1-Company](
 	[Registration Number] int not null, --NOT SPECIFIED BY US
 	[Brand Name] varchar(50) not null,
 	[Induction Date] date not null,
-	[Inductor ID] int,
 	[Admin ID] int
 	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Registration Number])
 	)
@@ -127,7 +127,6 @@ INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Pas
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '3', '0002', '3')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '2', '0002', '3')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukis Pap', '2000/6/26', 'M', 'Manager', 'lpapal03', 'hehehe', '1', NULL, NULL)
 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
@@ -138,7 +137,7 @@ INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
 INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
 
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date], [Inductor ID], [Admin ID]) VALUES ('0001', 'Company 1', '2020/11/10', '4', '1')
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date], [Admin ID]) VALUES ('0001', 'Company 1', '2020/11/10', '1')
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
@@ -148,7 +147,6 @@ CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Com
 CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
 
 ALTER TABLE dbo.[T1-Company]  ADD 
-CONSTRAINT [FK-Company-InductorUser] FOREIGN KEY ([Inductor ID]) REFERENCES [dbo].[T1-User]([User ID]),
 CONSTRAINT [FK-Company-AdminUser]  FOREIGN KEY ([Admin ID]) REFERENCES [dbo].[T1-User]([User ID])
 
 ALTER TABLE dbo.[T1-Question] ADD
@@ -197,16 +195,20 @@ FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
 GO
-CREATE PROCEDURE dbo.Q1 @caller_id int, @name varchar(50), @bday date, @sex char(1), 
+CREATE PROCEDURE dbo.Q1 @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
-@company_reg_num int, @company_brand_name varchar(50), @inductor_id int
-AS --MAY NEED CONVERT
+@company_reg_num int, @company_brand_name varchar(50)
+AS
+ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
+ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id)
-DECLARE @user_id int 
-SELECT @user_id = u.[User ID]
+DECLARE @admin_id int 
+SELECT @admin_id = u.[User ID]
 FROM [T1-User] u
 WHERE u.Username = @username AND u.[Password] = @password
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date], [Inductor ID], [Admin ID]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ), @caller_id, @user_id)
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date], [Admin ID]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ), @admin_id)
+ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
+ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
@@ -250,5 +252,7 @@ qqp.[Questionnaire ID] = cq.[Questionnaire ID]
 GROUP BY Title, [Version]
 
 
-
+exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
+@position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
+@company_reg_num ='999', @company_brand_name='Noname Company'
 
