@@ -265,7 +265,7 @@ WHERE NOT EXISTS
 	)
 	EXCEPT
 	--Questions of current questionaire
-	(SELECT QQP2[Question ID]
+	(SELECT QQP2.[Question ID]
 	FROM [T1-Question Questionnaire Pairs] QQP2
 	WHERE QQP2.[Questionnaire ID] = Qn.[Questionnaire ID]
 	)
@@ -274,7 +274,7 @@ WHERE NOT EXISTS
 GO
 CREATE PROCEDURE dbo.Q15 @k_min varchar(30)
 AS
-SELECT TOP (@kMin) *
+SELECT TOP (@k_min) *
 FROM [T1-Question] Q
 WHERE Q.[Question ID] IN
 (
@@ -292,14 +292,14 @@ FROM [T1-Question] Q
 WHERE NOT EXISTS
 (
 	--All Questionnaire ids
-	(SELECT Qn.[T1-Questionnaire ID]
+	(SELECT Qn.[Questionnaire ID]
 	FROM [T1-Questionnaire] Qn
 	)
 	EXCEPT
 	--All Questionnaire id of current question
 	(SELECT QQR.[T1-Questionnaire ID]
 	FROM [T1-Question Questionnaire Pairs] QQP
-	WHERE QQR.[Question ID] = Q.[Question ID]
+	WHERE QQP.[Question ID] = Q.[Question ID]
 	)
 )
 
