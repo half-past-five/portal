@@ -49,6 +49,7 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 	</table>
 	<hr>
 
+
 	<?php
 	$time_start = microtime(true);
 	echo "Connecting to SQL server (" . $serverName . ")<br/>";
@@ -76,10 +77,20 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 
 		$getResults = sqlsrv_query($conn, $tsql, $params);
 		echo ("Results:<br/>");
-		echo ($getResults);
 		if ($getResults == FALSE)
 			die(FormatErrors(sqlsrv_errors()));
-		PrintResultSet($getResults);
+			
+		$row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
+		/* Arrays in PHP work like objects */
+		echo (var_dump($row));
+
+		/* Add authorised User credentials in SESSION */
+		$UserID = $row["User ID"];
+		$Privilages = $row["Privilages"];
+
+		$_SESSION['UserID'] = $UserID;
+		$_SESSION['Privilages'] = $Privilages;
+
 		/* Free query  resources. */
 		sqlsrv_free_stmt($getResults);
 
@@ -90,74 +101,15 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 		$execution_time = round((($time_end - $time_start) * 1000), 2);
 		echo 'QueryTime: ' . $execution_time . ' ms';
 	}
-
-	/* Print results */
-
-
-	// $temp;				
-	// while ($row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC)) {
-	// 	foreach($row as $col){
-	// 		echo ("<h1>");
-	// 		echo (is_null($col) ? "Null" : $col);
-	// 		$temp = $col;
-	// 		echo ("<h1>");
-	// 	}
-	// 	echo ("</tr>");
-	// }
-	// echo("<h1>");
-	// echo($temp);
-	// echo("</h1>");
-	// if($temp == 1)
-	// 	header("Location:auth1.php");
-	// else if($temp == 2)
-	// 	header("Location:auth2.php");
-	// else if($temp == 3)
-	// 	header("Location:auth3.php");
-	// else
-	// 	echo("Location:index.php");
-
-
-
-
-
-
-	function PrintResultSet($resultSet)
-	{
-		echo ("<table><tr >");
-
-		foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
-			echo ("<th>");
-			echo $fieldMetadata["Name"];
-			echo ("</th>");
-		}
-		echo ("</tr>");
-
-		while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
-			echo ("<tr>");
-			foreach ($row as $col) {
-				echo ("<td>");
-				echo (is_null($col) ? "Null" : $col);
-				echo ("</td>");
-			}
-			echo ("</tr>");
-		}
-		echo ("</table>");
-	}
-
-	function FormatErrors($errors)
-	{
-		/* Display errors. */
-		echo "Error information: ";
-
-		foreach ($errors as $error) {
-			echo "SQLSTATE: " . $error['SQLSTATE'] . "";
-			echo "Code: " . $error['code'] . "";
-			echo "Message: " . $error['message'] . "";
-		}
-	}
 	?>
-
 	<hr>
+	<form action="authenticated.php" method="post" class="signin-form">
+		<div class="form-group">
+			<button type="submit" name="authorize" class="form-control btn btn-primary submit px-3">Authorize</button>
+		</div>
+	</form>
+
+
 	<?php
 	if (isset($_POST['disconnect'])) {
 		echo "Clossing session and redirecting to start page";
@@ -169,7 +121,6 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 
 	<form method="post">
 		<input type="submit" name="disconnect" value="Disconnect" />
-		<!-- <input type="submit" value="Menu" formaction="connect.php"> -->
 	</form>
 
 </body>
