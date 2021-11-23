@@ -50,13 +50,10 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
     <hr>
 
     <?php
-    $time_start = microtime(true);
-
-
-    if (isset($_SESSION["UserID"]) && isset($_SESSION["Privilages"])) {
-        $UserID = $_SESSION['UserID'];
-        $Privilages = $_SESSION['Privilages'];
-        echo ("UserID: ");
+    if (isset($_SESSION["User ID"]) && isset($_SESSION["Privilages"])) {
+        $UserID = $_SESSION["User ID"];
+        $Privilages = $_SESSION["Privilages"];
+        echo ("User ID: ");
         echo ($UserID);
         echo ("<br>Privilages: ");
         echo ($Privilages);

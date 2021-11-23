@@ -88,8 +88,8 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 		$UserID = $row["User ID"];
 		$Privilages = $row["Privilages"];
 
-		$_SESSION['UserID'] = $UserID;
-		$_SESSION['Privilages'] = $Privilages;
+		$_SESSION["User ID"] = $UserID;
+		$_SESSION["Privilages"] = $Privilages;
 
 		/* Free query  resources. */
 		sqlsrv_free_stmt($getResults);
