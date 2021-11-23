@@ -263,6 +263,57 @@ cq.[Questionnaire ID] = q.[Questionnaire ID] AND
 qqp.[Questionnaire ID] = cq.[Questionnaire ID]
 GROUP BY Title, [Version]
 
+GO
+CREATE PROCEDURE dbo.Q14 @qn_id varchar(30)
+AS
+SELECT *
+FROM [T1-Questionnaire] Qn
+WHERE NOT EXISTS
+(
+	--All questions of questionaire
+	(SELECT QQP1.[Question ID]
+	FROM [T1-Question Questionnaire Pairs] QQP1
+	WHERE QQP1.[Questionnaire ID] = @qn_id
+	)
+	EXCEPT
+	--Questions of current questionaire
+	(SELECT QQP2[Question ID]
+	FROM [T1-Question Questionnaire Pairs] QQP2
+	WHERE QQP2.[Questionnaire ID] = Qn.[Questionnaire ID]
+	)
+)
+
+GO
+CREATE PROCEDURE dbo.Q15 @k_min varchar(30)
+AS
+SELECT TOP (@kMin) *
+FROM [T1-Question] Q
+WHERE Q.[Question ID] IN
+(
+	SELECT QQP.[Question ID], COUNT(*) AS q_COUNT
+	FROM [T1-Question Questionnaire Pairs] QQP
+	GROUP BY QQP.[Question ID]
+	ORDER BY COUNT(*) ASC
+)
+
+GO
+CREATE PROCEDURE dbo.Q16
+AS
+SELECT *
+FROM [T1-Question] Q
+WHERE NOT EXISTS
+(
+	--All Questionnaire ids
+	(SELECT Qn.[T1-Questionnaire ID]
+	FROM [T1-Questionnaire] Qn
+	)
+	EXCEPT
+	--All Questionnaire id of current question
+	(SELECT QQR.[T1-Questionnaire ID]
+	FROM [T1-Question Questionnaire Pairs] QQP
+	WHERE QQR.[Question ID] = Q.[Question ID]
+	)
+)
 
 /*
 exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 

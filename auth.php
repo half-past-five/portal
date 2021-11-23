@@ -76,20 +76,19 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 		);
 
 		$getResults = sqlsrv_query($conn, $tsql, $params);
-		echo ("Results:<br/>");
 		if ($getResults == FALSE)
 			die(FormatErrors(sqlsrv_errors()));
 			
-		$row = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
+		$result = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
 		/* Arrays in PHP work like objects */
-		echo (var_dump($row));
+		echo ("Results:<br/>" . var_dump($result));
 
 		/* Add authorised User credentials in SESSION */
-		$UserID = $row["User ID"];
-		$Privilages = $row["Privilages"];
+		$UserID = $result["User ID"];
+		$Privilages = $result["Privilages"];
 
-		$_SESSION['UserID'] = $UserID;
-		$_SESSION['Privilages'] = $Privilages;
+		$_SESSION["User ID"] = $UserID;
+		$_SESSION["Privilages"] = $Privilages;
 
 		/* Free query  resources. */
 		sqlsrv_free_stmt($getResults);
@@ -99,13 +98,13 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 
 		$time_end = microtime(true);
 		$execution_time = round((($time_end - $time_start) * 1000), 2);
-		echo 'QueryTime: ' . $execution_time . ' ms';
+		echo ('<br>QueryTime: ' . $execution_time . ' ms');
 	}
 	?>
 	<hr>
 	<form action="authenticated.php" method="post" class="signin-form">
 		<div class="form-group">
-			<button type="submit" name="authorize" class="form-control btn btn-primary submit px-3">Authorize</button>
+			<button type="submit" name="authenticate" class="form-control btn btn-primary submit px-3">Authorize</button>
 		</div>
 	</form>
 
