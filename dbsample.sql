@@ -43,7 +43,7 @@ CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
 
 
 CREATE TABLE dbo.[T1-User] (
-	[User ID] int IDENTITY(1,1) not null, --IDENTITY added 
+	[User ID] int IDENTITY(1,1) not null,
 	[Name] varchar(30) not null,
 	[Birth Date] date not null,
 	Sex char(1) not null,
@@ -89,7 +89,7 @@ CREATE TABLE dbo.[T1-Multiple Choice Question] (
 )
 	
 
-CREATE TABLE dbo.[T1-Multiple Choice Answer] ( --gia tuto en ekatalava akrivos pos en nan sindedemeno me to multiple choice question 
+CREATE TABLE dbo.[T1-Multiple Choice Answer] ( 
 	[Answers Table] varchar(30) not null,
 	[Question ID] int not null,	
 )
@@ -97,7 +97,6 @@ CREATE TABLE dbo.[T1-Multiple Choice Answer] ( --gia tuto en ekatalava akrivos p
 
 CREATE TABLE dbo.[T1-Arithmetic Question] (
 	[Question ID] int not null,
-	--[Range] int not null
 	[MIN value] int not null, 
 	[MAX value] int not null, --min & max value added for range	
 )
@@ -153,7 +152,7 @@ INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date],
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
 CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]),
-CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]), --trigger for this
+CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]),
 CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
 
@@ -393,13 +392,12 @@ WHERE NOT EXISTS
 )
 
 ---------- TESTING ----------
-/*
+
 exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
 @position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
 @company_reg_num ='999', @company_brand_name='Noname Company'
-*/
 
-/*
+
+
 exec Q3 @admin_id='1', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost03', @password='hehehe', @manager_id=NULL
-*/
