@@ -66,3 +66,40 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
         //die();
     }
     ?>
+
+    <!--Query 1-->
+    <form action="query1.php" method="post">
+        <h3>Query 1 (Adding Company with Company Admin)</h3>
+        <h4>Parameter:</h4>
+        Name <input type="text" name="name" placeholder="Konstantinos Larkou"><br>
+        Birth Date <input type="date" name="bday" placeholder="04/06/2000"><br>
+        Sex <input type="text" name="sex" placeholder="M"><br>
+        Position <input type="text" name="position" placeholder="CEO"><br>
+        Username <input type="text" name="username" placeholder="klarko01"><br>
+        Password <input type="password" name="password"><br>
+        Manager ID <input type="text" name="manager_id" placeholder="1"><br>
+        Company Registration Number <input type="text" name="company_reg_num" placeholder="007"><br>
+        Company Brand Name <input type="text" name="company_brand_name" placeholder="James Bond"><br>
+        <input type="submit" name="Query 1">
+    </form>
+
+    <!--Query 2a-->
+    <form action="query2.php" method="post">
+        <h3>Query 2 (Adding Company Admin)</h3>
+        <h4>Parameter:</h4>
+        <label for="action">Action</label>
+        <select id="action" name="action">>
+            <option value="insert">Insert</option>
+            <option value="update">Update</option>
+            <option value="show">Show</option>
+        </select><br>
+        Name <input type="text" name="name" placeholder="Konstantinos Larkou"><br>
+        Birth Date <input type="date" name="bday" placeholder="04/06/2000"><br>
+        Sex <input type="text" name="sex" placeholder="M"><br>
+        Position <input type="text" name="position" placeholder="CEO"><br>
+        Username <input type="text" name="username" placeholder="klarko01"><br>
+        Password <input type="password" name="password"><br>
+        Manager ID <input type="text" name="manager_id" placeholder="1"><br>
+        Company ID<input type="text" name="company_id" placeholder="007"><br>
+        <input type="submit" name="Query 2">
+    </form>
