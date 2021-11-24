@@ -233,10 +233,15 @@ ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
 --QUERY 2a--
 GO
-CREATE PROCEDURE dbo.Q2a @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
-@company_id int, @isAdmin bit
+CREATE PROCEDURE dbo.Q2a @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @isAdmin bit
 AS
+DECLARE @company_id int
+SET @company_id = (
+	SELECT [Company ID]
+	FROM [T1-User] u
+	WHERE u.[User ID] = @caller_id
+	)
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @isAdmin)
@@ -478,24 +483,17 @@ WHERE NOT EXISTS
 )
 
 ---------- TESTING ----------
-/*
+
 exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
 @position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
 @company_reg_num ='999', @company_brand_name='Noname Company'
-*/
 
-/*
-CREATE PROCEDURE dbo.Q2a @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
-@company_id int
-*/
 
- 
 exec Q2a @action='insert', @name = 'KKKas', @bday='', @sex='F', 
 @position='Katotatos', @username='klarko01', @password='hihi', @manager_id=NULL, @company_id=NULL, @isAdmin = '0'
 
-/*
+
 exec Q3 @admin_id='1', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost03', @password='hehehe', @manager_id=NULL
-*/
+
 
