@@ -55,7 +55,6 @@ CREATE TABLE dbo.[T1-User] (
 	Privilages int not null,
 	[Company ID] int,
 	[Manager ID] int,
-	[isAdmin] BIT not null,
 	UNIQUE(Username),
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID])
 )
@@ -136,10 +135,10 @@ CREATE TABLE [dbo].[T1-Privilages](
 
 ---------- INSERTS ----------
 
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '0001', '2', '0')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2', '0')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '3', '0002', '3', '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '2', '0002', '3', '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '0001', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '3', '0002', '3')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '2', '0002', '3')
 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
@@ -227,14 +226,35 @@ AS
 ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
 ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ))
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id, '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id)
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
 --QUERY 2a--
 GO
-CREATE PROCEDURE dbo.Q2a @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @isAdmin bit
+CREATE PROCEDURE dbo.Q2a @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30)
+AS
+IF @action = 'insert'
+	BEGIN
+	INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_id, @brand_name, CAST( GETDATE() AS Date ))
+	END
+IF @action = 'update'
+	BEGIN
+	IF @brand_name <> '' BEGIN UPDATE [T1-Company] SET [Brand Name] = @brand_name WHERE @company_id=[Registration Number] END 
+	IF @new_date <> '' BEGIN UPDATE [T1-Company] SET [Induction Date] = CAST( @new_date AS Date ) WHERE @company_id=[Registration Number] END 
+	END
+IF @action = 'show'
+	BEGIN
+	SELECT *
+	FROM [T1-Company]
+	WHERE @company_id = [Registration Number]
+	END
+
+
+--QUERY 2b--
+GO
+CREATE PROCEDURE dbo.Q2b @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
 AS
 DECLARE @company_id int
 SET @company_id = (
@@ -244,7 +264,7 @@ SET @company_id = (
 	)
 IF  @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [isAdmin]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @isAdmin)
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
 	END
 IF @action = 'update'
 	BEGIN
@@ -271,26 +291,6 @@ IF  @action = 'show'
 	WHERE U.Username = 'lpapal03'
 	END
 
-
---QUERY 2b--
-GO
-CREATE PROCEDURE dbo.Q2b @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30)
-AS
-IF @action = 'insert'
-	BEGIN
-	INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_id, @brand_name, CAST( GETDATE() AS Date ))
-	END
-IF @action = 'update'
-	BEGIN
-	IF @brand_name <> '' BEGIN UPDATE [T1-Company] SET [Brand Name] = @brand_name WHERE @company_id=[Registration Number] END 
-	IF @new_date <> '' BEGIN UPDATE [T1-Company] SET [Induction Date] = CAST( @new_date AS Date ) WHERE @company_id=[Registration Number] END 
-	END
-IF @action = 'show'
-	BEGIN
-	SELECT *
-	FROM [T1-Company]
-	WHERE @company_id = [Registration Number]
-	END
 
 --QUERY 3--
 GO
