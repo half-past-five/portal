@@ -69,7 +69,7 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 
     <!--Query 1-->
     <form action="query1.php" method="post">
-        <h3>Query 1 (Adding Company with Company Admin)</h3>
+        <h3>Query 1 (Add Company with Company Admin)</h3>
         <h4>Parameter:</h4>
         Name <input type="text" name="name" placeholder="Konstantinos Larkou"><br>
         Birth Date <input type="date" name="bday" placeholder="04/06/2000"><br>
@@ -84,8 +84,25 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
     </form>
 
     <!--Query 2a-->
-    <form action="query2.php" method="post">
-        <h3>Query 2 (Adding Company Admin)</h3>
+    <form action="query2a.php" method="post">
+        <h3>Query 2a (Add Company)</h3>
+        <h4>Parameter:</h4>
+        <label for="action">Action</label>
+        <select id="action" name="action">>
+            <option value="insert">Insert</option>
+            <option value="update">Update</option>
+            <option value="show">Show</option>
+        </select><br>
+        Registration Number <input type="text" name="company_id" placeholder="1"><br>
+        Brand Name<input type="text" name="brand_name" placeholder="1"><br>
+        Induction Date<input type="date" name="new_date"><br>
+
+        <input type="submit" name="Query 2a">
+    </form>
+
+    <!--Query 2b-->
+    <form action="query2b.php" method="post">
+        <h3>Query 2 (Add Company Admin)</h3>
         <h4>Parameter:</h4>
         <label for="action">Action</label>
         <select id="action" name="action">>
@@ -100,6 +117,6 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
         Username <input type="text" name="username" placeholder="klarko01"><br>
         Password <input type="password" name="password"><br>
         Manager ID <input type="text" name="manager_id" placeholder="1"><br>
-        Company ID<input type="text" name="company_id" placeholder="007"><br>
-        <input type="submit" name="Query 2">
+        Is Admin?<input type="text" name="is_admin" placeholder="0 if not/ 1 if true"><br>
+        <input type="submit" name="Query 2b">
     </form>
