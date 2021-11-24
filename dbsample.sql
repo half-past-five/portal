@@ -135,10 +135,8 @@ CREATE TABLE [dbo].[T1-Privilages](
 
 ---------- INSERTS ----------
 
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Katrina Rosario', '1965/4/30', 'F', 'Development', 'K1', 'password K1', '2', '0001', '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Natalie Hudson', '1979/8/18', 'F', 'Marketing', 'N2', 'password N2', '3', '0001', '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('David Madden', '1973/4/19', 'F', 'Development', 'D3', 'password D3', '3', '0002', '3')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Avah Potts', '1973/9/14', 'F', 'Marketing', 'A4', 'password A4', '2', '0002', '3')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hehehe', '1', NULL, NULL)
 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
@@ -245,7 +243,10 @@ IF @action = 'update'
 	END
 IF @action = 'show'
 	BEGIN
-	SELECT *
+	SELECT
+	CAST([Registration Number] AS varchar(30)) as [Registration Number],
+	CAST([Brand Name] AS varchar(30)) as [Brand Name],
+	CAST([Induction Date] AS varchar(30)) as [Induction Date]
 	FROM [T1-Company]
 	WHERE @company_id = [Registration Number]
 	END
@@ -253,15 +254,9 @@ IF @action = 'show'
 
 --QUERY 2b--
 GO
-CREATE PROCEDURE dbo.Q2b @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
+CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int
 AS
-DECLARE @company_id int
-SET @company_id = (
-	SELECT [Company ID]
-	FROM [T1-User] u
-	WHERE u.[User ID] = @caller_id
-	)
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
@@ -273,8 +268,8 @@ IF @action = 'update'
 	IF @sex <>'' BEGIN UPDATE [T1-User] SET [Sex] = @sex WHERE Username = @username END
 	IF @position <>'' BEGIN UPDATE [T1-User] SET [Position] = @position WHERE Username = @username END
 	IF @password <>'' BEGIN UPDATE [T1-User] SET [Password] = @password WHERE Username = @username END
-	IF @manager_id <>'' BEGIN UPDATE [T1-User] SET [Company ID] = @manager_id WHERE Username = @username END
-	IF @company_id <>'' BEGIN UPDATE [T1-User] SET [Manager ID] = @company_id WHERE Username = @username END
+	IF @manager_id <>'' BEGIN UPDATE [T1-User] SET [Manager ID] = @manager_id WHERE Username = @username END
+	IF @company_id <>'' BEGIN UPDATE [T1-User] SET [Company ID] = @company_id WHERE Username = @username END
 	END
 IF  @action = 'show'
 	BEGIN
@@ -287,8 +282,7 @@ IF  @action = 'show'
 	CAST([Company ID]  AS varchar(30)) as [Company ID],
 	CAST([Manager ID] AS varchar(30)) as [Manager ID]
 	FROM [T1-User] U
-	--WHERE @username = U.Username
-	WHERE U.Username = 'lpapal03'
+	WHERE @username = U.Username
 	END
 
 
@@ -488,10 +482,8 @@ exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M',
 @position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
 @company_reg_num ='999', @company_brand_name='Noname Company'
 
-
-exec Q2a @action='insert', @name = 'KKKas', @bday='', @sex='F', 
-@position='Katotatos', @username='klarko01', @password='hihi', @manager_id=NULL, @company_id=NULL, @isAdmin = '0'
-
+exec Q2b @action='insert', @name = 'KAS', @bday='2000/6/26', @sex='F', 
+@position='Katotatos', @username='klarko02', @password='hihi', @manager_id=NULL, @company_id = '1'
 
 exec Q3 @admin_id='1', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost03', @password='hehehe', @manager_id=NULL
