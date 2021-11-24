@@ -93,8 +93,8 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
             <option value="update">Update</option>
             <option value="show">Show</option>
         </select><br>
-        Registration Number <input type="text" name="company_id" placeholder="1"><br>
-        Brand Name<input type="text" name="brand_name" placeholder="1"><br>
+        Registration Number <input type="text" name="company_id"><br>
+        Brand Name<input type="text" name="brand_name"><br>
         Induction Date<input type="date" name="new_date"><br>
 
         <input type="submit" name="Query 2a">
@@ -102,7 +102,7 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 
     <!--Query 2b-->
     <form action="query2b.php" method="post">
-        <h3>Query 2 (Add Company Admin)</h3>
+        <h3>Query 2b (Add Company Admin)</h3>
         <h4>Parameter:</h4>
         <label for="action">Action</label>
         <select id="action" name="action">>
@@ -110,13 +110,13 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
             <option value="update">Update</option>
             <option value="show">Show</option>
         </select><br>
-        Name <input type="text" name="name" placeholder="Konstantinos Larkou"><br>
-        Birth Date <input type="date" name="bday" placeholder="04/06/2000"><br>
-        Sex <input type="text" name="sex" placeholder="M"><br>
-        Position <input type="text" name="position" placeholder="CEO"><br>
-        Username <input type="text" name="username" placeholder="klarko01"><br>
+        Name <input type="text" name="name"><br>
+        Birth Date <input type="date" name="bday"><br>
+        Sex <input type="text" name="sex"><br>
+        Position <input type="text" name="position"><br>
+        Username <input type="text" name="username"><br>
         Password <input type="password" name="password"><br>
-        Manager ID <input type="text" name="manager_id" placeholder="1"><br>
-        Is Admin?<input type="text" name="is_admin" placeholder="0 if not/ 1 if true"><br>
+        Manager ID <input type="text" name="manager_id"><br>
+        Company ID <input type="text" name="company_id"><br>
         <input type="submit" name="Query 2b">
     </form>

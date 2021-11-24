@@ -59,12 +59,11 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
     $conn = sqlsrv_connect($serverName, $connectionOptions);
 
     //Read Stored proc with param
-    $tsql = "{call Q2b(?,?,?,?,?,?,?,?,?,?)} ";
+    $tsql = "{call Q2b(?,?,?,?,?,?,?,?,?)} ";
     $UserID = $_SESSION["User ID"];
-    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . $_POST["is_admin"] . "<br/>";
+    echo "Executing query: " . $tsql . ") with parameter " . $_POST["action"] . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . $_POST["action"] . "<br/>";
 
     $params = array(
-        array($UserID, SQLSRV_PARAM_IN),
         array($_POST["action"], SQLSRV_PARAM_IN),
         array($_POST["name"], SQLSRV_PARAM_IN),
         array($_POST["bday"], SQLSRV_PARAM_IN),
@@ -73,7 +72,7 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
         array($_POST["username"], SQLSRV_PARAM_IN),
         array($_POST["password"], SQLSRV_PARAM_IN),
         array($_POST["manager_id"], SQLSRV_PARAM_IN),
-        array($_POST["is_admin"], SQLSRV_PARAM_IN),
+        array($_POST["company_id"], SQLSRV_PARAM_IN)
     );
 
     $getResults = sqlsrv_query($conn, $tsql, $params);
