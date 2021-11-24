@@ -334,6 +334,88 @@ qqp.[Questionnaire ID] = cq.[Questionnaire ID]
 GROUP BY Title, [Version]
 
 
+--Questions per Questionnaire VIEW creation
+DROP VIEW dbo.[Questions per Questionnaire] 
+
+CREATE VIEW dbo.[Questions per Questionnaire] AS
+SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
+FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Completed Questionnaire] CQ
+WHERE QQP.[Questionnaire ID] = CQ.[Questionnaire ID]
+GROUP BY QQP.[Questionnaire ID]
+
+
+--Query 10 
+GO
+CREATE PROCEDURE dbo.Q10
+AS
+SELECT C.[Brand Name],AVG(Result.noOFQuestionnaires) as avgNoOfQuestionnaires
+FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire,
+	(SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestionnaires
+	FROM  [T1-Question Questionnaire Pairs] QQP
+	GROUP BY QQP.[Questionnaire ID]) Result
+WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
+GROUP BY C.[Brand Name]	
+
+--Query 10 with view 
+
+SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) as [Average number Of Questionnaires]
+FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
+WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
+GROUP BY C.[Brand Name]	
+
+--Drop Constraints
+ALTER TABLE [dbo].[T1-Questionnaire] ADD
+CONSTRAINT [FK-Questionnaire-ParentQuestionnaire] FOREIGN KEY ([Parent ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]), --ask pankris
+CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
+
+ALTER TABLE [dbo].[T1-Questionnaire]
+DROP CONSTRAINT [FK-Questionnaire-ParentQuestionnaire]
+
+ALTER TABLE [dbo].[T1-Questionnaire]
+DROP CONSTRAINT [FK-Questionnaire-CreatorUser]
+
+ 
+--Query 11 
+GO
+CREATE PROCEDURE dbo.Q11
+AS
+DECLARE @maxFromAverage float;
+
+SET @maxFromAverage = (	SELECT MAX(CompanyAvg.avgNoOfQuestions) 
+						FROM	(SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS avgNoOfQuestions
+								FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
+								WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
+								GROUP BY C.[Brand Name]) as CompanyAvg)
+
+SELECT Qnnaire.Title, Qnnaire.Version
+FROM [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
+WHERE QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND QpQ.NoOfQuestions > @maxFromAverage
+
+
+--Query 12
+GO
+CREATE PROCEDURE dbo.Q12
+AS
+DECLARE @minNoOfQuestions int;
+
+SET @minNoOfQuestions  = (SELECT MIN(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ)
+	
+print @minNoOfQuestions 				
+
+SELECT QpQ.[Questionnaire ID]
+FROM [Questions per Questionnaire] QpQ
+WHERE QpQ.noOfQuestions = @minNoOfQuestions 
+
+
+--Query 13
+GO
+CREATE PROCEDURE dbo.Q13
+AS
+SET @INDEXVAR = 0  
+SELECT @TOTALCOUNT= COUNT(*) FROM [T1-Question Questionnaire Pairs] 
+WHILE @INDEXVAR < @TOTALCOUNT  
+BEGIN  
+
 --QUERY 14--
 GO
 CREATE PROCEDURE dbo.Q14 @qn_id varchar(30)
@@ -353,6 +435,7 @@ WHERE NOT EXISTS
 	FROM [T1-Question Questionnaire Pairs] QQP2
 	WHERE QQP2.[Questionnaire ID] = Qn.[Questionnaire ID]
 	)
+	
 )
 
 
