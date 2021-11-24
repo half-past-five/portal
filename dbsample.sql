@@ -358,18 +358,18 @@ WHERE NOT EXISTS
 
 
 --QUERY 15--
-/*
+
 GO
-CREATE PROCEDURE dbo.Q15 @k_min varchar(30)
+CREATE PROCEDURE dbo.Q15 @k_min int
 AS
-SELECT TOP (@k_min) *
-FROM [T1-Question] Q
-WHERE Q.[Question ID] IN
+SELECT Q.[Question ID], Q.[Creator ID], Q.[Description], Q.[Type], Q.[Text]
+FROM [T1-Question] Q,
 (
-	SELECT QQP.[Question ID], COUNT(*) AS q_COUNT
+	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUNT
 	FROM [T1-Question Questionnaire Pairs] QQP
 	GROUP BY QQP.[Question ID]
-)
+) MinimumQ
+WHERE Q.[Question ID] = MinimumQ.[Question ID]
 
 
 --QUERY 16--
@@ -386,12 +386,11 @@ WHERE NOT EXISTS
 	)
 	EXCEPT
 	--All Questionnaire id of current question
-	(SELECT QQP.[T1-Questionnaire ID]
+	(SELECT QQP.[Questionnaire ID]
 	FROM [T1-Question Questionnaire Pairs] QQP
 	WHERE QQP.[Question ID] = Q.[Question ID]
 	)
 )
-*/
 
 ---------- TESTING ----------
 /*
