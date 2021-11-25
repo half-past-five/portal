@@ -74,6 +74,7 @@ CREATE TABLE dbo.[T1-Question] (
 	[Type] varchar(30),
 	[Description] varchar(50) not null,
 	[Text] varchar(100) not null,
+	[isCompleted] BIT
 	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
 	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
 )
@@ -337,16 +338,17 @@ CREATE TABLE dbo.[T1-Question] (
 	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
 	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
 )
-
+*/
 GO
-CREATE PROCEDURE dbo.Q5 @action varchar(20), @creator_id int, @type varchar(30), @description varchar(50), @text varchar(100),
-@
+CREATE PROCEDURE dbo.Q5 @action varchar(20), @caller_id int, @question_id int, @creator_id int, @type varchar(30),
+@description varchar(50), @text varchar(100), @isCompleted bit, @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
+@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
 AS
 IF @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) VALUES(
 	END
-*/
+
 --QUERY 7-- ***NEEDS FIX***
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
