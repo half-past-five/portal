@@ -23,6 +23,23 @@
 				"Uid" => $sqlUser,
 				"PWD" => $sqlPass);
 ?>
+<script>
+function myFunction() {
+  var x = document.getElementById("password-field");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+</script>
+
+<style>
+	.myDIV:hover{
+		background-color: blue;
+}
+</style>
+
 <section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -35,7 +52,7 @@
 		      			</div>
 	            		<div class="form-group">
 	              			<input name="password" id="password-field" type="password" class="form-control" placeholder="Password" required>
-	             			 <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+	             			 <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password" onclick="myFunction()"></span>
 	            		</div>
 	            		<div class="form-group">
 	            			<button type="submit" name="connect" class="form-control btn btn-primary submit px-3">Sign In</button>
