@@ -74,6 +74,7 @@ CREATE TABLE dbo.[T1-Question] (
 	[Type] varchar(30),
 	[Description] varchar(50) not null,
 	[Text] varchar(100) not null,
+	[isCompleted] BIT
 	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
 	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
 )
@@ -81,26 +82,22 @@ CREATE TABLE dbo.[T1-Question] (
 
 CREATE TABLE dbo.[T1-Free Text Question] (
 	[Question ID] int not null,
+	[Restriction] varchar(30)
 )	
 
 
 CREATE TABLE dbo.[T1-Multiple Choice Question] (
 	[Question ID] int not null,
-	[Selectable Amount] int not null, 
-)
-	
-
-CREATE TABLE dbo.[T1-Multiple Choice Answer] ( --gia tuto en ekatalava akrivos pos en nan sindedemeno me to multiple choice question 
-	[Answers Table] varchar(30) not null,
-	[Question ID] int not null,	
+	[Selectable Amount] int not null,
+	[Answers] varchar(1000)
 )
 	
 
 CREATE TABLE dbo.[T1-Arithmetic Question] (
 	[Question ID] int not null,
-	--[Range] int not null
 	[MIN value] int not null, 
 	[MAX value] int not null, --min & max value added for range	
+	CHECK ([MAX value] > [MIN value])
 )
 	
 
@@ -130,10 +127,11 @@ CREATE TABLE [dbo].[T1-Privilages](
 
 
 ---------- INSERTS ----------
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hihi', '1', NULL, '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hihi', '1', NULL,  NULL)
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kasoul', '1979/8/18', 'F', 'Marketing', 'ckasou01', 'hoho', '2', '1', '4')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager', '1979/8/18', 'M', 'CEO', 'manag01', 'hoho', '3', '1', NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Christos', '1979/8/18', 'M', 'Katouris', 'celeft01', 'hoho', '3', '1', '4')
 
 
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
@@ -166,9 +164,6 @@ CONSTRAINT [FK-Free Text-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [
 ALTER TABLE dbo.[T1-Multiple Choice Question] ADD
 CONSTRAINT [FK-Multiple Choice-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
-ALTER TABLE dbo.[T1-Multiple Choice Answer] ADD
-CONSTRAINT [FK-Answer-Multiple Choice Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
-
 ALTER TABLE dbo.[T1-Arithmetic Question] ADD
 CONSTRAINT [FK-Arithmetic-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
@@ -199,7 +194,7 @@ GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
 SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
 FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
-WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
+WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[isCompleted] = '0'
 GROUP BY QQP.[Questionnaire ID]
 
 ---------- SPOCS ----------
@@ -330,6 +325,28 @@ IF  @action = 'show'
 	CAST([Manager ID] AS varchar(30)) as [Manager ID]
 	FROM [T1-User] U
 	WHERE @username = U.Username AND [Company ID] = @admin_company_id
+	END
+
+--QUERY 5--
+/*
+CREATE TABLE dbo.[T1-Question] (
+	[Question ID] int IDENTITY(1,1) not null,
+	[Creator ID] int,
+	[Type] varchar(30),
+	[Description] varchar(50) not null,
+	[Text] varchar(100) not null,
+	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
+	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
+)
+*/
+GO
+CREATE PROCEDURE dbo.Q5 @action varchar(20), @caller_id int, @question_id int, @creator_id int, @type varchar(30),
+@description varchar(50), @text varchar(100), @isCompleted bit, @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
+@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+AS
+IF @action = 'insert'
+	BEGIN
+	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) VALUES(
 	END
 
 --QUERY 7-- ***NEEDS FIX***
