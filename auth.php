@@ -1,18 +1,8 @@
 <?php
 session_start();
 // Get the DB connection info from the session
-if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
-	$serverName = $_SESSION["serverName"];
-	$connectionOptions = $_SESSION["connectionOptions"];
-} else {
-	// Session is not correctly set! Redirecting to start page
-	session_unset();
-	session_destroy();
-	echo "Session is not correctly set! Clossing session and redirecting to start page in 3 seconds<br/>";
-	die('<meta http-equiv="refresh" content="3; url=index.php" />');
-	//header('Location: index.php');
-	//die();
-}
+$serverName = $_SESSION["serverName"];
+$connectionOptions = $_SESSION["connectionOptions"];
 ?>
 
 <html>
@@ -67,7 +57,7 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 		if (empty($_POST["password"]))
 			echo "Password is empty!<br/>";
 		echo "Executing query: " . $tsql . ") with Username: " . $_POST["username"] . "<br/>";
-		echo "Pass: " . $_POST["password"] . "<br/>";
+		//echo "Pass: " . $_POST["password"] . "<br/>";
 
 		// Getting parameter from the http call and setting it for the SQL call
 		$params = array(
@@ -78,17 +68,19 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 		$getResults = sqlsrv_query($conn, $tsql, $params);
 		if ($getResults == FALSE)
 			die(FormatErrors(sqlsrv_errors()));
-			
+
 		$result = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
 		/* Arrays in PHP work like objects */
-		echo ("Results:<br/>" . var_dump($result));
-
-		/* Add authorised User credentials in SESSION */
-		$UserID = $result["User ID"];
-		$Privilages = $result["Privilages"];
-
-		$_SESSION["User ID"] = $UserID;
-		$_SESSION["Privilages"] = $Privilages;
+		if (isset($result["User ID"])) {
+			$UserID = $result["User ID"];
+			$Privilages = $result["Privilages"];
+			/* Add authorised User credentials in SESSION */
+			$_SESSION["User ID"] = $UserID;
+			$_SESSION["Privilages"] = $Privilages;
+			echo ("<hr>Authentication Successful!</br>User ID: " . $UserID . "</br>Privilages: " . $Privilages);
+		} else {
+			echo ("<hr>Authentication Unsuccessful!");
+		}
 
 		/* Free query  resources. */
 		sqlsrv_free_stmt($getResults);
@@ -104,17 +96,18 @@ if (isset($_SESSION["serverName"]) && isset($_SESSION["connectionOptions"])) {
 	<hr>
 	<form action="authenticated.php" method="post" class="signin-form">
 		<div class="form-group">
-			<button type="submit" name="authenticate" class="form-control btn btn-primary submit px-3">Authorize</button>
+			<button type="submit" name="authenticate" class="form-control btn btn-primary submit px-3">Proceed</button>
 		</div>
 	</form>
 
 
 	<?php
 	if (isset($_POST['disconnect'])) {
-		echo "Clossing session and redirecting to start page";
+		echo "Clossing session and redirecting to start page</br>";
+		echo "Thank you for choosing EPL342 Team 1!";
 		session_unset();
 		session_destroy();
-		die('<meta http-equiv="refresh" content="1; url=index.php" />');
+		die('<meta http-equiv="refresh" content="5; url=index.php" />');
 	}
 	?>
 

@@ -46,19 +46,7 @@
 			</div>
 		</div>
 	</section>
-
-	<?php
-		if(isset($_POST['disconnect'])) { 
-			echo "Clossing session and redirecting to start page"; 
-			session_unset();
-			session_destroy();
-			die('<meta http-equiv="refresh" content="2; url=index.php" />');
-		} 
-	?> 
 	
-	<!--<form method="post"> 
-		<input type="submit" name="disconnect" value="Disconnect"/> 
-	</form> -->
 </body>
 
 </html>
