@@ -49,33 +49,23 @@ $connectionOptions = $_SESSION["connectionOptions"];
     $conn = sqlsrv_connect($serverName, $connectionOptions);
 
     //Read Stored proc with param
-    $tsql = "{call Q2b(?,?,?,?,?,?,?,?,?)} ";
     $UserID = $_SESSION["User ID"];
-    echo "Executing query: " . $tsql . ") with parameter " . $_POST["action"] . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . $_POST["company_id"] . "<br/>";
+    $tsql = "{call Q3(?,?,?,?,?,?,?,?)}";
+    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . "<br/>";
 
+    //Initialize Parameters
     $params = array(
-        array($_POST["action"], SQLSRV_PARAM_IN),
+        array($UserID, SQLSRV_PARAM_IN),
         array($_POST["name"], SQLSRV_PARAM_IN),
         array($_POST["bday"], SQLSRV_PARAM_IN),
         array($_POST["sex"], SQLSRV_PARAM_IN),
         array($_POST["position"], SQLSRV_PARAM_IN),
         array($_POST["username"], SQLSRV_PARAM_IN),
         array($_POST["password"], SQLSRV_PARAM_IN),
-        array($_POST["manager_id"], SQLSRV_PARAM_IN),
-        array($_POST["company_id"], SQLSRV_PARAM_IN)
+        array($_POST["manager_id"], SQLSRV_PARAM_IN)
     );
 
-    $getResults = sqlsrv_query($conn, $tsql, $params);
-
-    echo ("Results:<br/>");
-    echo ($getResults);
-    if ($getResults == FALSE) 
-        die(FormatErrors(sqlsrv_errors()));
-
-    PrintResultSet($getResults);
-
-    /* Free query  resources. */
-    sqlsrv_free_stmt($getResults);
+    sqlsrv_query($conn, $tsql, $params);
 
     /* Free connection resources. */
     sqlsrv_close($conn);
@@ -83,44 +73,10 @@ $connectionOptions = $_SESSION["connectionOptions"];
     $time_end = microtime(true);
     $execution_time = round((($time_end - $time_start) * 1000), 2);
     echo ('<br>QueryTime: ' . $execution_time . ' ms');
-
-    function PrintResultSet($resultSet)
-    {
-        echo ("<table><tr >");
-
-        foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
-            echo ("<th>");
-            echo $fieldMetadata["Name"];
-            echo ("</th>");
-        }
-        echo ("</tr>");
-
-        while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
-            echo ("<tr>");
-            foreach ($row as $col) {
-                echo ("<td>");
-                echo (is_null($col) ? "Null" : $col);
-                echo ("</td>");
-            }
-            echo ("</tr>");
-        }
-        echo ("</table>");
-    }
-
-    function FormatErrors( $errors ){
-		/* Display errors. */
-		echo "Error information: ";
-
-		foreach ( $errors as $error )
-		{
-			echo "SQLSTATE: ".$error['SQLSTATE']."";
-			echo "Code: ".$error['code']."";
-			echo "Message: ".$error['message']."";
-		}
-	}
     ?>
 
     <form method="post">
+        <input type="submit" name="disconnect" value="Disconnect" />
         <input type="submit" value="Menu" formaction="authenticated.php">
     </form>
 
