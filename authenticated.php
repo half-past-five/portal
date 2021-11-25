@@ -157,24 +157,24 @@ $connectionOptions = $_SESSION["connectionOptions"];
             <script>
                 function showHide(value) {
                     if (value == "") {
-                        document.getElementById("ft").style.display = "none";
+                        document.getElementById("Free Text").style.display = "none";
+                        document.getElementById("Multiple Choice").style.display = "none";
+                        document.getElementById("Arithmetic").style.display = "none";
+                    }
+                    if (value == "Free Text") {
+                        document.getElementById("Free Text").style.display = "block";
                         document.getElementById("mc").style.display = "none";
+                        document.getElementById("Arithmetic").style.display = "none";
+                    }
+                    if (value == "Multiple Choice") {
+                        document.getElementById("Free Text").style.display = "none";
+                        document.getElementById("Multiple Choice").style.display = "block";
                         document.getElementById("ar").style.display = "none";
                     }
-                    if (value == "ft") {
-                        document.getElementById("ft").style.display = "block";
-                        document.getElementById("mc").style.display = "none";
-                        document.getElementById("ar").style.display = "none";
-                    }
-                    if (value == "mc") {
-                        document.getElementById("ft").style.display = "none";
-                        document.getElementById("mc").style.display = "block";
-                        document.getElementById("ar").style.display = "none";
-                    }
-                    if (value == "ar") {
-                        document.getElementById("ft").style.display = "none";
-                        document.getElementById("mc").style.display = "none";
-                        document.getElementById("ar").style.display = "block";
+                    if (value == "Arithmetic") {
+                        document.getElementById("Free Text").style.display = "none";
+                        document.getElementById("Multiple Choice").style.display = "none";
+                        document.getElementById("Arithmetic").style.display = "block";
                     }
                 }
             </script>
@@ -194,26 +194,26 @@ $connectionOptions = $_SESSION["connectionOptions"];
                     <option value="delete">Delete</option>
                 </select><br>
                 Question ID <input type="text" name="question_id"><br>
-                Type <input type="text" name="type"><br>
                 Description <input type="text" name="description"><br>
                 Text <input type="text" name="text"><br>
-                <select class="default" id="security_question_1" name="security_question_1" onchange="showHide(this.value);">
+                Type <select class="default" id="type" name="type" onchange="showHide(this.value);">
                     <option value="" selected>Select question...</option>
-                    <option value="ft">Free text</option>
-                    <option value="mc">Multiple choice</option>
-                    <option value="ar">Arithmetic</option>
+                    <option value="Free Text">Free Text</option>
+                    <option value="Multiple Choice">Multiple Choice</option>
+                    <option value="Arithmetic">Arithmetic</option>
                 </select>
-                <div id="ft" class="divShow">
+                <div id="Free Text" class="divShow">
                     Restriction <input type="text" name="restriction"><br>
                 </div>
-                <div id="mc" class="divShow">
+                <div id="Multiple Choice" class="divShow">
                     Selectable Amount <input type="text" name="selectable_amount"><br>
                     Answers <input type="text" name="answers"><br>
                 </div>
-                <div id="ar" class="divShow">
+                <div id="Arithmetic" class="divShow">
                     Min <input type="text" name="min"><br>
                     Max <input type="text" name="max"><br>
                 </div>
+                <br><input type="submit" name="Query 5">
             </form>
         <?php else : ?>
             <hr>
@@ -235,6 +235,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
         <form action="query8.php" method="post">
             <h3>Query 8 (Most Popular Questionnaires)</h3>
             <input type="submit" name="Query 8">
+        </form>
+
+        <!--Query 9-->
+        <hr>
+        <form action="query9.php" method="post">
+            <h3>Query 9 (All Questionnaires)</h3>
+            <input type="submit" name="Query 9">
         </form>
 
         <!--Query 10-->
