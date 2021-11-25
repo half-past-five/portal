@@ -73,12 +73,16 @@ $connectionOptions = $_SESSION["connectionOptions"];
         die(FormatErrors(sqlsrv_errors()));
 
     PrintResultSet($getResults);
-    
+
     /* Free query  resources. */
     sqlsrv_free_stmt($getResults);
 
     /* Free connection resources. */
     sqlsrv_close($conn);
+
+    $time_end = microtime(true);
+    $execution_time = round((($time_end - $time_start) * 1000), 2);
+    echo ('<br>QueryTime: ' . $execution_time . ' ms');
 
     function PrintResultSet($resultSet)
     {
