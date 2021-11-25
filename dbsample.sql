@@ -110,15 +110,11 @@ CREATE TABLE [dbo].[T1-Questionnaire](
 	[Version] int not null,
 	[Parent ID] int,
 	[Creator ID] int,
+	[URL] nvarchar(2083),
+	[isCompleted] BIT not null
 	UNIQUE (Title, [Version]),
 	CONSTRAINT [PK-Questionnaire] PRIMARY KEY NONCLUSTERED ([Questionnaire ID])
 	)
-	
-
-CREATE TABLE dbo.[T1-Completed Questionnaire] (
-	[Questionnaire ID] int not null,
-	[URL] nvarchar(2083) not null,
-)
 	
 
 CREATE TABLE [dbo].[T1-Log](
@@ -134,9 +130,14 @@ CREATE TABLE [dbo].[T1-Privilages](
 
 
 ---------- INSERTS ----------
-
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hehehe', '1', NULL, NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hihi', '1', NULL, '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kasoul', '1979/8/18', 'F', 'Marketing', 'ckasou01', 'hoho', '2', '1', '4')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager', '1979/8/18', 'M', 'CEO', 'manag01', 'hoho', '3', '1', NULL)
+
+
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('2', 'Company 2', '2020/11/10')
 
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
 INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
@@ -147,7 +148,7 @@ INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
 INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
 
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('0001', 'Company 1', '2020/11/10')
+
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
@@ -175,9 +176,6 @@ ALTER TABLE [dbo].[T1-Questionnaire] ADD
 CONSTRAINT [FK-Questionnaire-ParentQuestionnaire] FOREIGN KEY ([Parent ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]), --ask pankris
 CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
 
-ALTER TABLE dbo.[T1-Completed Questionnaire] ADD
-CONSTRAINT [FK-Completed-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE ON DELETE CASCADE
-
 ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
@@ -200,8 +198,8 @@ END;
 GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
 SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
-FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Completed Questionnaire] CQ
-WHERE QQP.[Questionnaire ID] = CQ.[Questionnaire ID]
+FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
+WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
 GROUP BY QQP.[Questionnaire ID]
 
 ---------- SPOCS ----------
@@ -298,7 +296,43 @@ WHERE u.[User ID] = @admin_id
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
 
 
---QUERY 7--
+--QUERY 4--
+GO
+CREATE PROCEDURE dbo.Q4 @admin_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
+AS
+DECLARE @admin_company_id int
+SELECT @admin_company_id = u.[Company ID]
+FROM [T1-User] u
+WHERE u.[User ID] = @admin_id 
+IF  @action = 'insert'
+	BEGIN
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
+	END
+IF @action = 'update'
+	BEGIN
+	IF @name <>'' BEGIN UPDATE [T1-User] SET [Name] = @name WHERE Username = @username END
+	IF @bday <>'' BEGIN UPDATE [T1-User] SET [Birth Date] = @bday WHERE Username = @username END
+	IF @sex <>'' BEGIN UPDATE [T1-User] SET [Sex] = @sex WHERE Username = @username END
+	IF @position <>'' BEGIN UPDATE [T1-User] SET [Position] = @position WHERE Username = @username END
+	IF @password <>'' BEGIN UPDATE [T1-User] SET [Password] = @password WHERE Username = @username END
+	IF @manager_id <>'' BEGIN UPDATE [T1-User] SET [Manager ID] = @manager_id WHERE Username = @username END
+	END
+IF  @action = 'show'
+	BEGIN
+	SELECT 
+	CAST([Name] AS varchar(30)) as [Name],
+	CAST([Birth Date] AS varchar(30)) as [Birth Date],
+	CAST([Sex] AS varchar(30)) as [Sex],
+	CAST([Position] AS varchar(30)) as [Position],
+	CAST([Password] AS varchar(30)) as [Password],
+	CAST([Company ID]  AS varchar(30)) as [Company ID],
+	CAST([Manager ID] AS varchar(30)) as [Manager ID]
+	FROM [T1-User] U
+	WHERE @username = U.Username AND [Company ID] = @admin_company_id
+	END
+
+--QUERY 7-- ***NEEDS FIX***
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
 AS
@@ -313,7 +347,7 @@ GROUP BY Title, [Version]
 ORDER BY q_count
 
 
---QUERY 8--
+--QUERY 8-- ***NEEDS FIX***
 GO
 CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
 AS
@@ -333,7 +367,7 @@ apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AN
 apps_table.[Question ID] = q.[Question ID]
 
 
---QUERY 9--
+--QUERY 9-- ***NEEDS FIX***
 GO
 CREATE PROCEDURE dbo.Q9
 AS
@@ -507,7 +541,9 @@ exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M',
 exec Q2b @action='insert', @name = 'KAS', @bday='2000/6/26', @sex='F', 
 @position='Katotatos', @username='klarko02', @password='hihi', @manager_id=NULL, @company_id = '1'
 
-exec Q3 @admin_id='1', @name='Kostis', @bday='2000/6/26', @sex='M', 
-@position='Sales', @username='kost03', @password='hehehe', @manager_id=NULL
+exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M', 
+@position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
+exec Q4 @action='show', @admin_id='2', @name='Kostis', @bday='2000/6/26', @sex='M', 
+@position='Sales', @username='kost06', @password='hehehe', @manager_id='4'
 
