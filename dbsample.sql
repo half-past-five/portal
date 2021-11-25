@@ -327,23 +327,25 @@ IF  @action = 'show'
 	END
 
 --QUERY 5--
-
 GO
-CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @creator_id int, @type varchar(30),
+CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @type varchar(30),
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
 AS
-
 IF @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) OUTPUT inserted.[Question ID] INTO @generated_question_id VALUES(@caller_id, @type, @description, @text)
+	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) OUTPUT inserted.[Question ID] VALUES(@caller_id, @type, @description, @text)
+	DECLARE @new_question_id int = SCOPE_IDENTITY()
 	IF @type = 'Free Text'
 		BEGIN
+		INSERT INTO [T1-Free Text Question]([Question ID], [Restriction]) VALUES (@new_question_id, @free_text_restriction)
 		END
 	END
 --QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
+/*
 IF @action = 'update'
 IF @action = 'delete'
+*/
 
 
 --QUERY 7-- ***NEEDS FIX***
@@ -561,3 +563,8 @@ exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M',
 exec Q4 @action='show', @admin_id='2', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost06', @password='hehehe', @manager_id='4'
 
+/*
+exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @creator_id = '3', @type= 'Free Text',
+@description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
+@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+*/
