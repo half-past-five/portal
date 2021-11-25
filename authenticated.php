@@ -152,10 +152,76 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 Manager ID <input type="text" name="manager_id"><br>
                 <input type="submit" name="Query 2b">
             </form>
+
+            <!-- Query 5 -->
+            <script>
+                function showHide(value) {
+                    if (value == "") {
+                        document.getElementById("ft").style.display = "none";
+                        document.getElementById("mc").style.display = "none";
+                        document.getElementById("ar").style.display = "none";
+                    }
+                    if (value == "ft") {
+                        document.getElementById("ft").style.display = "block";
+                        document.getElementById("mc").style.display = "none";
+                        document.getElementById("ar").style.display = "none";
+                    }
+                    if (value == "mc") {
+                        document.getElementById("ft").style.display = "none";
+                        document.getElementById("mc").style.display = "block";
+                        document.getElementById("ar").style.display = "none";
+                    }
+                    if (value == "ar") {
+                        document.getElementById("ft").style.display = "none";
+                        document.getElementById("mc").style.display = "none";
+                        document.getElementById("ar").style.display = "block";
+                    }
+                }
+            </script>
+
+            <style>
+                .divShow {
+                    display: none;
+                }
+            </style>
+            <hr>
+            <form action="query5.php" method="post">
+                <h3>Query 5 (Insert/Update/View Question)</h3>
+                <h4>Parameter:</h4>
+                Action <select id="action" name="action">  
+                    <option value="insert">Insert</option>
+                    <option value="update">Update</option>
+                    <option value="delete">Delete</option>
+                </select><br>
+                Question ID <input type="text" name="question_id"><br>
+                Type <input type="text" name="type"><br>
+                Description <input type="text" name="description"><br>
+                Text <input type="text" name="text"><br>
+                <select class="default" id="security_question_1" name="security_question_1" onchange="showHide(this.value);">
+                    <option value="" selected>Select question...</option>
+                    <option value="ft">Free text</option>
+                    <option value="mc">Multiple choice</option>
+                    <option value="ar">Arithmetic</option>
+                </select>
+                <div id="ft" class="divShow">
+                    Restriction <input type="text" name="restriction"><br>
+                </div>
+                <div id="mc" class="divShow">
+                    Selectable Amount <input type="text" name="selectable_amount"><br>
+                    Answers <input type="text" name="answers"><br>
+                </div>
+                <div id="ar" class="divShow">
+                    Min <input type="text" name="min"><br>
+                    Max <input type="text" name="max"><br>
+                </div>
+            </form>
         <?php else : ?>
             <hr>
             <h2>Logged in as Simple User</h2>
         <?php endif; ?>
+
+
+
 
         <!--Query 7-->
         <hr>
@@ -177,7 +243,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
             <h3>Query 10 (Average Question per Questionnaire)</h3>
             <input type="submit" name="Query 10">
         </form>
-        
+
         <!--Query 11-->
         <hr>
         <form action="query11.php" method="post">
@@ -191,14 +257,14 @@ $connectionOptions = $_SESSION["connectionOptions"];
             <h3>Query 12 (Small Questionnaires)</h3>
             <input type="submit" name="Query 12">
         </form>
-        
+
         <!--Query 13-->
         <hr>
         <form action="query13.php" method="post">
             <h3>Query 13 (Questionnaires with exact same Questions)</h3>
             <input type="submit" name="Query 13">
         </form>
-        
+
         <!--Query 14-->
         <hr>
         <form action="query14.php" method="post">
@@ -207,7 +273,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
             <input type="submit" name="Query 14">
         </form>
 
-        
+
         <!--Query 15-->
         <hr>
         <form action="query15.php" method="post">

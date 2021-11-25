@@ -49,7 +49,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
     $conn = sqlsrv_connect($serverName, $connectionOptions);
 
     //Read Stored proc with param
-    $tsql = "{call Q11(?)}";
+    $tsql = "{call Q16(?)}";
     $UserID = $_SESSION["User ID"];
     echo "Executing query: " . $tsql . ") with parameter " . $UserID . "<br/>";
 
