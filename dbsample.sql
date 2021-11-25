@@ -148,7 +148,41 @@ INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
 INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
 
+--DATA FOR QUESTIONNAIRE
 
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com',1)																			   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com',1)																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com',1)																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-2',3,2,1,NULL,0)																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com',1)																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-2',3,1,1,NULL,0)
+
+
+--DATA FOR QUESTION
+
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
@@ -199,7 +233,7 @@ GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
 SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
 FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
-WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
+WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.isCompleted = 1
 GROUP BY QQP.[Questionnaire ID]
 
 ---------- SPOCS ----------
@@ -367,15 +401,14 @@ apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AN
 apps_table.[Question ID] = q.[Question ID]
 
 
---QUERY 9-- ***NEEDS FIX***
+--QUERY 9-- WORKS
 GO
 CREATE PROCEDURE dbo.Q9
 AS
 SELECT Title, [Version], COUNT([Question ID]) as q_count
-FROM [T1-Question Questionnaire Pairs] qqp, [T1-Completed Questionnaire] cq, [T1-Questionnaire] q
+FROM [T1-Question Questionnaire Pairs] qqp,[T1-Questionnaire] q
 WHERE
-cq.[Questionnaire ID] = q.[Questionnaire ID] AND
-qqp.[Questionnaire ID] = cq.[Questionnaire ID]
+q.isCompleted = 1 AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 GROUP BY Title, [Version]
 
 
@@ -427,7 +460,7 @@ FROM [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
 WHERE QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND QpQ.NoOfQuestions > @maxFromAverage
 
 
---Query 12
+--Query 12 WORKS
 GO
 CREATE PROCEDURE dbo.Q12
 AS
@@ -442,17 +475,14 @@ FROM [Questions per Questionnaire] QpQ
 WHERE QpQ.noOfQuestions = @minNoOfQuestions 
 
 
+
+
 --Query 13
 GO
 CREATE PROCEDURE dbo.Q13
 AS
-DECLARE @INDEXVAR int
-DECLARE @TOTALCOUNT int 
-SET @INDEXVAR = 0  
-SELECT @TOTALCOUNT= COUNT(*) FROM [T1-Completed Questionnaire]
-WHILE @INDEXVAR < @TOTALCOUNT  
---BEGIN  
-	SELECT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
+
+	SELECT DISTINCT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
 			Qnnaire2.[Questionnaire ID] AS '2nd Qnnaire ID',Qnnaire2.Title AS '2nd Qnnaire Title',Qnnaire2.Version AS '2nd Qnnaire Version',QpQ2.noOfQuestions AS '2nd Qnnaire noOfQuestions'
 	FROM [T1-Questionnaire] Qnnaire1,[T1-Questionnaire] Qnnaire2,[Questions per Questionnaire] QpQ1,[Questions per Questionnaire] QpQ2
 	WHERE NOT EXISTS(
@@ -470,10 +500,9 @@ WHILE @INDEXVAR < @TOTALCOUNT
 		AND QpQ1.[Questionnaire ID] = Qnnaire1.[Questionnaire ID] 
 		AND QpQ2.[Questionnaire ID] = Qnnaire2.[Questionnaire ID] 
 		AND QpQ1.noOfQuestions = QpQ2.noOfQuestions
+		AND QpQ1.[Questionnaire ID] <> QpQ2.[Questionnaire ID]
 
 
-    --SET @INDEXVAR = @INDEXVAR  + 1
---END
 
 --QUERY 14--
 GO
