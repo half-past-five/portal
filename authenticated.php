@@ -21,6 +21,12 @@ $connectionOptions = $_SESSION["connectionOptions"];
             background: LightGray
         }
     </style>
+
+    <style>
+        .divShow {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -74,42 +80,87 @@ $connectionOptions = $_SESSION["connectionOptions"];
         </form>
 
         <!--Query 2a-->
+        <script>
+            function showHideQuery2a(value) {
+                if (value == "") {
+                    document.getElementById("q2a_insert").style.display = "none";
+                    document.getElementById("q2a_show").style.display = "none";
+                }
+                if (value == "insert" || value == "update") {
+                    document.getElementById("q2a_insert").style.display = "block";
+                    document.getElementById("q2a_show").style.display = "block";
+                }
+                if (value == "show") {
+                    document.getElementById("q2a_insert").style.display = "none";
+                    document.getElementById("q2a_show").style.display = "block";
+                }
+            }
+        </script>
+
+
         <hr>
         <form action="query2a.php" method="post">
             <h3>Query 2a (Insert/Update/View Company)</h3>
             <h4>Parameter:</h4>
             <label for="action">Action</label>
-            <select id="action" name="action">>
+            <select id="action" name="action" class="default" onchange="showHideQuery2a(this.value);">
+                <option value="" selected>Select function...</option>
                 <option value="insert">Insert</option>
                 <option value="update">Update</option>
                 <option value="show">Show</option>
             </select><br>
-            Registration Number <input type="text" name="company_id"><br>
-            Brand Name<input type="text" name="brand_name"><br>
-            Induction Date<input type="date" name="new_date"><br>
+            <div id="q2a_show" class="divShow">
+                Registration Number <input type="text" name="company_id"><br>
+            </div>
+            <div id="q2a_insert" class="divShow">
+                Brand Name<input type="text" name="brand_name"><br>
+                Induction Date<input type="date" name="new_date"><br>
+            </div>
 
             <input type="submit" name="Query 2a">
         </form>
 
         <!--Query 2b-->
+        <script>
+            function showHideQuery2b(value) {
+                if (value == "") {
+                    document.getElementById("q2b_insert").style.display = "none";
+                    document.getElementById("q2b_show").style.display = "none";
+                }
+                if (value == "insert" || value == "update") {
+                    document.getElementById("q2b_insert").style.display = "block";
+                    document.getElementById("q2b_show").style.display = "block";
+                }
+                if (value == "show") {
+                    document.getElementById("q2b_insert").style.display = "none";
+                    document.getElementById("q2b_show").style.display = "block";
+                }
+            }
+        </script>
+
         <hr>
         <form action="query2b.php" method="post">
             <h3>Query 2b (Insert/Update/View Admin)</h3>
             <h4>Parameter:</h4>
             <label for="action">Action</label>
-            <select id="action" name="action">>
+            <select id="action" name="action" class="default" onchange="showHideQuery2b(this.value);">
+                <option value="" selected>Select function...</option>
                 <option value="insert">Insert</option>
                 <option value="update">Update</option>
                 <option value="show">Show</option>
             </select><br>
-            Name <input type="text" name="name"><br>
-            Birth Date <input type="date" name="bday"><br>
-            Sex <input type="text" name="sex"><br>
-            Position <input type="text" name="position"><br>
-            Username <input type="text" name="username"><br>
-            Password <input type="password" name="password"><br>
-            Manager ID <input type="text" name="manager_id"><br>
-            Company ID <input type="text" name="company_id"><br>
+            <div id="q2b_show" class="divShow">
+                Username <input type="text" name="username"><br>
+            </div>
+            <div id="q2b_insert" class="divShow">
+                Name <input type="text" name="name"><br>
+                Birth Date <input type="date" name="bday"><br>
+                Sex <input type="text" name="sex"><br>
+                Position <input type="text" name="position"><br>
+                Password <input type="password" name="password"><br>
+                Manager ID <input type="text" name="manager_id"><br>
+                Company ID <input type="text" name="company_id"><br>
+            </div>
             <input type="submit" name="Query 2b">
         </form>
 
@@ -133,29 +184,74 @@ $connectionOptions = $_SESSION["connectionOptions"];
             </form>
 
             <!--Query 4-->
+            <script>
+                function showHideQuery4(value) {
+                    if (value == "") {
+                        document.getElementById("q4_insert").style.display = "none";
+                        document.getElementById("q4_show").style.display = "none";
+                    }
+                    if (value == "insert" || value == "update") {
+                        document.getElementById("q4_insert").style.display = "block";
+                        document.getElementById("q4_show").style.display = "block";
+                    }
+                    if (value == "show") {
+                        document.getElementById("q4_insert").style.display = "none";
+                        document.getElementById("q4_show").style.display = "block";
+                    }
+                }
+            </script>
+
             <hr>
             <form action="query4.php" method="post">
                 <h3>Query 4 (Insert/Update/View Company Admin)</h3>
-                <h4>Parameter:</h4>
+                <h4>Parameters:</h4>
                 <label for="action">Action</label>
-                <select id="action" name="action">>
+                <select id="action" name="action" class="default" onchange="showHideQuery4(this.value);">
+                    <option value="" selected>Select function...</option>
                     <option value="insert">Insert</option>
                     <option value="update">Update</option>
                     <option value="show">Show</option>
                 </select><br>
-                Name <input type="text" name="name"><br>
-                Birth Date <input type="date" name="bday"><br>
-                Sex <input type="text" name="sex"><br>
-                Position <input type="text" name="position"><br>
-                Username <input type="text" name="username"><br>
-                Password <input type="password" name="password"><br>
-                Manager ID <input type="text" name="manager_id"><br>
+                <div id="q4_show" class="divShow">
+                    Username <input type="text" name="username"><br>
+                </div>
+                <div id="q4_insert" class="divShow">
+
+                    Name <input type="text" name="name"><br>
+                    Birth Date <input type="date" name="bday"><br>
+                    Sex <input type="text" name="sex"><br>
+                    Position <input type="text" name="position"><br>
+
+                    Password <input type="password" name="password"><br>
+                    Manager ID <input type="text" name="manager_id"><br>
+                </div>
                 <input type="submit" name="Query 2b">
             </form>
 
             <!-- Query 5 -->
             <script>
-                function showHide(value) {
+                function showHideQuery5(value) {
+                    if (value == "") {
+                        document.getElementById("q5_insert").style.display = "none";
+                        document.getElementById("q5_delete").style.display = "none";
+                    }
+                    if (value == "insert") {
+                        document.getElementById("q5_insert").style.display = "block";
+                        document.getElementById("q5_delete").style.display = "none";
+                    }
+                    if (value == "update") {
+                        document.getElementById("q5_insert").style.display = "block";
+                        document.getElementById("q5_delete").style.display = "block";
+                    }
+                    if (value == "delete") {
+                        document.getElementById("q5_insert").style.display = "none";
+                        document.getElementById("q5_delete").style.display = "block";
+                    }
+                }
+            </script>
+
+            <script>
+                function showHideQuery5b(value) {
                     if (value == "") {
                         document.getElementById("Free Text").style.display = "none";
                         document.getElementById("Multiple Choice").style.display = "none";
@@ -163,13 +259,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
                     }
                     if (value == "Free Text") {
                         document.getElementById("Free Text").style.display = "block";
-                        document.getElementById("mc").style.display = "none";
+                        document.getElementById("Multiple Choice").style.display = "none";
                         document.getElementById("Arithmetic").style.display = "none";
                     }
                     if (value == "Multiple Choice") {
                         document.getElementById("Free Text").style.display = "none";
                         document.getElementById("Multiple Choice").style.display = "block";
-                        document.getElementById("ar").style.display = "none";
+                        document.getElementById("Arithmetic").style.display = "none";
                     }
                     if (value == "Arithmetic") {
                         document.getElementById("Free Text").style.display = "none";
@@ -179,39 +275,39 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 }
             </script>
 
-            <style>
-                .divShow {
-                    display: none;
-                }
-            </style>
             <hr>
             <form action="query5.php" method="post">
                 <h3>Query 5 (Insert/Update/View Question)</h3>
                 <h4>Parameter:</h4>
-                Action <select id="action" name="action">  
+                Action <select id="action" name="action" class="default" onchange="showHideQuery5(this.value);">
+                    <option value="" selected>Select function...</option>
                     <option value="insert">Insert</option>
                     <option value="update">Update</option>
                     <option value="delete">Delete</option>
                 </select><br>
-                Question ID <input type="text" name="question_id"><br>
-                Description <input type="text" name="description"><br>
-                Text <input type="text" name="text"><br>
-                Type <select class="default" id="type" name="type" onchange="showHide(this.value);">
-                    <option value="" selected>Select question...</option>
-                    <option value="Free Text">Free Text</option>
-                    <option value="Multiple Choice">Multiple Choice</option>
-                    <option value="Arithmetic">Arithmetic</option>
-                </select>
-                <div id="Free Text" class="divShow">
-                    Restriction <input type="text" name="restriction"><br>
+                <div id="q5_delete" class="divShow">
+                    Question ID <input type="text" name="question_id"><br>
                 </div>
-                <div id="Multiple Choice" class="divShow">
-                    Selectable Amount <input type="text" name="selectable_amount"><br>
-                    Answers <input type="text" name="answers"><br>
-                </div>
-                <div id="Arithmetic" class="divShow">
-                    Min <input type="text" name="min"><br>
-                    Max <input type="text" name="max"><br>
+                <div id="q5_insert" class="divShow">
+                    Description <input type="text" name="description"><br>
+                    Text <input type="text" name="text"><br>
+                    Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
+                        <option value="" selected>Select question...</option>
+                        <option value="Free Text">Free Text</option>
+                        <option value="Multiple Choice">Multiple Choice</option>
+                        <option value="Arithmetic">Arithmetic</option>
+                    </select>
+                    <div id="Free Text" class="divShow">
+                        Restriction <input type="text" name="restriction"><br>
+                    </div>
+                    <div id="Multiple Choice" class="divShow">
+                        Selectable Amount <input type="text" name="selectable_amount"><br>
+                        Answers <input type="text" name="answers"><br>
+                    </div>
+                    <div id="Arithmetic" class="divShow">
+                        Min <input type="text" name="min"><br>
+                        Max <input type="text" name="max"><br>
+                    </div>
                 </div>
                 <br><input type="submit" name="Query 5">
             </form>
