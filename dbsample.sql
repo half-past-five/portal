@@ -415,9 +415,31 @@ AS
 DECLARE @INDEXVAR int
 DECLARE @TOTALCOUNT int 
 SET @INDEXVAR = 0  
-SELECT @TOTALCOUNT= COUNT(*) FROM [T1-Question Questionnaire Pairs] 
---WHILE @INDEXVAR < @TOTALCOUNT  
+SELECT @TOTALCOUNT= COUNT(*) FROM [T1-Completed Questionnaire]
+WHILE @INDEXVAR < @TOTALCOUNT  
 --BEGIN  
+	SELECT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
+			Qnnaire2.[Questionnaire ID] AS '2nd Qnnaire ID',Qnnaire2.Title AS '2nd Qnnaire Title',Qnnaire2.Version AS '2nd Qnnaire Version',QpQ2.noOfQuestions AS '2nd Qnnaire noOfQuestions'
+	FROM [T1-Questionnaire] Qnnaire1,[T1-Questionnaire] Qnnaire2,[Questions per Questionnaire] QpQ1,[Questions per Questionnaire] QpQ2
+	WHERE NOT EXISTS(
+		--All questions of questionaire
+		(SELECT QQP1.[Question ID]
+		FROM [T1-Question Questionnaire Pairs] QQP1
+		WHERE QQP1.[Questionnaire ID] = Qnnaire1.[Questionnaire ID]
+		)
+		EXCEPT
+		--Questions of current questionaire
+		(SELECT QQP2.[Question ID]
+		FROM [T1-Question Questionnaire Pairs] QQP2
+		WHERE QQP2.[Questionnaire ID] = Qnnaire2.[Questionnaire ID]
+		) ) 
+		AND QpQ1.[Questionnaire ID] = Qnnaire1.[Questionnaire ID] 
+		AND QpQ2.[Questionnaire ID] = Qnnaire2.[Questionnaire ID] 
+		AND QpQ1.noOfQuestions = QpQ2.noOfQuestions
+
+
+    --SET @INDEXVAR = @INDEXVAR  + 1
+--END
 
 --QUERY 14--
 GO
