@@ -118,6 +118,8 @@ $connectionOptions = $_SESSION["connectionOptions"];
         <hr><h2>Logged in as User</h2>
     <?php endif; ?>
 
-    <hr><form method="post" action="auth.php">
+  
+
+    <hr><form method="post" action="logout.php">
         <input type="submit" name="disconnect" value="Disconnect" />
     </form>

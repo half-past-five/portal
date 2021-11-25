@@ -100,18 +100,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 		</div>
 	</form>
 
-
-	<?php
-	if (isset($_POST['disconnect'])) {
-		echo "Clossing session and redirecting to start page</br>";
-		echo "Thank you for choosing EPL342 Team 1!";
-		session_unset();
-		session_destroy();
-		die('<meta http-equiv="refresh" content="5; url=index.php" />');
-	}
-	?>
-
-	<form method="post">
+	<form method="post" action="logout.php">
 		<input type="submit" name="disconnect" value="Disconnect" />
 	</form>
 
