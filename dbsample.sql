@@ -34,6 +34,9 @@ GO
 
 DROP VIEW IF EXISTS dbo.[Questions per Questionnaire]
 
+IF OBJECT_ID (N'dbo.canUserSeeQuestion', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestion;
+IF OBJECT_ID (N'dbo.canUserSeeQuestionnaire', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestionnaire; 
+
 
 ----------CREATE TABLES----------
 
@@ -88,9 +91,20 @@ CREATE TABLE dbo.[T1-Free Text Question] (
 
 CREATE TABLE dbo.[T1-Multiple Choice Question] (
 	[Question ID] int not null,
-	[Selectable Amount] int not null,
-	[Answers] varchar(1000)
+	[Selectable Amount] int not null
 )
+
+CREATE TABLE dbo.[T1-Multiple Choice Answers] (
+	[Question ID] int,
+	[Answer ID] int
+	)
+
+CREATE TABLE dbo.[T1-Answers](
+	[Answer ID] int IDENTITY(1,1) not null,
+	[Answer] varchar(50) not null,
+	CONSTRAINT [PK-Answer] PRIMARY KEY NONCLUSTERED ([Answer ID]),
+	)
+	
 	
 
 CREATE TABLE dbo.[T1-Arithmetic Question] (
@@ -99,7 +113,8 @@ CREATE TABLE dbo.[T1-Arithmetic Question] (
 	[MAX value] int not null, --min & max value added for range	
 	CHECK ([MAX value] > [MIN value])
 )
-	
+
+
 
 CREATE TABLE [dbo].[T1-Questionnaire](
 	[Questionnaire ID] int IDENTITY(1,1) not null,
@@ -137,13 +152,13 @@ INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES (
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'The first question', '2??')
 --DATA FOR QUESTIONNAIRE
 
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,3,'https://www.qnnaire1.com')																			   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,3,'https://www.qnnaire2.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,3,'https://www.qnnaire2-1.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,4,NULL)																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,4,NULL)
 
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com')																			   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com')																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com')																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,1,NULL)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com')																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,1,NULL)
 
 --DATA FOR QQP
 
@@ -199,6 +214,7 @@ CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Que
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
 
 ---------- VIEWS ----------
+
 --Questions per Questionnaire VIEW creation
 GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
@@ -206,6 +222,50 @@ SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
 FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
 WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
 GROUP BY QQP.[Questionnaire ID]
+
+---------- UDFs ----------
+GO  
+CREATE FUNCTION dbo.canUserSeeQuestion(@caller_id int, @question_id int)  
+RETURNS bit   
+AS    
+BEGIN  
+IF @question_id NOT IN (
+SELECT [Question ID]
+FROM [T1-Question]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+) RETURN 0
+RETURN 1
+END;
+
+
+GO  
+CREATE FUNCTION dbo.canUserSeeQuestionnaire(@caller_id int, @questionnaire_id int)  
+RETURNS bit   
+AS    
+BEGIN  
+IF @questionnaire_id NOT IN (
+SELECT [Questionnaire ID]
+FROM [T1-Questionnaire]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+) RETURN 0
+RETURN 1
+END;
+
+--select dbo.canUserSeeQuestion('3', '4')
+--select dbo.canUserSeeQuestionnaire('1', '4')
+
 
 ---------- SPOCS ----------
 
@@ -233,6 +293,39 @@ WHERE [Creator ID] in (
 	)
 
 
+--SHOW QUESTION DETAILS--
+GO
+CREATE PROCEDURE dbo.ShowQuestionDetails @caller_id int, @question_id int
+AS
+IF @question_id NOT IN (
+SELECT [Question ID]
+FROM [T1-Question]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+) RETURN --user requested question he cant see
+
+DECLARE @q_type varchar(30)
+SET @q_type = (SELECT [Type] FROM [T1-Question] WHERE [Question ID] = @question_id)
+
+IF @q_type = 'Free Text'
+	BEGIN
+	SELECT * FROM [T1-Free Text Question] WHERE [Question ID] = @question_id
+	END
+IF @q_type = 'Arithmetic'
+	BEGIN
+	SELECT * FROM [T1-Arithmetic Question] WHERE [Question ID] = @question_id
+	END
+IF @q_type = 'Multiple Choice'
+	BEGIN
+	SELECT * FROM [T1-Multiple Choice Question] WHERE [Question ID] = @question_id
+	END				
+
+
 --QUERY SHOW ALL QUESTIONNAIRES--
 GO
 CREATE PROCEDURE dbo.ShowQuestionnaires @caller_id int
@@ -246,6 +339,7 @@ WHERE [Creator ID] in (
 		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
 		)
 	)
+
 
 --QUERY 1--
 GO
@@ -370,7 +464,7 @@ IF  @action = 'show'
 GO
 CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @type varchar(30),
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
-@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+@arithm_min int, @arithm_max int
 AS
 IF @action = 'insert'
 	BEGIN
@@ -382,7 +476,7 @@ IF @action = 'insert'
 		END
 	IF @type = 'Multiple Choice'
 		BEGIN
-		INSERT INTO [T1-Multiple Choice Question] ([Question ID], [Selectable Amount], [Answers]) VALUES (@new_question_id, @mult_choice_selectable_amount, @mult_choice_answers)
+		INSERT INTO [T1-Multiple Choice Question] ([Question ID], [Selectable Amount]) VALUES (@new_question_id, @mult_choice_selectable_amount)
 		END
 	IF @type = 'Arithmetic'
 		BEGIN
@@ -391,9 +485,9 @@ IF @action = 'insert'
 	END
 IF @action = 'update'
 	BEGIN
-	IF @new_question_id NOT IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs])
+	IF @question_id NOT IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs])
 		BEGIN
-		print('')
+		print('do update')
 		END
 	END   
 --QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
@@ -402,6 +496,18 @@ IF @action = 'update'
 IF @action = 'delete'
 */
 
+
+--QUERY 6a (CREATE NEW)--
+GO
+CREATE PROCEDURE dbo.Q6a @caller_id int, @title varchar(30)
+AS
+INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL) 
+
+
+--QUERY 6b (ADD QUESTION TO QUESTIONNAIRE)--
+GO
+CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int, @question_id int
+AS
 
 --QUERY 7-- WORKS
 GO
