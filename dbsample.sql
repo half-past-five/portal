@@ -56,7 +56,8 @@ CREATE TABLE dbo.[T1-User] (
 	[Company ID] int,
 	[Manager ID] int,
 	UNIQUE(Username),
-	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID])
+	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
+	CHECK ([Privilages] in ('1', '2', '3'))
 )
 
 
@@ -144,6 +145,9 @@ INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES (
 INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
 INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
+
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('3', 'Free Text', 'The first question', '1?')
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'The first question', '2??')
 --DATA FOR QUESTIONNAIRE
 
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com',1)																			   
@@ -209,18 +213,6 @@ ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
 
-
----------- TRIGGERS ----------
-GO
-CREATE TRIGGER dbo.PrivilagesReject ON [T1-Privilages]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-RAISERROR ('Cannot alter Privilages TABLE', 16, 1);
-ROLLBACK TRANSACTION;
-RETURN
-END;
-
 ---------- VIEWS ----------
 --Questions per Questionnaire VIEW creation
 GO
@@ -240,6 +232,46 @@ SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
+/*
+CREATE TABLE dbo.[T1-Question] (
+	[Question ID] int IDENTITY(1,1) not null,
+	[Creator ID] int,
+	[Type] varchar(30),
+	[Description] varchar(50) not null,
+	[Text] varchar(100) not null,
+	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
+	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
+)
+*/
+
+--QUERY SHOW ALL QUESTIONS--
+GO
+CREATE PROCEDURE dbo.ShowQuestions @caller_id int
+AS
+SELECT *
+FROM [T1-Question]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+
+
+--QUERY SHOW ALL QUESTIONNAIRES--
+GO
+CREATE PROCEDURE dbo.ShowQuestionnaires @caller_id int
+AS
+SELECT *
+FROM [T1-Questionnaire]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
 
 --QUERY 1--
 GO
@@ -383,6 +415,13 @@ IF @action = 'insert'
 		INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES (@new_question_id, @arithm_min, @arithm_max)
  		END
 	END
+IF @action = 'update'
+	BEGIN
+	IF @new_question_id NOT IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs])
+		BEGIN
+		print('')
+		END
+	END   
 --QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
 /*
 IF @action = 'update'
