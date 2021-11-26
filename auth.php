@@ -8,101 +8,98 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <html>
 
 <head>
-	<style>
-		table th {
-			background: grey
-		}
-
-		table tr:nth-child(odd) {
-			background: LightYellow
-		}
-
-		table tr:nth-child(even) {
-			background: LightGray
-		}
-	</style>
+	<title>Login</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-	<table cellSpacing=0 cellPadding=5 width="100%" border=0>
-		<tr>
-			<td vAlign=top width=170><img height=91 alt=UCY src="images/ucy.jpg" width=94>
-				<h5>
-					<a href="http://www.ucy.ac.cy/">University of Cyprus</a><BR />
-					<a href="http://www.cs.ucy.ac.cy/">Dept. of Computer Science</a>
-				</h5>
-			</td>
-			<td vAlign=center align=middle>
-				<h2>Welcome to the EPL342 project test page</h2>
-			</td>
-		</tr>
-	</table>
-	<hr>
-
-
-	<?php
-	$time_start = microtime(true);
-	echo "Connecting to SQL server (" . $serverName . ")<br/>";
-	echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
-	//echo "Pass: " . $connectionOptions[PWD] . "<br/>";
-
-	//Establishes the connection
-	$conn = sqlsrv_connect($serverName, $connectionOptions);
-
-	if (isset($_POST['connect'])) {
-		echo "<br/>Trying to authenticate to T1-Users!<br/>";
-		$tsql = "{call Authenticate(?,?)}";
-		if (empty($_POST["username"]))
-			echo "Username is empty!<br/>";
-		if (empty($_POST["password"]))
-			echo "Password is empty!<br/>";
-		echo "Executing query: " . $tsql . ") with Username: " . $_POST["username"] . "<br/>";
-		//echo "Pass: " . $_POST["password"] . "<br/>";
-
-		// Getting parameter from the http call and setting it for the SQL call
-		$params = array(
-			array($_POST["username"], SQLSRV_PARAM_IN),
-			array($_POST["password"], SQLSRV_PARAM_IN)
-		);
-
-		$getResults = sqlsrv_query($conn, $tsql, $params);
-		if ($getResults == FALSE)
-			die(FormatErrors(sqlsrv_errors()));
-
-		$result = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
-		/* Arrays in PHP work like objects */
-		if (isset($result["User ID"])) {
-			$UserID = $result["User ID"];
-			$Privilages = $result["Privilages"];
-			/* Add authorised User credentials in SESSION */
-			$_SESSION["User ID"] = $UserID;
-			$_SESSION["Privilages"] = $Privilages;
-			echo ("<hr>Authentication Successful!</br>User ID: " . $UserID . "</br>Privilages: " . $Privilages);
-		} else {
-			echo ("<hr>Authentication Unsuccessful!");
-		}
-
-		/* Free query  resources. */
-		sqlsrv_free_stmt($getResults);
-
-		/* Free connection resources. */
-		sqlsrv_close($conn);
-
-		$time_end = microtime(true);
-		$execution_time = round((($time_end - $time_start) * 1000), 2);
-		echo ('<br>QueryTime: ' . $execution_time . ' ms');
+<style>
+	.myDiv {
+		background-color: lightgray;
+		text-align: center;
 	}
-	?>
-	<hr>
-	<form action="authenticated.php" method="post" class="signin-form">
-		<div class="form-group">
-			<button type="submit" name="authenticate" class="form-control btn btn-primary submit px-3">Proceed</button>
-		</div>
-	</form>
+</style>
 
-	<form method="post" action="logout.php">
-		<input type="submit" name="disconnect" value="Disconnect" />
-	</form>
+<body class="img js-fullheight" style="background-image: url(https://www.yerun.eu/wp-content/uploads/2021/07/UCY-SOCIAL-ACTIVITIES-1600x1071.jpg);">
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<div class="login-wrap p-0">
+						<!-- <div class="myDiv"> -->
+							<?php
+							$time_start = microtime(true);
+							echo "Connecting to SQL server (" . $serverName . ")<br/>";
+							echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
+							//echo "Pass: " . $connectionOptions[PWD] . "<br/>";
+
+							//Establishes the connection
+							$conn = sqlsrv_connect($serverName, $connectionOptions);
+
+							if (isset($_POST['connect'])) {
+								echo "<br/>Trying to authenticate to T1-Users!<br/>";
+								$tsql = "{call Authenticate(?,?)}";
+								if (empty($_POST["username"]))
+									echo "Username is empty!<br/>";
+								if (empty($_POST["password"]))
+									echo "Password is empty!<br/>";
+								echo "Executing query: " . $tsql . ") with Username: " . $_POST["username"] . "<br/>";
+								//echo "Pass: " . $_POST["password"] . "<br/>";
+
+								// Getting parameter from the http call and setting it for the SQL call
+								$params = array(
+									array($_POST["username"], SQLSRV_PARAM_IN),
+									array($_POST["password"], SQLSRV_PARAM_IN)
+								);
+
+								$getResults = sqlsrv_query($conn, $tsql, $params);
+								if ($getResults == FALSE)
+									die(FormatErrors(sqlsrv_errors()));
+
+								$result = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
+								/* Arrays in PHP work like objects */
+								if (isset($result["User ID"])) {
+									$UserID = $result["User ID"];
+									$Privilages = $result["Privilages"];
+									/* Add authorised User credentials in SESSION */
+									$_SESSION["User ID"] = $UserID;
+									$_SESSION["Privilages"] = $Privilages;
+									echo ("<hr>Authentication Successful!</br>User ID: " . $UserID . "</br>Privilages: " . $Privilages);
+								} else {
+									echo ("<hr>Authentication Unsuccessful!");
+								}
+
+								/* Free query  resources. */
+								sqlsrv_free_stmt($getResults);
+
+								/* Free connection resources. */
+								sqlsrv_close($conn);
+
+								$time_end = microtime(true);
+								$execution_time = round((($time_end - $time_start) * 1000), 2);
+								echo ('<br>QueryTime: ' . $execution_time . ' ms');
+							}
+							?></b>
+							<hr>
+							<form action="authenticated.php" method="post" class="signin-form">
+								<div class="form-group">
+									<button type="submit" name="authenticate" class="form-control btn btn-primary submit px-3">Proceed</button>
+								</div>
+							</form>
+
+							<form method="post" action="logout.php">
+								<button type="submit" name="disconnect" class="form-control btn btn-primary submit px-3">Disconnect</button>
+							</form>
+						<!-- </div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 
 </body>
 
