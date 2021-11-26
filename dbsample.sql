@@ -390,15 +390,21 @@ IF @action = 'delete'
 */
 
 
---QUERY 7-- ***NEEDS FIX***
+--QUERY 7-- WORKS
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
 AS
+--DECLARE @user_id varchar(30) --FOR TESTING
+--set @user_id = '1'
+
 SELECT Title, [Version], COUNT([Question ID]) as q_count
-FROM [T1-Completed Questionnaire] cq,  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
+FROM  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
 WHERE 
-cq.[Questionnaire ID] = q.[Questionnaire ID] AND
-qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+--cq.[Questionnaire ID] = q.[Questionnaire ID] AND
+--qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+
+q.URL <> 'NULL' AND --To null thelei to me quotes
+qqp.[Questionnaire ID] = q.[Questionnaire ID] AND
 q.[Creator ID] = u.[User ID] AND
 u.[User ID] = @user_id
 GROUP BY Title, [Version]
