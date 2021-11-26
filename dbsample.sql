@@ -128,10 +128,6 @@ INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Pas
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('2', 'Company 2', '2020/11/10')
 
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('3', 'AX')
-
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'The first question', 'Do you like db?')
 INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
@@ -180,9 +176,7 @@ INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
 CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]),
-CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]), --trigger for this
-CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE,
-CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
+CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE dbo.[T1-Question] ADD
 CONSTRAINT [FK-Question-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
@@ -223,17 +217,6 @@ SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
-/*
-CREATE TABLE dbo.[T1-Question] (
-	[Question ID] int IDENTITY(1,1) not null,
-	[Creator ID] int,
-	[Type] varchar(30),
-	[Description] varchar(50) not null,
-	[Text] varchar(100) not null,
-	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
-	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
-)
-*/
 
 --QUERY SHOW ALL QUESTIONS--
 GO
