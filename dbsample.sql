@@ -368,12 +368,20 @@ CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @
 AS
 IF @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) OUTPUT inserted.[Question ID] VALUES(@caller_id, @type, @description, @text)
+	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) VALUES(@caller_id, @type, @description, @text)
 	DECLARE @new_question_id int = SCOPE_IDENTITY()
 	IF @type = 'Free Text'
 		BEGIN
-		INSERT INTO [T1-Free Text Question]([Question ID], [Restriction]) VALUES (@new_question_id, @free_text_restriction)
+		INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES (@new_question_id, @free_text_restriction)
 		END
+	IF @type = 'Multiple Choice'
+		BEGIN
+		INSERT INTO [T1-Multiple Choice Question] ([Question ID], [Selectable Amount], [Answers]) VALUES (@new_question_id, @mult_choice_selectable_amount, @mult_choice_answers)
+		END
+	IF @type = 'Arithmetic'
+		BEGIN
+		INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES (@new_question_id, @arithm_min, @arithm_max)
+ 		END
 	END
 --QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
 /*
@@ -589,8 +597,14 @@ exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M',
 exec Q4 @action='show', @admin_id='2', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost06', @password='hehehe', @manager_id='4'
 
+
+exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multiple Choice',
+@description='test question', @text='do u liek db?', @free_text_restriction='<=100', @mult_choice_selectable_amount='3',
+@mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
+
 /*
-exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @creator_id = '3', @type= 'Free Text',
+
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+
 */
