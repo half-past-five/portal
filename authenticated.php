@@ -8,7 +8,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <html>
 
 <head>
-    <title>Login</title>
+    <title>Authenticated User</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -54,18 +54,21 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <div class="form-group">
                                     <input type="text" name="name" placeholder="Admin Name" class="form-control">
                                     Birth Date <input type="date" name="bday" class="form-control">
-                                    Sex<select id="sex" name="sex" class="form-control">
+                                </div>
+                                <div class="form-group">Sex
+                                    <select id="sex" name="sex">
                                         <option value="M">M</option>
                                         <option value="F">F</option>
                                     </select>
-                                    <input type="text" name="position" placeholder="Position" class="form-control">
-                                    <input type="text" name="username" placeholder="Username" class="form-control">
-                                    <input type="password" name="password" placeholder="Password" class="form-control">
-                                    <input type="text" name="manager_id" placeholder="Manager ID" class="form-control">
-                                    <input type="text" name="company_reg_num" placeholder="Company Registration Number" class="form-control">
-                                    <input type="text" name="company_brand_name" placeholder="Company Brand Name" class="form-control">
-                                    <input type="submit" name="Query 1" class="form-control btn btn-primary submit px-3" value="Query 1">
                                 </div>
+
+                                <div class="form-group"><input type="text" name="position" placeholder="Position" class="form-control"></div>
+                                <div class="form-group"><input type="text" name="username" placeholder="Username" class="form-control"></div>
+                                <div class="form-group"><input type="password" name="password" placeholder="Password" class="form-control"></div>
+                                <div class="form-group"><input type="text" name="manager_id" placeholder="Manager ID" class="form-control"></div>
+                                <div class="form-group"><input type="text" name="company_reg_num" placeholder="Company Registration Number" class="form-control"></div>
+                                <div class="form-group"><input type="text" name="company_brand_name" placeholder="Company Brand Name" class="form-control"></div>
+                                <div class="form-group"><input type="submit" name="Query 1" class="form-control btn btn-primary submit px-3" value="Query 1"></div>
                             </form>
 
                             <!--Query 2a-->
@@ -89,24 +92,24 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <hr>
                             <form action="query2a.php" method="post">
-                                <h3>Query 2a (Insert/Update/View Company)</h3>
+                                <h3>Query 2A (Insert/Update/View Company)</h3>
                                 <h4>Parameter:</h4>
                                 <label for="action">Action</label>
-                                <select id="action" name="action" class="default" onchange="showHideQuery2a(this.value);">
-                                    <option value="" selected>Select function...</option>
-                                    <option value="insert">Insert</option>
-                                    <option value="update">Update</option>
-                                    <option value="show">Show</option>
-                                </select><br>
+                                <div class="form-group"><select id="action" name="action" class="form-control" onchange="showHideQuery2a(this.value);">
+                                        <option value="" selected>Select function...</option>
+                                        <option value="insert">Insert</option>
+                                        <option value="update">Update</option>
+                                        <option value="show">Show</option>
+                                    </select></div>
                                 <div id="q2a_show" class="divShow">
-                                    Registration Number <input type="text" name="company_id"><br>
+                                    <div class="form-group"><input type="text" class="form-control" name="company_id" placeholder="Registration Number"></div>
                                 </div>
                                 <div id="q2a_insert" class="divShow">
-                                    Brand Name<input type="text" name="brand_name"><br>
-                                    Induction Date<input type="date" name="new_date"><br>
+                                    <div class="form-group"><input type="text" class="form-control" name="brand_name" placeholder="Brand Name"></div>
+                                    <div class="form-group"><input type="date" class="form-control" name="new_date" placeholder="Induction Date"></div>
                                 </div>
 
-                                <input type="submit" name="Query 2a">
+                                <input type="submit" name="Query 2a" value="QUERY 2A" class="form-control btn btn-primary submit px-3">
                             </form>
 
                             <!--Query 2b-->
@@ -129,28 +132,33 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <hr>
                             <form action="query2b.php" method="post">
-                                <h3>Query 2b (Insert/Update/View Admin)</h3>
+                                <h3>Query 2B (Insert/Update/View Admin)</h3>
                                 <h4>Parameter:</h4>
                                 <label for="action">Action</label>
-                                <select id="action" name="action" class="default" onchange="showHideQuery2b(this.value);">
-                                    <option value="" selected>Select function...</option>
-                                    <option value="insert">Insert</option>
-                                    <option value="update">Update</option>
-                                    <option value="show">Show</option>
-                                </select><br>
+                                <div class="form-group"><select id="action" class="form-control" name="action" class="default" onchange="showHideQuery2b(this.value);">
+                                        <option value="" selected>Select function...</option>
+                                        <option value="insert">Insert</option>
+                                        <option value="update">Update</option>
+                                        <option value="show">Show</option>
+                                    </select></div>
                                 <div id="q2b_show" class="divShow">
-                                    Username <input type="text" name="username"><br>
+                                    <div class="form-group"><input type="text" name="username" class="form-control" placeholder="Username"></div>
                                 </div>
                                 <div id="q2b_insert" class="divShow">
-                                    Name <input type="text" name="name"><br>
-                                    Birth Date <input type="date" name="bday"><br>
-                                    Sex <input type="text" name="sex"><br>
-                                    Position <input type="text" name="position"><br>
-                                    Password <input type="password" name="password"><br>
-                                    Manager ID <input type="text" name="manager_id"><br>
-                                    Company ID <input type="text" name="company_id"><br>
+                                    <div class="form-group"><input type="text" name="name" class="form-control" placeholder="Name"></div>
+                                    <div class="form-group">
+                                        Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
+                                        Sex<select id="sex" name="sex" class="form-control">
+                                            <option value="M">M</option>
+                                            <option value="F">F</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><input type="text" name="position" class="form-control" placeholder="Position"></div>
+                                    <div class="form-group"><input type="password" name="password" class="form-control" placeholder="Password"></div>
+                                    <div class="form-group"><input type="text" name="manager_id" class="form-control" placeholder="Manager ID"></div>
+                                    <div class="form-group"><input type="text" name="company_id" class="form-control" placeholder="Company ID"></div>
                                 </div>
-                                <input type="submit" name="Query 2b">
+                                <input type="submit" name="Query 2b" value="QUERY 2B" class="form-control btn btn-primary submit px-3">
                             </form>
 
                         <?php else : ?>
@@ -162,14 +170,19 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <form action="query3.php" method="post">
                                     <h3>Query 3 (Add Simple User)</h3>
                                     <h4>Parameter:</h4>
-                                    Name <input type="text" name="name" placeholder="Konstantinos Larkos"><br>
-                                    Birth Date <input type="date" name="bday"><br>
-                                    Sex <input type="text" name="sex" placeholder="M/F"><br>
-                                    Position <input type="text" name="position" placeholder="CEO"><br>
-                                    Username <input type="text" name="username" placeholder="klarko01"><br>
-                                    Password <input type="password" name="password" placeholder="hihi"><br>
-                                    Manager ID <input type="text" name="manager_id" placeholder="1"><br>
-                                    <input type="submit" name="Query 3">
+                                    <input type="text" name="name" placeholder="Admin Name" class="form-control">
+                                    <div class="form-group">
+                                        Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
+                                        Sex<select id="sex" name="sex" class="form-control">
+                                            <option value="M">M</option>
+                                            <option value="F">F</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group"><input type="text" name="position" class="form-control" placeholder="Position"></div>
+                                    <div class="form-group"><input type="text" name="username" class="form-control" placeholder="Username"></div>
+                                    <div class="form-group"><input type="password" name="password" class="form-control" placeholder="Password"></div>
+                                    <div class="form-group"><input type="text" name="manager_id" class="form-control" placeholder="Manager ID"></div>
+                                    <div class="form-group"><input type="submit" name="Query 3" class="form-control btn btn-primary submit px-3" value="QUERY 3">
                                 </form>
 
                                 <!--Query 4-->
@@ -195,26 +208,29 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                     <h3>Query 4 (Insert/Update/View Company Admin)</h3>
                                     <h4>Parameters:</h4>
                                     <label for="action">Action</label>
-                                    <select id="action" name="action" class="default" onchange="showHideQuery4(this.value);">
-                                        <option value="" selected>Select function...</option>
-                                        <option value="insert">Insert</option>
-                                        <option value="update">Update</option>
-                                        <option value="show">Show</option>
-                                    </select><br>
+                                    <div class="form-group"><select id="action" class="form-control" name="action" class="default" onchange="showHideQuery4(this.value);">
+                                            <option value="" selected>Select function...</option>
+                                            <option value="insert">Insert</option>
+                                            <option value="update">Update</option>
+                                            <option value="show">Show</option>
+                                        </select></div>
                                     <div id="q4_show" class="divShow">
-                                        Username <input type="text" name="username"><br>
+                                        <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
                                     </div>
                                     <div id="q4_insert" class="divShow">
-
-                                        Name <input type="text" name="name"><br>
-                                        Birth Date <input type="date" name="bday"><br>
-                                        Sex <input type="text" name="sex"><br>
-                                        Position <input type="text" name="position"><br>
-
-                                        Password <input type="password" name="password"><br>
-                                        Manager ID <input type="text" name="manager_id"><br>
+                                        <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Name"></div>
+                                        <div class="form-group">
+                                            Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
+                                            Sex<select id="sex" name="sex" class="form-control">
+                                                <option value="M">M</option>
+                                                <option value="F">F</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group"><input class="form-control" type="text" name="position" placeholder="Position"></div>
+                                        <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password"></div>
+                                        <div class="form-group"><input class="form-control" type="text" name="manager_id" placeholder="Manager ID"></div>
                                     </div>
-                                    <input type="submit" name="Query 2b">
+                                    <input type="submit" name="Query 4" class="form-control btn btn-primary submit px-3" value="QUERY 4">
                                 </form>
 
                                 <!-- Query 5 -->
@@ -268,37 +284,37 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <form action="query5.php" method="post">
                                     <h3>Query 5 (Insert/Update/Delete Question)</h3>
                                     <h4>Parameter:</h4>
-                                    Action <select id="action" name="action" class="default" onchange="showHideQuery5(this.value);">
-                                        <option value="" selected>Select function...</option>
-                                        <option value="insert">Insert</option>
-                                        <option value="update">Update</option>
-                                        <option value="delete">Delete</option>
-                                    </select><br>
+                                    <div class="form-group">Action <select id="action" name="action" class="form-control" onchange="showHideQuery5(this.value);">
+                                            <option value="" selected>Select function...</option>
+                                            <option value="insert">Insert</option>
+                                            <option value="update">Update</option>
+                                            <option value="delete">Delete</option>
+                                        </select></div>
                                     <div id="q5_delete" class="divShow">
-                                        Question ID <input type="text" name="question_id"><br>
+                                        <div class="form-group"><input type="text" name="question_id" placeholder="Question ID"></div>
                                     </div>
                                     <div id="q5_insert" class="divShow">
-                                        Description <input type="text" name="description"><br>
-                                        Text <input type="text" name="text"><br>
-                                        Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
-                                            <option value="" selected>Select question...</option>
-                                            <option value="Free Text">Free Text</option>
-                                            <option value="Multiple Choice">Multiple Choice</option>
-                                            <option value="Arithmetic">Arithmetic</option>
-                                        </select>
+                                        <div class="form-group"><input class="form-control" type="text" name="description" placeholder="Description"></div>
+                                        <div class="form-group"><input class="form-control" type="text" name="text" placeholder="Text"></div>
+                                        <div class="form-group">Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
+                                                <option value="" selected>Select question...</option>
+                                                <option value="Free Text">Free Text</option>
+                                                <option value="Multiple Choice">Multiple Choice</option>
+                                                <option value="Arithmetic">Arithmetic</option>
+                                            </select></div>
                                         <div id="Free Text" class="divShow">
-                                            Restriction <input type="text" name="restriction"><br>
+                                            <div class="form-group"><input class="form-control" type="text" name="restriction" placeholder="Restriction"></div>
                                         </div>
                                         <div id="Multiple Choice" class="divShow">
-                                            Selectable Amount <input type="text" name="selectable_amount"><br>
-                                            Answers <input type="text" name="answers"><br>
+                                            <div class="form-group"><input class="form-control" type="text" name="selectable_amount" placeholder="Selectable Amount"></div>
+                                            <div class="form-group"><input class="form-control" type="text" name="answers" placeholder="Answers"></div>
                                         </div>
                                         <div id="Arithmetic" class="divShow">
-                                            Min <input type="text" name="min"><br>
-                                            Max <input type="text" name="max"><br>
+                                            <div class="form-group"><input class="form-control" type="text" name="min" placeholder="Min"></div>
+                                            <div class="form-group"><input class="form-control" type="text" name="max" placeholder="Max"></div>
                                         </div>
                                     </div>
-                                    <br><input type="submit" name="Query 5">
+                                    <br><input type="submit" name="Query 5" class="form-control btn btn-primary submit px-3" value="QUERY 5">
                                 </form>
                             <?php else : ?>
                                 <hr>
@@ -312,57 +328,57 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="query7.php" method="post">
                                 <h3>Query 7 (Company's Questionnaires)</h3>
-                                <input type="submit" name="Query 7">
+                                <input type="submit" name="Query 7" class="form-control btn btn-primary submit px-3" value="QUERY 7">
                             </form>
 
                             <!--Query 8-->
                             <hr>
                             <form action="query8.php" method="post">
                                 <h3>Query 8 (Most Popular Questionnaires)</h3>
-                                <input type="submit" name="Query 8">
+                                <input type="submit" name="Query 8" class="form-control btn btn-primary submit px-3" value="QUERY 8">
                             </form>
 
                             <!--Query 9-->
                             <hr>
                             <form action="query9.php" method="post">
                                 <h3>Query 9 (All Questionnaires)</h3>
-                                <input type="submit" name="Query 9">
+                                <input type="submit" name="Query 9" class="form-control btn btn-primary submit px-3" value="QUERY 9">
                             </form>
 
                             <!--Query 10-->
                             <hr>
                             <form action="query10.php" method="post">
                                 <h3>Query 10 (Average Question per Questionnaire)</h3>
-                                <input type="submit" name="Query 10">
+                                <input type="submit" name="Query 10" class="form-control btn btn-primary submit px-3" value="QUERY 10">
                             </form>
 
                             <!--Query 11-->
                             <hr>
                             <form action="query11.php" method="post">
                                 <h3>Query 11 (Large Questionnaires)</h3>
-                                <input type="submit" name="Query 11">
+                                <input type="submit" name="Query 11" class="form-control btn btn-primary submit px-3" value="QUERY 11">
                             </form>
 
                             <!--Query 12-->
                             <hr>
                             <form action="query12.php" method="post">
                                 <h3>Query 12 (Small Questionnaires)</h3>
-                                <input type="submit" name="Query 12">
+                                <input type="submit" name="Query 12" class="form-control btn btn-primary submit px-3" value="QUERY 12">
                             </form>
 
                             <!--Query 13-->
                             <hr>
                             <form action="query13.php" method="post">
                                 <h3>Query 13 (Questionnaires with exact same Questions)</h3>
-                                <input type="submit" name="Query 13">
+                                <input type="submit" name="Query 13" class="form-control btn btn-primary submit px-3" value="QUERY 13">
                             </form>
 
                             <!--Query 14-->
                             <hr>
                             <form action="query14.php" method="post">
                                 <h3>Query 14 (Questionaires which have at least the Questions of selected Questionnaire)</h3>
-                                Questionnaire ID <input type="text" name="@qn_id"><br>
-                                <input type="submit" name="Query 14">
+                                <div class="form-group"><input class="form-control"type="text" name="@qn_id" placeholder="Questionnaire ID"></div>
+                                <input type="submit" name="Query 14" class="form-control btn btn-primary submit px-3" value="QUERY 14">
                             </form>
 
 
@@ -370,15 +386,15 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="query15.php" method="post">
                                 <h3>Query 15 (k Least Used Questions)</h3>
-                                Number k <input type="text" name="@q@k_min"><br>
-                                <input type="submit" name="Query 15">
+                                <div class="form-group"><input class="form-control" type="text" name="@q@k_min" placeholder="Number k"></div>
+                                <input type="submit" name="Query 15" class="form-control btn btn-primary submit px-3" value="QUERY 15">
                             </form>
 
                             <!--Query 16-->
                             <hr>
                             <form action="query16.php" method="post">
                                 <h3>Query 16 (Small Questionnaires)</h3>
-                                <input type="submit" name="Query 16">
+                                <input type="submit" name="Query 16" class="form-control btn btn-primary submit px-3" value="QUERY 16">
                             </form>
 
                         <?php endif; ?>

@@ -43,7 +43,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
         echo "Thank you for choosing EPL342 Team 1!</h3>";
         session_unset();
         session_destroy();
-        die('<meta http-equiv="refresh" content="5; url=index.php" />');
+        die('<meta http-equiv="refresh" content="3; url=index.php" />');
     }
     ?>
 </body>
