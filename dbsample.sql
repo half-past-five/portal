@@ -36,6 +36,7 @@ DROP VIEW IF EXISTS dbo.[Questions per Questionnaire]
 
 IF OBJECT_ID (N'dbo.canUserSeeQuestion', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestion;
 IF OBJECT_ID (N'dbo.canUserSeeQuestionnaire', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestionnaire; 
+IF OBJECT_ID (N'dbo.generateURL', N'FN') IS NOT NULL DROP FUNCTION generateURL; 
 
 
 ----------CREATE TABLES----------
@@ -263,6 +264,18 @@ WHERE [Creator ID] in (
 RETURN 1
 END;
 
+GO
+CREATE FUNCTION dbo.generateURL(@questionnaire_id int)
+RETURNS varchar(100)
+AS
+BEGIN
+DECLARE @out_put varchar(100)
+SET @out_put ='https://www.obervers.com/questionnaire_no_' + CAST(@questionnaire_id AS varchar(30))
+RETURN @out_put
+END;
+
+
+--select dbo.generateURL('1')
 --select dbo.canUserSeeQuestion('3', '4')
 --select dbo.canUserSeeQuestionnaire('1', '4')
 
@@ -493,18 +506,30 @@ AS
 INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL) 
 
 
---QUERY 6b (ADD QUESTION TO QUESTIONNAIRE)--
+--QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)--
 GO
-CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int, @question_id int
+CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int
+AS
+IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN
+SELECT *
+FROM [T1-Question Questionnaire Pairs] qqp, [T1-Question] q
+WHERE qqp.[Questionnaire ID] = @questionnaire_id AND qqp.[Question ID] = q.[Question ID]
+
+
+--QUERY 6c (ADD QUESTION TO QUESTIONNAIRE)--
+GO
+CREATE PROCEDURE dbo.Q6c @caller_id int, @questionnaire_id int, @question_id int
 AS
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
+UPDATE [T1-Questionnaire] SET [URL] = NULL
 INSERT INTO [T1-Question Questionnaire Pairs]([Question ID], [Questionnaire ID]) VALUES (@questionnaire_id, @question_id)
+UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id)
 
 
---QUERY 6c (REMOVE QUESTION FROM QUESTIONNAIRE)--
+--QUERY 6d (REMOVE QUESTION FROM QUESTIONNAIRE)--
 GO
-CREATE PROCEDURE dbo.Q6c @caller_id int, @questionnaire_id int, @question_id int
+CREATE PROCEDURE dbo.Q6d @caller_id int, @questionnaire_id int, @question_id int
 AS
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
