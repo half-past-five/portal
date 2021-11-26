@@ -118,14 +118,6 @@ CREATE TABLE [dbo].[T1-Log](
 	[Event]	varchar(100) not null,
 	)
 
-
-CREATE TABLE [dbo].[T1-Privilages](
-	[Privilage Number] int not null,
-	[Privilage Decription] varchar(20) not null
-	CONSTRAINT [PK-Privilages] PRIMARY KEY NONCLUSTERED ([Privilage Number])
-	)
-
-
 ---------- INSERTS ----------
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, '2')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kon Larkou', '1979/8/18', 'F', 'Marketing', 'klarko01', 'hihi', '1', NULL,  NULL)
