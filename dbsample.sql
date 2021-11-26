@@ -108,7 +108,6 @@ CREATE TABLE [dbo].[T1-Questionnaire](
 	[Parent ID] int,
 	[Creator ID] int,
 	[URL] nvarchar(2083),
-	[isCompleted] BIT not null
 	UNIQUE (Title, [Version]),
 	CONSTRAINT [PK-Questionnaire] PRIMARY KEY NONCLUSTERED ([Questionnaire ID])
 	)
@@ -142,12 +141,12 @@ INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES (
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'The first question', '2??')
 --DATA FOR QUESTIONNAIRE
 
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com',1)																			   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com',1)																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com',1)																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-2',3,2,1,NULL,0)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com',1)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-2',3,1,1,NULL,0)
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com')																			   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,1,NULL)																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com')																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,1,NULL)
 
 
 --DATA FOR QQP
@@ -211,7 +210,7 @@ GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
 SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
 FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
-WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.isCompleted = 1
+WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
 GROUP BY QQP.[Questionnaire ID]
 
 ---------- SPOCS ----------
@@ -469,7 +468,7 @@ AS
 SELECT Title, [Version], COUNT([Question ID]) as q_count
 FROM [T1-Question Questionnaire Pairs] qqp,[T1-Questionnaire] q
 WHERE
-q.isCompleted = 1 AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
+q.[URL] <> NULL AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 GROUP BY Title, [Version]
 
 
