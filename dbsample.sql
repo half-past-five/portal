@@ -297,18 +297,7 @@ WHERE [Creator ID] in (
 GO
 CREATE PROCEDURE dbo.ShowQuestionDetails @caller_id int, @question_id int
 AS
-IF @question_id NOT IN (
-SELECT [Question ID]
-FROM [T1-Question]
-WHERE [Creator ID] in (
-	SELECT [User ID]
-	FROM [T1-User] u
-	WHERE u.[Company ID] = (
-		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
-		)
-	)
-) RETURN --user requested question he cant see
-
+IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN
 DECLARE @q_type varchar(30)
 SET @q_type = (SELECT [Type] FROM [T1-Question] WHERE [Question ID] = @question_id)
 
@@ -508,6 +497,19 @@ INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [U
 GO
 CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int, @question_id int
 AS
+IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
+IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
+INSERT INTO [T1-Question Questionnaire Pairs]([Question ID], [Questionnaire ID]) VALUES (@questionnaire_id, @question_id)
+
+
+--QUERY 6c (REMOVE QUESTION FROM QUESTIONNAIRE)--
+GO
+CREATE PROCEDURE dbo.Q6c @caller_id int, @questionnaire_id int, @question_id int
+AS
+IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
+IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
+DELETE FROM [T1-Question Questionnaire Pairs] WHERE [Question ID] = @question_id AND [Questionnaire ID] = @questionnaire_id
+
 
 --QUERY 7-- WORKS
 GO
