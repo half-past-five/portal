@@ -137,22 +137,13 @@ INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES (
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'The first question', '2??')
 --DATA FOR QUESTIONNAIRE
 
-<<<<<<< Updated upstream
+
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com')																			   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com')																	   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com')																	   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,1,NULL)																   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com')																   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,1,NULL)
-=======
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com',1)																			   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com',1)																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com',1)																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 2-2',3,2,1,NULL,0)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-1',2,1,2,'https://www.qnnaire1-1.com',1)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL],[isCompleted])VALUES('Qnnaire 1-2',3,1,2,NULL,0)
->>>>>>> Stashed changes
-
 
 --DATA FOR QQP
 
@@ -438,8 +429,8 @@ GO
 CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
 AS
 
-DECLARE @user_id varchar(30) --FOR TESTING
-set @user_id = '1'
+--DECLARE @user_id varchar(30) --FOR TESTING
+--set @user_id = '1'
 
 SELECT apps_table.[Question ID], q.[Text]
 FROM [T1-Question] q,
@@ -467,11 +458,8 @@ AS
 SELECT Title, [Version], COUNT([Question ID]) as q_count
 FROM [T1-Question Questionnaire Pairs] qqp,[T1-Questionnaire] q
 WHERE
-<<<<<<< Updated upstream
-q.[URL] <> NULL AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
-=======
 q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
->>>>>>> Stashed changes
+
 GROUP BY Title, [Version]
 
 
