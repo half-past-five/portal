@@ -56,7 +56,8 @@ CREATE TABLE dbo.[T1-User] (
 	[Company ID] int,
 	[Manager ID] int,
 	UNIQUE(Username),
-	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID])
+	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
+	CHECK ([Privilages] in ('1', '2', '3'))
 )
 
 
@@ -107,7 +108,6 @@ CREATE TABLE [dbo].[T1-Questionnaire](
 	[Parent ID] int,
 	[Creator ID] int,
 	[URL] nvarchar(2083),
-	[isCompleted] BIT not null
 	UNIQUE (Title, [Version]),
 	CONSTRAINT [PK-Questionnaire] PRIMARY KEY NONCLUSTERED ([Questionnaire ID])
 	)
@@ -116,14 +116,6 @@ CREATE TABLE [dbo].[T1-Questionnaire](
 CREATE TABLE [dbo].[T1-Log](
 	[Event]	varchar(100) not null,
 	)
-
-
-CREATE TABLE [dbo].[T1-Privilages](
-	[Privilage Number] int not null,
-	[Privilage Decription] varchar(20) not null
-	CONSTRAINT [PK-Privilages] PRIMARY KEY NONCLUSTERED ([Privilage Number])
-	)
-
 
 ---------- INSERTS ----------
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukas Papalazarou', '2000/6/26', 'M', 'Development', 'lpapal03', 'hehehe', '1', NULL, '2')
@@ -136,23 +128,55 @@ INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Pas
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('2', 'Company 2', '2020/11/10')
 
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('1', 'DO')
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('2', 'DE')
-INSERT INTO [T1-Privilages] ([Privilage Number], [Privilage Decription]) VALUES ('3', 'AX')
-
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'The first question', 'Do you like db?')
 INSERT INTO [T1-Free Text Question] ([Question ID]) VALUES ('1')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Arithmetic', 'The second question', 'How much do you like db?')
 INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES ('1', '0', '10')
+
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('3', 'Free Text', 'The first question', '1?')
+INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'The first question', '2??')
+--DATA FOR QUESTIONNAIRE
+
+
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,1,'https://www.qnnaire1.com')																			   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,1,'https://www.qnnaire2.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,1,'https://www.qnnaire2-1.com')																	   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,1,NULL)																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,1,'https://www.qnnaire1-1.com')																   
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,1,NULL)
+
+--DATA FOR QQP
+
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
+	 
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
 
 
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
 CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]),
-CONSTRAINT [FK-User-Privilages] FOREIGN KEY ([Privilages]) REFERENCES [T1-Privilages]([Privilage Number]), --trigger for this
-CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE,
-CONSTRAINT [Range-Privilage] CHECK (Privilages between 1 and 3)
+CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE dbo.[T1-Question] ADD
 CONSTRAINT [FK-Question-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
@@ -174,26 +198,13 @@ ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])
 
-
----------- TRIGGERS ----------
-GO
-CREATE TRIGGER dbo.PrivilagesReject ON [T1-Privilages]
-AFTER INSERT, UPDATE, DELETE
-AS
-BEGIN
-RAISERROR ('Cannot alter Privilages TABLE', 16, 1);
-ROLLBACK TRANSACTION;
-RETURN
-END;
-
-
 ---------- VIEWS ----------
 --Questions per Questionnaire VIEW creation
 GO
 CREATE VIEW dbo.[Questions per Questionnaire] AS
 SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestions
 FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
-WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[isCompleted] = '0'
+WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> NULL
 GROUP BY QQP.[Questionnaire ID]
 
 ---------- SPOCS ----------
@@ -206,6 +217,35 @@ SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
+
+--QUERY SHOW ALL QUESTIONS--
+GO
+CREATE PROCEDURE dbo.ShowQuestions @caller_id int
+AS
+SELECT *
+FROM [T1-Question]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+
+
+--QUERY SHOW ALL QUESTIONNAIRES--
+GO
+CREATE PROCEDURE dbo.ShowQuestionnaires @caller_id int
+AS
+SELECT *
+FROM [T1-Questionnaire]
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
 
 --QUERY 1--
 GO
@@ -334,13 +374,28 @@ CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @
 AS
 IF @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) OUTPUT inserted.[Question ID] VALUES(@caller_id, @type, @description, @text)
+	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) VALUES(@caller_id, @type, @description, @text)
 	DECLARE @new_question_id int = SCOPE_IDENTITY()
 	IF @type = 'Free Text'
 		BEGIN
-		INSERT INTO [T1-Free Text Question]([Question ID], [Restriction]) VALUES (@new_question_id, @free_text_restriction)
+		INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES (@new_question_id, @free_text_restriction)
 		END
+	IF @type = 'Multiple Choice'
+		BEGIN
+		INSERT INTO [T1-Multiple Choice Question] ([Question ID], [Selectable Amount], [Answers]) VALUES (@new_question_id, @mult_choice_selectable_amount, @mult_choice_answers)
+		END
+	IF @type = 'Arithmetic'
+		BEGIN
+		INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES (@new_question_id, @arithm_min, @arithm_max)
+ 		END
 	END
+IF @action = 'update'
+	BEGIN
+	IF @new_question_id NOT IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs])
+		BEGIN
+		print('')
+		END
+	END   
 --QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
 /*
 IF @action = 'update'
@@ -348,15 +403,21 @@ IF @action = 'delete'
 */
 
 
---QUERY 7-- ***NEEDS FIX***
+--QUERY 7-- WORKS
 GO
 CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
 AS
+--DECLARE @user_id varchar(30) --FOR TESTING
+--set @user_id = '1'
+
 SELECT Title, [Version], COUNT([Question ID]) as q_count
-FROM [T1-Completed Questionnaire] cq,  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
+FROM  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
 WHERE 
-cq.[Questionnaire ID] = q.[Questionnaire ID] AND
-qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+--cq.[Questionnaire ID] = q.[Questionnaire ID] AND
+--qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+
+q.URL <> 'NULL' AND --To null thelei to me quotes
+qqp.[Questionnaire ID] = q.[Questionnaire ID] AND
 q.[Creator ID] = u.[User ID] AND
 u.[User ID] = @user_id
 GROUP BY Title, [Version]
@@ -367,14 +428,21 @@ ORDER BY q_count
 GO
 CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
 AS
+
+--DECLARE @user_id varchar(30) --FOR TESTING
+--set @user_id = '1'
+
 SELECT apps_table.[Question ID], q.[Text]
 FROM [T1-Question] q,
 	(
 	SELECT [Question ID], COUNT(qqp.[Questionnaire ID]) as appearances
-	FROM [T1-Question Questionnaire Pairs] qqp, [T1-Completed Questionnaire] cq, [T1-Questionnaire] q, [T1-User] u
+	FROM [T1-Question Questionnaire Pairs] qqp, [T1-Questionnaire] q, [T1-User] u
 	WHERE
-	qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
-	q.[Questionnaire ID] = cq.[Questionnaire ID] AND
+	
+	--qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
+	--q.[Questionnaire ID] = cq.[Questionnaire ID] AND
+
+	qqp.[Questionnaire ID] = q.[Questionnaire ID] AND
 	u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id)
 	GROUP BY [Question ID]
 	) apps_table
@@ -383,15 +451,15 @@ apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AN
 apps_table.[Question ID] = q.[Question ID]
 
 
---QUERY 9-- ***NEEDS FIX***
+--QUERY 9-- WORKS
 GO
 CREATE PROCEDURE dbo.Q9
 AS
 SELECT Title, [Version], COUNT([Question ID]) as q_count
-FROM [T1-Question Questionnaire Pairs] qqp, [T1-Completed Questionnaire] cq, [T1-Questionnaire] q
+FROM [T1-Question Questionnaire Pairs] qqp,[T1-Questionnaire] q
 WHERE
-cq.[Questionnaire ID] = q.[Questionnaire ID] AND
-qqp.[Questionnaire ID] = cq.[Questionnaire ID]
+q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
+
 GROUP BY Title, [Version]
 
 
@@ -407,23 +475,27 @@ FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire,
 WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
 GROUP BY C.[Brand Name]	
 
---Query 10 with view 
+--Query 10 with view WORKS
 
 SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) as [Average number Of Questionnaires]
-FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
-WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
+FROM 
+--[T1-Question] Q,
+[T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
+WHERE 
+--Q.[Creator ID] = U.[User ID] AND 
+U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
 GROUP BY C.[Brand Name]	
 
 --Drop Constraints
-ALTER TABLE [dbo].[T1-Questionnaire] ADD
-CONSTRAINT [FK-Questionnaire-ParentQuestionnaire] FOREIGN KEY ([Parent ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]), --ask pankris
-CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
+--ALTER TABLE [dbo].[T1-Questionnaire] ADD
+--CONSTRAINT [FK-Questionnaire-ParentQuestionnaire] FOREIGN KEY ([Parent ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID]), --ask pankris
+--CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
 
-ALTER TABLE [dbo].[T1-Questionnaire]
-DROP CONSTRAINT [FK-Questionnaire-ParentQuestionnaire]
+--ALTER TABLE [dbo].[T1-Questionnaire]
+--DROP CONSTRAINT [FK-Questionnaire-ParentQuestionnaire]
 
-ALTER TABLE [dbo].[T1-Questionnaire]
-DROP CONSTRAINT [FK-Questionnaire-CreatorUser]
+--ALTER TABLE [dbo].[T1-Questionnaire]
+--DROP CONSTRAINT [FK-Questionnaire-CreatorUser]
 
  
 --Query 11 
@@ -443,7 +515,7 @@ FROM [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
 WHERE QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND QpQ.NoOfQuestions > @maxFromAverage
 
 
---Query 12
+--Query 12 WORKS
 GO
 CREATE PROCEDURE dbo.Q12
 AS
@@ -458,17 +530,13 @@ FROM [Questions per Questionnaire] QpQ
 WHERE QpQ.noOfQuestions = @minNoOfQuestions 
 
 
+
 --Query 13
 GO
 CREATE PROCEDURE dbo.Q13
 AS
-DECLARE @INDEXVAR int
-DECLARE @TOTALCOUNT int 
-SET @INDEXVAR = 0  
-SELECT @TOTALCOUNT= COUNT(*) FROM [T1-Completed Questionnaire]
-WHILE @INDEXVAR < @TOTALCOUNT  
---BEGIN  
-	SELECT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
+
+	SELECT DISTINCT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
 			Qnnaire2.[Questionnaire ID] AS '2nd Qnnaire ID',Qnnaire2.Title AS '2nd Qnnaire Title',Qnnaire2.Version AS '2nd Qnnaire Version',QpQ2.noOfQuestions AS '2nd Qnnaire noOfQuestions'
 	FROM [T1-Questionnaire] Qnnaire1,[T1-Questionnaire] Qnnaire2,[Questions per Questionnaire] QpQ1,[Questions per Questionnaire] QpQ2
 	WHERE NOT EXISTS(
@@ -486,10 +554,7 @@ WHILE @INDEXVAR < @TOTALCOUNT
 		AND QpQ1.[Questionnaire ID] = Qnnaire1.[Questionnaire ID] 
 		AND QpQ2.[Questionnaire ID] = Qnnaire2.[Questionnaire ID] 
 		AND QpQ1.noOfQuestions = QpQ2.noOfQuestions
-
-
-    --SET @INDEXVAR = @INDEXVAR  + 1
---END
+		AND QpQ1.[Questionnaire ID] <> QpQ2.[Questionnaire ID]
 
 --QUERY 14--
 GO
@@ -563,8 +628,14 @@ exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M',
 exec Q4 @action='show', @admin_id='2', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost06', @password='hehehe', @manager_id='4'
 
+
+exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multiple Choice',
+@description='test question', @text='do u liek db?', @free_text_restriction='<=100', @mult_choice_selectable_amount='3',
+@mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
+
 /*
-exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @creator_id = '3', @type= 'Free Text',
+
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+
 */
