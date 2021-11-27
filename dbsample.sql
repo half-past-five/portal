@@ -524,7 +524,7 @@ IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user h
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 UPDATE [T1-Questionnaire] SET [URL] = NULL
 INSERT INTO [T1-Question Questionnaire Pairs]([Question ID], [Questionnaire ID]) VALUES (@questionnaire_id, @question_id)
-UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id)
+UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
 
 
 --QUERY 6d (REMOVE QUESTION FROM QUESTIONNAIRE)--
@@ -534,6 +534,28 @@ AS
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 DELETE FROM [T1-Question Questionnaire Pairs] WHERE [Question ID] = @question_id AND [Questionnaire ID] = @questionnaire_id
+
+
+--QUERY 6e (CHANGE QUERY STATE)--
+GO
+CREATE PROCEDURE dbo.Q6e @caller_id int, @questionnaire_id int
+AS
+IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
+UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+--exec Q6e @caller_id='1', @questionnaire_id='6'
+
+--QUERY 6f (CLONE)--
+GO
+CREATE PROCEDURE dbo.Q6f @caller_id int, @questionnaire_id int
+AS
+IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL RETURN --cannot be cloned because its not completed
+DECLARE @title varchar(30)
+SET @title = (SELECT [Title] q FROM [T1-Questionnaire] q WHERE [Questionnaire ID] = @questionnaire_id)
+DECLARE @version int 
+SET @version = (SELECT [Version] q FROM [T1-Questionnaire] q WHERE [Questionnaire ID] = @questionnaire_id)
+SET @version = @version + 1
+INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, @version, @questionnaire_id, @caller_id, NULL) 
 
 
 --QUERY 7-- WORKS
