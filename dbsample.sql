@@ -438,17 +438,13 @@ IF @action = 'show'
 
 --QUERY 2b--
 GO
-CREATE PROCEDURE dbo.Q2b @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int
 AS
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
 	END
-
-DECLARE @caller_usernme varchar(30)
-SET @caller_usernme = (SELECT [Username] FROM [T1-User] WHERE @caller_id = [User ID])
-IF dbo.canUserSeeUser(@caller_usernme, @username) = 0 RETURN 
 
 IF @action = 'update'
 	BEGIN
@@ -500,6 +496,11 @@ IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
 	END
+
+DECLARE @caller_usernme varchar(30)
+SET @caller_usernme = (SELECT [Username] FROM [T1-User] WHERE @admin_id = [User ID])
+IF dbo.canUserSeeUser(@caller_usernme, @username) = 0 RETURN 
+
 IF @action = 'update'
 	BEGIN
 	IF @name <>'' BEGIN UPDATE [T1-User] SET [Name] = @name WHERE Username = @username END
@@ -523,6 +524,7 @@ IF  @action = 'show'
 	FROM [T1-User] U
 	WHERE @username = U.Username AND [Company ID] = @admin_company_id
 	END
+
 
 --QUERY 5--
 GO
