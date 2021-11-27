@@ -202,6 +202,9 @@ CONSTRAINT [FK-Free Text-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [
 ALTER TABLE dbo.[T1-Multiple Choice Question] ADD
 CONSTRAINT [FK-Multiple Choice-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
+ALTER TABLE dbo.[T1-Multiple Choice Answers] ADD
+CONSTRAINT [FK-Multiple Choice-Answers] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
+
 ALTER TABLE dbo.[T1-Arithmetic Question] ADD
 CONSTRAINT [FK-Arithmetic-Main Question] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
