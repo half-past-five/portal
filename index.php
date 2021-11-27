@@ -1,8 +1,8 @@
 <?php
 session_start();
-$sqlDBname = 'lpapal03';
-$sqlUser = 'lpapal03';
-$sqlPass = 'VuVrAvV6';
+$sqlDBname = 'klarko01';
+$sqlUser = 'klarko01';
+$sqlPass = 'bhbmJcp2';
 
 $_SESSION["serverName"] = "mssql.cs.ucy.ac.cy";
 $_SESSION["connectionOptions"] = array(

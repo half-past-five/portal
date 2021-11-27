@@ -366,7 +366,7 @@ IF @q_type = 'Multiple Choice'
 	END				
 
 
---QUERY SHOW ALL QUESTIONNAIRES--
+--QUERY SHOW ALL COMPANY'S QUESTIONNAIRES --
 GO
 CREATE PROCEDURE dbo.ShowQuestionnaires @caller_id int
 AS
@@ -652,23 +652,24 @@ INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [U
 
 --QUERY 7-- WORKS
 GO
-CREATE PROCEDURE dbo.Q7 @user_id varchar(30)
-AS
---DECLARE @user_id varchar(30) --FOR TESTING
---set @user_id = '5'
-
-SELECT Title, [Version], COUNT([Question ID]) as q_count
-FROM  [T1-Questionnaire] q, [T1-User] u, [T1-Question Questionnaire Pairs] qqp
-WHERE 
---cq.[Questionnaire ID] = q.[Questionnaire ID] AND
---qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
-
-q.URL <> 'NULL' AND --To null thelei to me quotes
-qqp.[Questionnaire ID] = q.[Questionnaire ID] AND
-q.[Creator ID] = u.[User ID] AND
-u.[User ID] = @user_id
-GROUP BY Title, [Version]
-ORDER BY q_count
+CREATE PROCEDURE dbo.Q7 @user_id int
+AS		
+BEGIN
+/*exec ShowQuestionnaires @caller_id = @user_id*/
+DECLARE @result TABLE
+(   [Questionnaire ID] int,
+	[Title] varchar(20),
+	[Version] int not null,
+	[Parent ID] int,
+	[Creator ID] int,
+	[URL] nvarchar(2083)
+)
+INSERT INTO @result Exec ShowQuestionnaires @caller_id = @user_id
+SELECT R.Title, R.Version, QPQ.noOfQuestions
+FROM @result R, [Questions per Questionnaire] QPQ
+WHERE R.[Questionnaire ID] = QPQ.[Questionnaire ID]
+ORDER BY QPQ.noOfQuestions ASC
+END
 
 
 --QUERY 8-- ***NEEDS FIX***
@@ -869,6 +870,7 @@ exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multipl
 @description='test question', @text='do u liek db?', @free_text_restriction='<=100', @mult_choice_selectable_amount='3',
 @mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
 
+exec Q7 @user_id = '1'
 /*
 
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,

@@ -61,11 +61,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
     echo ("Results:<br/>");
     echo ($getResults);
-    if ($getResults == FALSE) 
+    if ($getResults == FALSE){
         die(FormatErrors(sqlsrv_errors()));
+        echo("null");
+    }
 
     PrintResultSet($getResults);
-
+    //echo(var_dump($getResults));
     /* Free query  resources. */
     sqlsrv_free_stmt($getResults);
 
