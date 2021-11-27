@@ -100,16 +100,9 @@ CREATE TABLE dbo.[T1-Multiple Choice Question] (
 
 CREATE TABLE dbo.[T1-Multiple Choice Answers] (
 	[Question ID] int,
-	[Answer ID] int
-	UNIQUE([Question ID])
+	[Answer] varchar(50)
+	UNIQUE([Question ID], [Answer])
 	)
-
-CREATE TABLE dbo.[T1-Answers](
-	[Answer ID] int IDENTITY(1,1) not null,
-	[Answer] varchar(50) not null,
-	CONSTRAINT [PK-Answer] PRIMARY KEY NONCLUSTERED ([Answer ID]),
-	)
-	
 	
 
 CREATE TABLE dbo.[T1-Arithmetic Question] (
@@ -347,6 +340,50 @@ WHERE [Creator ID] in (
 	)
 
 
+--INSERT ANSWER TO MULTIPLE CHOICE--
+GO
+CREATE PROCEDURE dbo.InsertAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50)
+AS
+--check if caller is correct
+IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
+--check if multiple choice
+IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
+INSERT INTO [T1-Multiple Choice Answers]([Question ID], [Answer]) VALUES (@question_id, @answer)
+
+
+--EDIT ANSWER TO MULTIPLE CHOICE--
+GO
+CREATE PROCEDURE dbo.EditAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50), @new_answer varchar(50)
+AS
+--check if caller is correct
+IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
+--check if multiple choice
+IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
+UPDATE [T1-Multiple Choice Answers] SET [Answer] = @answer WHERE @answer = [Answer] AND @question_id = [Question ID]
+
+
+--REMOVE ANSWER FROM MULT CHOICE--
+GO
+CREATE PROCEDURE dbo.RemoveAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50)
+AS
+--check if caller is correct
+IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
+--check if multiple choice
+IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
+DELETE FROM [T1-Multiple Choice Answers] WHERE @answer = [Answer] AND @question_id = [Question ID]
+
+
+--SHOW ALL ANSWERS OF MULT CHOICE
+GO
+CREATE PROCEDURE dbo.ShowAnswerMultChoice @caller_id int, @question_id int
+AS
+--check if caller is correct
+IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
+--check if multiple choice
+IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
+SELECT [Answer] FROM [T1-Multiple Choice Answers] WHERE @question_id = [Question ID]
+
+
 --QUERY 1--
 GO
 CREATE PROCEDURE dbo.Q1 @name varchar(50), @bday date, @sex char(1), 
@@ -510,7 +547,7 @@ AS
 INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL) 
 
 
---QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)--
+--QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)-- ***NOT DONE***
 GO
 CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int
 AS
@@ -519,7 +556,7 @@ SELECT *
 FROM [T1-Question Questionnaire Pairs] qqp, [T1-Question] q
 WHERE qqp.[Questionnaire ID] = @questionnaire_id AND qqp.[Question ID] = q.[Question ID]
 
---exec Q6b @caller_id='3', @questionnaire_id='2'
+--exec Q6b @caller_id='3', @questionnaire_id='1'
 
 
 --QUERY 6c (ADD QUESTION TO QUESTIONNAIRE)--
