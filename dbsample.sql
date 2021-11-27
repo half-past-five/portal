@@ -381,6 +381,20 @@ WHERE [Creator ID] in (
 	)
 
 
+--QUERY SHOW ALL COMPANY USERS--
+GO
+CREATE PROCEDURE dbo.ShowQUsers @caller_id int
+AS
+DECLARE @admin_company_id int
+SELECT @admin_company_id = u.[Company ID]
+FROM [T1-User] u
+WHERE u.[User ID] = @caller_id 
+SELECT *
+FROM [T1-User] u
+WHERE u.[Company ID] = @admin_company_id
+
+
+
 --INSERT ANSWER TO MULTIPLE CHOICE--
 GO
 CREATE PROCEDURE dbo.InsertAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50)
