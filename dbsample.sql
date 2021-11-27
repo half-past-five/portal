@@ -154,9 +154,6 @@ INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')																   
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,4,NULL)
 
-
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,5,'https://www.qnnaire2-1.com')	
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3-1',2,3,6,'https://www.qnnaire3-1.com')	
 
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-1',3,4,1,'https://www.qnnaire1-1-1.com')	
@@ -209,7 +206,7 @@ INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire
 --Company 3 related                                                                          
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,3)
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,6)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,6)
+INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(6,6)
 																							
 --NOT COMPLETED (URL = NULL) qqp                                                            
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,10)
@@ -712,7 +709,7 @@ q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 
 GROUP BY Title, [Version]
 
-
+/*
 --Query 10 
 GO
 CREATE PROCEDURE dbo.Q10
@@ -735,7 +732,7 @@ WHERE
 U.[Company ID] = C.[Registration Number] AND U.[User ID] = Qnnaire.[Creator ID] AND QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID]
 --Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] AND Qnnaire.[Questionnaire ID] = QpQ.[Questionnaire ID]
 GROUP BY C.[Brand Name]	
-
+*/
  
 --Query 11 
 GO
