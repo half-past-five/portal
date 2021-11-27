@@ -45,6 +45,7 @@ IF OBJECT_ID (N'dbo.generateURL', N'FN') IS NOT NULL DROP FUNCTION generateURL;
 CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
 	[Question ID] int not null,
 	[Questionnaire ID] int not null,
+	UNIQUE([Question ID], [Questionnaire ID])
 	)
 
 
@@ -87,17 +88,20 @@ CREATE TABLE dbo.[T1-Question] (
 CREATE TABLE dbo.[T1-Free Text Question] (
 	[Question ID] int not null,
 	[Restriction] varchar(30)
+	UNIQUE([Question ID])
 )	
 
 
 CREATE TABLE dbo.[T1-Multiple Choice Question] (
 	[Question ID] int not null,
 	[Selectable Amount] int not null
+	UNIQUE([Question ID])
 )
 
 CREATE TABLE dbo.[T1-Multiple Choice Answers] (
 	[Question ID] int,
 	[Answer ID] int
+	UNIQUE([Question ID])
 	)
 
 CREATE TABLE dbo.[T1-Answers](
@@ -165,27 +169,27 @@ INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],
 
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
-	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
 	 
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
+	 
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,2)
 	 
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,3)
 	 
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,4)
 	 
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
 	 
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
+--INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
 
 
 
@@ -514,6 +518,8 @@ IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETUR
 SELECT *
 FROM [T1-Question Questionnaire Pairs] qqp, [T1-Question] q
 WHERE qqp.[Questionnaire ID] = @questionnaire_id AND qqp.[Question ID] = q.[Question ID]
+
+--exec Q6b @caller_id='3', @questionnaire_id='2'
 
 
 --QUERY 6c (ADD QUESTION TO QUESTIONNAIRE)--
