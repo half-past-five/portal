@@ -667,23 +667,21 @@ INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [U
 --QUERY 7-- WORKS
 GO
 CREATE PROCEDURE dbo.Q7 @user_id int
-AS		
-BEGIN
-/*exec ShowQuestionnaires @caller_id = @user_id*/
-DECLARE @result TABLE
-(   [Questionnaire ID] int,
-	[Title] varchar(20),
-	[Version] int not null,
-	[Parent ID] int,
-	[Creator ID] int,
-	[URL] nvarchar(2083)
-)
-INSERT INTO @result Exec ShowQuestionnaires @caller_id = @user_id
-SELECT R.Title, R.Version, QPQ.noOfQuestions
-FROM @result R, [Questions per Questionnaire] QPQ
-WHERE R.[Questionnaire ID] = QPQ.[Questionnaire ID]
+AS
+
+SELECT Q.Title, Q.Version, QPQ.noOfQuestions
+FROM [T1-Questionnaire] Q, [Questions per Questionnaire] QPQ
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id
+						)
+					)
+AND QPQ.[Questionnaire ID] = Q.[Questionnaire ID]
 ORDER BY QPQ.noOfQuestions ASC
-END
+
+--exec Q7 @user_id = 1
 
 
 --QUERY 8-- ***NEEDS FIX***
