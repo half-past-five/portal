@@ -36,7 +36,9 @@ DROP VIEW IF EXISTS dbo.[Questions per Questionnaire]
 
 IF OBJECT_ID (N'dbo.canUserSeeQuestion', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestion;
 IF OBJECT_ID (N'dbo.canUserSeeQuestionnaire', N'FN') IS NOT NULL DROP FUNCTION canUserSeeQuestionnaire; 
-IF OBJECT_ID (N'dbo.generateURL', N'FN') IS NOT NULL DROP FUNCTION generateURL; 
+IF OBJECT_ID (N'dbo.generateURL', N'FN') IS NOT NULL DROP FUNCTION generateURL;
+IF OBJECT_ID (N'dbo.canUserSeeUser', N'FN') IS NOT NULL DROP FUNCTION canUserSeeUser; 
+
 
 
 ----------CREATE TABLES----------
@@ -272,6 +274,16 @@ RETURN @out_put
 END;
 
 
+GO
+CREATE FUNCTION dbo.canUserSeeUser(@username1 varchar(30), @username2 varchar(30))
+RETURNS BIT
+AS
+BEGIN
+IF (SELECT [Company ID] FROM [T1-User] WHERE @username1 = [Username]) = (SELECT [Company ID] FROM [T1-User] WHERE @username2 = [Username]) RETURN 1
+RETURN 0
+END;
+
+
 --select dbo.generateURL('1')
 --select dbo.canUserSeeQuestion('3', '4')
 --select dbo.canUserSeeQuestionnaire('1', '4')
@@ -423,13 +435,18 @@ IF @action = 'show'
 
 --QUERY 2b--
 GO
-CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+CREATE PROCEDURE dbo.Q2b @caller_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int
 AS
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
 	END
+
+DECLARE @caller_usernme varchar(30)
+SET @caller_usernme = (SELECT [Username] FROM [T1-User] WHERE @caller_id = [User ID])
+IF dbo.canUserSeeUser(@caller_usernme, @username) = 0 RETURN 
+
 IF @action = 'update'
 	BEGIN
 	IF @name <>'' BEGIN UPDATE [T1-User] SET [Name] = @name WHERE Username = @username END
@@ -497,6 +514,7 @@ IF  @action = 'show'
 	CAST([Sex] AS varchar(30)) as [Sex],
 	CAST([Position] AS varchar(30)) as [Position],
 	CAST([Password] AS varchar(30)) as [Password],
+	CAST([Privilages] AS varchar(30)) as [Privilages],
 	CAST([Company ID]  AS varchar(30)) as [Company ID],
 	CAST([Manager ID] AS varchar(30)) as [Manager ID]
 	FROM [T1-User] U
