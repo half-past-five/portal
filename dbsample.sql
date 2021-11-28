@@ -738,42 +738,44 @@ q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 
 GROUP BY Title, [Version]
 
-/*
+
 --Query 10 
 GO
-CREATE PROCEDURE dbo.Q10
+CREATE PROCEDURE dbo.Q10 @user_id int
 AS
-SELECT C.[Brand Name],AVG(Result.noOFQuestionnaires) as avgNoOfQuestionnaires
-FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire,
-	(SELECT  QQP.[Questionnaire ID], COUNT(QQP.[Questionnaire ID]) as noOfQuestionnaires
-	FROM  [T1-Question Questionnaire Pairs] QQP
-	GROUP BY QQP.[Questionnaire ID]) Result
-WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
-GROUP BY C.[Brand Name]	
 
---Query 10 with view -thelo help gt exathika lio telika
-SELECT *
---C.[Brand Name],AVG(QpQ.noOfQuestions) as [Average number Of Questions]
-FROM 
-[T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ,[T1-User] U
---[T1-Question] Q,[T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
-WHERE 
-U.[Company ID] = C.[Registration Number] AND U.[User ID] = Qnnaire.[Creator ID] AND QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID]
---Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] AND Qnnaire.[Questionnaire ID] = QpQ.[Questionnaire ID]
-GROUP BY C.[Brand Name]	
-*/
- 
+/* tuto gia kathe company
+SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions' 
+	FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
+	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number]
+	GROUP BY C.[Brand Name]
+*/		
+
+
+SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions' 
+	FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
+	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+		SELECT [User ID]
+		FROM [T1-User] u
+		WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] =  @user_id
+		)
+	)
+	GROUP BY C.[Brand Name]
+	
+
 --Query 11 
 GO
 CREATE PROCEDURE dbo.Q11 @user_id int
 AS
 DECLARE @avgNoOfQuestions int;
 
-SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
+SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) 
+	FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
 	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
 		SELECT [User ID]
 		FROM [T1-User] U
-		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 					)
 					)
 
@@ -784,7 +786,7 @@ FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
 WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions > @avgNoOfQuestions AND Qnnaire.[Creator ID] IN (
 		SELECT [User ID]
 		FROM [T1-User] U
-		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 		)
 
 
@@ -794,11 +796,12 @@ GO
 CREATE PROCEDURE dbo.Q12 @user_id int
 AS
 DECLARE @minNoOfQuestions int;
-SET @minNoOfQuestions  = (SELECT MIN(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
+SET @minNoOfQuestions  = (SELECT MIN(QpQ.noOfQuestions) 
+	FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
 	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
 		SELECT [User ID]
 		FROM [T1-User] U
-		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 					)
 					)
 --print @minNoOfQuestions 				
@@ -807,7 +810,7 @@ FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
 WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions = @minNoOfQuestions AND Qnnaire.[Creator ID] IN (
 		SELECT [User ID]
 		FROM [T1-User] U
-		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 					)
 
 
