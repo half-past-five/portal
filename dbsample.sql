@@ -697,34 +697,43 @@ WHERE [Creator ID] in (
 AND QPQ.[Questionnaire ID] = Q.[Questionnaire ID]
 ORDER BY QPQ.noOfQuestions ASC
 
---exec Q7 @user_id = 1
 
 
---QUERY 8-- ***NEEDS FIX***
+--QUERY 8--
 GO
-CREATE PROCEDURE dbo.Q8 @user_id varchar(30)
+CREATE PROCEDURE dbo.Q8 @user_id int
 AS
 
---DECLARE @user_id varchar(30) --FOR TESTING
---set @user_id = '1'
+DECLARE @maxNoOfQuestionnaires 	 int;
+SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)	
+								FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfQuestionnaires
+										FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
+										WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+												SELECT [User ID]
+												FROM [T1-User] u
+												WHERE u.[Company ID] = (
+												SELECT [Company ID] FROM [T1-User] WHERE [User ID] =  @user_id
+												)
+												)
+										GROUP BY QQP.[Question ID]
+										) as QuestionnaireCount
+										)
+print @maxNoOfQuestionnaires 	
 
-SELECT apps_table.[Question ID], q.[Text]
-FROM [T1-Question] q,
-	(
-	SELECT [Question ID], COUNT(qqp.[Questionnaire ID]) as appearances
-	FROM [T1-Question Questionnaire Pairs] qqp, [T1-Questionnaire] q, [T1-User] u
-	WHERE
-	
-	--qqp.[Questionnaire ID] = cq.[Questionnaire ID] AND
-	--q.[Questionnaire ID] = cq.[Questionnaire ID] AND
+SELECT *
+FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
+		FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
+		WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+		SELECT [User ID]
+		FROM [T1-User] u
+		WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] =  @user_id
+		)
+		)
+		GROUP BY QQP.[Question ID]
+		) as QuestionnaireCount
+WHERE QuestionnaireCount.noOfAppearances = @maxNoOfQuestionnaires 	
 
-	qqp.[Questionnaire ID] = q.[Questionnaire ID] AND
-	u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id)
-	GROUP BY [Question ID]
-	) apps_table
-WHERE 
-apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AND
-apps_table.[Question ID] = q.[Question ID]
 
 
 --QUERY 9 
