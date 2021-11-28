@@ -147,13 +147,14 @@ INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Pas
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hohoho', '2', 2, '2')
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hohoho', '2', 3, '3')
 
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,1,3,'https://www.qnnaire1.com')																			   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,2,3,'https://www.qnnaire2.com')																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,3,'https://www.qnnaire2-1.com')																	   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-2',3,2,4,NULL)																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')																   
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-2',3,1,4,NULL)
+--QUESTIONNAIRE data
 
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,NULL,1,'https://www.qnnaire1.com')	
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,NULL,2,'https://www.qnnaire2.com')	
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3',1,NULL,3,'https://www.qnnaire3.com')
+
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')	
+INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,5,'https://www.qnnaire2-1.com')	
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3-1',2,3,6,'https://www.qnnaire3-1.com')	
 
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-1',3,4,1,'https://www.qnnaire1-1-1.com')	
@@ -164,7 +165,6 @@ INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-1',4,4,4,NULL)
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1-1',4,5,5,NULL)
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3-1-1',4,6,5,NULL)
-
 --QUESTION data
 
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'I am question 1', 'Text cell')
@@ -711,7 +711,7 @@ apps_table.appearances = (SELECT MAX(apps_table.appearances) FROM apps_table) AN
 apps_table.[Question ID] = q.[Question ID]
 
 
---QUERY 9 - WORKS WITH NEW DATA
+--QUERY 9 
 GO
 CREATE PROCEDURE dbo.Q9
 AS
@@ -749,34 +749,50 @@ GROUP BY C.[Brand Name]
  
 --Query 11 
 GO
-CREATE PROCEDURE dbo.Q11
+CREATE PROCEDURE dbo.Q11 @user_id int
 AS
-DECLARE @maxFromAverage float;
+DECLARE @avgNoOfQuestions int;
 
-SET @maxFromAverage = (	SELECT MAX(CompanyAvg.avgNoOfQuestions) 
-						FROM	(SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS avgNoOfQuestions
-								FROM [T1-Question] Q, [T1-User] U, [T1-Company] C, [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
-								WHERE Q.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] = U.[User ID] 
-								GROUP BY C.[Brand Name]) as CompanyAvg)
+SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
+	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+		SELECT [User ID]
+		FROM [T1-User] U
+		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+					)
+					)
 
-SELECT Qnnaire.[Questionnaire ID], Qnnaire.Title, Qnnaire.Version
-FROM [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
-WHERE QpQ.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND QpQ.NoOfQuestions > @maxFromAverage
+--print @avgNoOfQuestions 	
+
+SELECT  Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
+FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
+WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions > @avgNoOfQuestions AND Qnnaire.[Creator ID] IN (
+		SELECT [User ID]
+		FROM [T1-User] U
+		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+		)
 
 
---Query 12 - WORKS WITH NEW DATA
+
+--Query 12 
 GO
-CREATE PROCEDURE dbo.Q12
+CREATE PROCEDURE dbo.Q12 @user_id int
 AS
 DECLARE @minNoOfQuestions int;
-
-SET @minNoOfQuestions  = (SELECT MIN(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ)
-	
-print @minNoOfQuestions 				
-
-SELECT QpQ.[Questionnaire ID]
-FROM [Questions per Questionnaire] QpQ
-WHERE QpQ.noOfQuestions = @minNoOfQuestions 
+SET @minNoOfQuestions  = (SELECT MIN(QpQ.noOfQuestions) from [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire
+	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+		SELECT [User ID]
+		FROM [T1-User] U
+		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+					)
+					)
+--print @minNoOfQuestions 				
+SELECT  Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
+FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
+WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions = @minNoOfQuestions AND Qnnaire.[Creator ID] IN (
+		SELECT [User ID]
+		FROM [T1-User] U
+		WHERE u.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+					)
 
 
 
