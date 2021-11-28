@@ -824,10 +824,35 @@ WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions 
 
 
 
---Query 13 - WORKS WITH NEW DATA
+--Query 13 
 GO
-CREATE PROCEDURE dbo.Q13
+CREATE PROCEDURE dbo.Q13 @user_id int
 AS
+
+
+SELECT *
+FROM (	SELECT   Qnnaire.[Questionnaire ID],Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
+		FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
+		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+				SELECT [User ID]
+				FROM [T1-User] U
+				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = 1 )
+				)
+				)as CompanyQuestionnaires
+WHERE NOT EXISTS(
+		--All questions of questionaire
+		(SELECT QQP1.[Question ID]
+		FROM [T1-Question Questionnaire Pairs] QQP1
+		WHERE QQP1.[Questionnaire ID] =  CompanyQuestionnaires.[Questionnaire ID]
+		)
+		EXCEPT
+		--Questions of current questionaire
+		(SELECT QQP2.[Question ID]
+		FROM [T1-Question Questionnaire Pairs] QQP2
+		WHERE QQP2.[Questionnaire ID] = CompanyQuestionnaires.[Questionnaire ID]
+		) ) 
+		
+
 
 	SELECT DISTINCT	Qnnaire1.[Questionnaire ID] AS '1st Qnnaire ID',Qnnaire1.Title AS '1st Qnnaire Title',Qnnaire1.Version AS '1st Qnnaire Version',QpQ1.noOfQuestions AS '1st Qnnaire noOfQuestions',
 			Qnnaire2.[Questionnaire ID] AS '2nd Qnnaire ID',Qnnaire2.Title AS '2nd Qnnaire Title',Qnnaire2.Version AS '2nd Qnnaire Version',QpQ2.noOfQuestions AS '2nd Qnnaire noOfQuestions'
@@ -851,11 +876,11 @@ AS
 
 --QUERY 14--
 GO
-CREATE PROCEDURE dbo.Q14 @qn_id varchar(30)
+CREATE PROCEDURE dbo.Q14 @qn_id int
 AS
 SELECT *
 FROM [T1-Questionnaire] Qn
-WHERE NOT EXISTS
+WHERE  NOT EXISTS
 (
 	--All questions of questionaire
 	(SELECT QQP1.[Question ID]
@@ -868,22 +893,35 @@ WHERE NOT EXISTS
 	FROM [T1-Question Questionnaire Pairs] QQP2
 	WHERE QQP2.[Questionnaire ID] = Qn.[Questionnaire ID]
 	)
-)
+) AND Qn.URL <> 'NULL'
 
 
 --QUERY 15--
 
 GO
-CREATE PROCEDURE dbo.Q15 @k_min int
+CREATE PROCEDURE dbo.Q15 @user_id int, @k_min int 
 AS
-SELECT Q.[Question ID], Q.[Creator ID], Q.[Description], Q.[Type], Q.[Text]
-FROM [T1-Question] Q,
-(
-	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUNT
-	FROM [T1-Question Questionnaire Pairs] QQP
-	GROUP BY QQP.[Question ID]
-) MinimumQ
+
+/*
+DECLARE @k_min int
+SET @k_min = 1
+DECLARE @user_id int
+SET @user_id = 1
+*/
+
+SELECT Q.[Question ID]
+FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUNT
+						FROM [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire
+						WHERE QQP.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+							SELECT [User ID]
+							FROM [T1-User] U
+							WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+										)
+						GROUP BY QQP.[Question ID]
+						ORDER BY q_COUNT ASC
+					) MinimumQ
 WHERE Q.[Question ID] = MinimumQ.[Question ID]
+
 
 
 --QUERY 16--
