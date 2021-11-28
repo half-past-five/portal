@@ -194,6 +194,7 @@ INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(4,8)
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(7,8)
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(8,8)
+
 																							 
 --Company 2 related                                                                          
 INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,2)
@@ -928,6 +929,58 @@ WHERE Q.[Question ID] = MinimumQ.[Question ID]
 GO
 CREATE PROCEDURE dbo.Q16
 AS
+
+DECLARE @user_id int
+SET @user_id = 1
+
+DECLARE @cnt int
+
+set @cnt = (SELECT COUNT([Questionnaire ID])
+FROM [T1-Questionnaire] 
+WHERE [Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id
+		)
+	)
+	)
+
+
+print @cnt
+
+
+SELECT Qnnaire.[Questionnaire ID]
+FROM [T1-Questionnaire] Qnnaire, [Questions per Questionnaire] QpQ
+WHERE Qnnaire.[Questionnaire ID] = QpQ.[Questionnaire ID] AND QpQ.noOfQuestions = @cnt AND Qnnaire.[Creator ID] in
+				(	SELECT [User ID]
+					FROM [T1-User] u
+					WHERE u.[Company ID] = (
+						SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id
+						)
+						)
+	
+/*
+SELECT *
+FROM (SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfQuestionnaires
+FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
+WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+			SELECT [User ID]
+			FROM [T1-User] u
+			WHERE u.[Company ID] = (
+			SELECT [Company ID] FROM [T1-User] WHERE [User ID] =  @user_id
+			)
+			)
+			GROUP BY QQP.[Question ID]) as QuestionnaireCount
+WHERE QuestionnaireCount.noOfAppearances = @maxNoOfQuestionnaires 	
+			
+			*/
+
+
+
+
+
+
 SELECT *
 FROM [T1-Question] Q
 WHERE NOT EXISTS
