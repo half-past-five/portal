@@ -414,7 +414,7 @@ AS
 IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
-UPDATE [T1-Multiple Choice Answers] SET [Answer] = @answer WHERE @answer = [Answer] AND @question_id = [Question ID]
+UPDATE [T1-Multiple Choice Answers] SET [Answer] = @new_answer WHERE @answer = [Answer] AND @question_id = [Question ID]
 
 
 --REMOVE ANSWER FROM MULT CHOICE--
@@ -589,18 +589,34 @@ IF @action = 'insert'
 		INSERT INTO [T1-Arithmetic Question] ([Question ID], [MIN value], [MAX value]) VALUES (@new_question_id, @arithm_min, @arithm_max)
  		END
 	END
+
+--IF Q does not belog to users cimpany OR Q is in qqp -> abort
+IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
+IF @question_id IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs]) RETURN 
+
 IF @action = 'update'
 	BEGIN
-	IF @question_id NOT IN (SELECT [Question ID] FROM [T1-Question Questionnaire Pairs])
+	IF @description <>'' BEGIN UPDATE [T1-Question] SET [Description] = @description WHERE [Question ID] = @question_id END
+	IF @text <>'' BEGIN UPDATE [T1-Question] SET [Text] = @text WHERE [Question ID] = @question_id END
+	IF @type = 'Free Text'
 		BEGIN
-		print('do update')
+		IF @free_text_restriction <>'' BEGIN UPDATE [T1-Free Text Question] SET [Restriction] = @free_text_restriction WHERE [Question ID] = @question_id END
 		END
-	END   
---QUESTION SHOULD NOT APPEAR IN QQ-PAIRS
-/*
-IF @action = 'update'
+	IF @type = 'Multiple Choice'
+		BEGIN
+		IF @mult_choice_selectable_amount <> '' BEGIN UPDATE [T1-Multiple Choice Question] SET [Selectable Amount] = @mult_choice_selectable_amount WHERE [Question ID] = @question_id END
+		END
+	IF @type = 'Arithmetic'
+		BEGIN
+		IF @arithm_min <> '' BEGIN UPDATE [T1-Arithmetic Question] SET [MIN value] = @arithm_min WHERE [Question ID] = @question_id END
+		IF @arithm_max <> '' BEGIN UPDATE [T1-Arithmetic Question] SET [MAX value] = @arithm_max WHERE [Question ID] = @question_id END
+		END
+	END
 IF @action = 'delete'
-*/
+	BEGIN
+	DELETE FROM [T1-Question] WHERE [Question ID] = @question_id --cascades to specific question types
+	END
+
 
 
 --QUERY 6a (CREATE NEW)--
