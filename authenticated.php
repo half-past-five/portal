@@ -382,6 +382,40 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <input type="submit" name="QueryShowAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Show Answer Mult Choice">
                             </form>
 
+                            <!--Query 6a-->
+                            <hr>
+                            <form action="query6a.php" method="post">
+                                <h3>6A (Create New Questionnaire)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="title" placeholder="Title"></div>
+                                <input type="submit" name="Query 6a" class="form-control btn btn-primary submit px-3" value="QUERY 6A">
+                            </form>
+
+                            <!--Query 6b-->
+                            <hr>
+                            <form action="query6b.php" method="post">
+                                <h3>6B (View Questionnaire's Questions)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="title" placeholder="Title"></div>
+                                <input type="submit" name="Query 6b" class="form-control btn btn-primary submit px-3" value="QUERY 6B">
+                            </form>
+
+                            <!--Query 6c-->
+                            <hr>
+                            <form action="query6c.php" method="post">
+                                <h3>6C (Add Question to Questionnaire)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="q_id" placeholder="Question ID"></div>
+                                <input type="submit" name="Query 6b" class="form-control btn btn-primary submit px-3" value="QUERY 6C">
+                            </form>
+
+                            <!--Query 6d-->
+                            <hr>
+                            <form action="query6d.php" method="post">
+                                <h3>6D (Remove Question to Questionnaire)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="q_id" placeholder="Question ID"></div>
+                                <input type="submit" name="Query 6d" class="form-control btn btn-primary submit px-3" value="QUERY 6D">
+                            </form>
+
 
                             <!--Query 7-->
                             <hr>
