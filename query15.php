@@ -21,7 +21,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
             background: #9C1092
         }
     </style>
-    <title>Small Questionnaires</title>
+    <title>k Least Used Questions</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -46,12 +46,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
                 //Read Stored proc with param
-                $tsql = "{call Q12(?)}";
+                $tsql = "{call Q15(?, ?)}";
                 $UserID = $_SESSION["User ID"];
-                echo "Executing query: " . $tsql . ") with parameter " . $UserID . "<br/>";
+                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["k_min"] . "<br/>";
 
                 $params = array(
-                    array($UserID, SQLSRV_PARAM_IN)
+                    array($UserID, SQLSRV_PARAM_IN),
+                    array($_POST["k_min"], SQLSRV_PARAM_IN)
                 );
 
                 $getResults = sqlsrv_query($conn, $tsql, $params);

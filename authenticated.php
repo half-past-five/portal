@@ -436,7 +436,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="query14.php" method="post">
                                 <h3>14 (Questionaires which have at least the Questions of selected Questionnaire)</h3>
-                                <div class="form-group"><input class="form-control" type="text" name="@qn_id" placeholder="Questionnaire ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
                                 <input type="submit" name="Query 14" class="form-control btn btn-primary submit px-3" value="QUERY 14">
                             </form>
 
@@ -445,14 +445,14 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="query15.php" method="post">
                                 <h3>15 (k Least Used Questions)</h3>
-                                <div class="form-group"><input class="form-control" type="text" name="@q@k_min" placeholder="Number k"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="k_min" placeholder="Number k"></div>
                                 <input type="submit" name="Query 15" class="form-control btn btn-primary submit px-3" value="QUERY 15">
                             </form>
 
                             <!--Query 16-->
                             <hr>
                             <form action="query16.php" method="post">
-                                <h3>16 (Small Questionnaires)</h3>
+                                <h3>16 (Questions in every Questionnaire)</h3>
                                 <input type="submit" name="Query 16" class="form-control btn btn-primary submit px-3" value="QUERY 16">
                             </form>
 
