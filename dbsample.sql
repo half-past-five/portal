@@ -133,20 +133,25 @@ CREATE TABLE [dbo].[T1-Log](
 	)
 
 ---------- INSERTS ----------
+
 --COMPANY DATA
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('2', 'Company 2', '2020/11/10')
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('3', 'Company 3', '2020/11/10')
+INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('99', 'Kass Business', '2020/11/10')
 
 
 --USER data
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 1', '2000/6/26', 'M', 'Development', 'manager1', 'hohoho', '2', '1', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 2', '2000/6/26', 'M', 'Development', 'manager2', 'hohoho', '2', '2', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 3', '2000/6/26', 'M', 'Development', 'manager3', 'hohoho', '2', '3', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 1', '2000/6/26', 'M', 'Marketing', 'user1', 'hohoho', '3', 1, '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hohoho', '3', 2, '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hohoho', '3', 3, '3')
-
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 1', '2000/6/26', 'M', 'Development', 'manager1', 'hoho', '2', '1', NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 2', '2000/6/26', 'M', 'Development', 'manager2', 'hoho', '2', '2', NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 3', '2000/6/26', 'M', 'Development', 'manager3', 'hoho', '2', '3', NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 1', '2000/6/26', 'M', 'Marketing', 'user1', 'hoho', '3', 1, '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hoho', '3', 2, '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hoho', '3', 3, '3')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kass', '2000/6/26', 'M', 'ADMIN', 'ckasou01', 'hoho', '2', '99', NULL)
+--OBSERVER ADMIN
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Larkos', '2000/6/26', 'M', 'OBSERVER', 'klarko01', 'hihi', '1', NULL, NULL)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukis', '2000/6/26', 'M', 'OBSERVER', 'lpapal03', 'hihi', '1', NULL, NULL)
 --QUESTIONNAIRE data
 
 INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,NULL,1,'https://www.qnnaire1.com')	
@@ -177,7 +182,16 @@ INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES (
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'I am question 8', 'Text cell')
 INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('2', 'Free Text', 'I am question 9', 'Text cell')
 
-
+--FREE TEXT QUESTIONS
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('1', '<1')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('2', '<2')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('3', '<3')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('4', '<4')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('5', '<5')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('6', '<6')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('7', '<7')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('8', '<8')
+INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('9', '<9')
 --QQP data
 
 --Company 1 related
@@ -733,7 +747,7 @@ SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)
 										GROUP BY QQP.[Question ID]
 										) as QuestionnaireCount
 										)
-print @maxNoOfQuestionnaires 	
+--print @maxNoOfQuestionnaires 	
 
 SELECT *
 FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
@@ -1032,6 +1046,11 @@ exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multipl
 @mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
 
 exec Q7 @user_id = '1'
+
+exec Q8 @user_id = '1'
+
+exec Q9
+
 /*
 
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
