@@ -143,9 +143,9 @@ INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date])
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 1', '2000/6/26', 'M', 'Development', 'manager1', 'hohoho', '2', '1', NULL)
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 2', '2000/6/26', 'M', 'Development', 'manager2', 'hohoho', '2', '2', NULL)
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 3', '2000/6/26', 'M', 'Development', 'manager3', 'hohoho', '2', '3', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 1', '2000/6/26', 'M', 'Marketing', 'user1', 'hohoho', '2', 1, '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hohoho', '2', 2, '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hohoho', '2', 3, '3')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 1', '2000/6/26', 'M', 'Marketing', 'user1', 'hohoho', '3', 1, '1')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hohoho', '3', 2, '2')
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hohoho', '3', 3, '3')
 
 --QUESTIONNAIRE data
 
@@ -402,7 +402,9 @@ DECLARE @admin_company_id int
 SELECT @admin_company_id = u.[Company ID]
 FROM [T1-User] u
 WHERE u.[User ID] = @caller_id 
-SELECT *
+SELECT CONVERT(varchar(30), [User ID]) as [User ID], CONVERT(varchar(30), [Name]) as [Name], CONVERT(varchar(30), [Birth Date]) as [Birth Date], CONVERT(varchar(30), [Sex]) as [Sex], CONVERT(varchar(30), [Position]) as [Position],
+CONVERT(varchar(30), [Username]) as [Username], CONVERT(varchar(30), [Password]) as [Password], CONVERT(varchar(30), [Privilages]) as [Privilages],
+CONVERT(varchar(30), [Company ID]) as [Company ID], CONVERT(varchar(30), [Manager ID]) as [Manager ID]  
 FROM [T1-User] u
 WHERE u.[Company ID] = @admin_company_id
 
