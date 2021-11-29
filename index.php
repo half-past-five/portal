@@ -23,7 +23,7 @@ $_SESSION["connectionOptions"] = array(
 	<link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="img js-fullheight" style="background-image: url(https://www.yerun.eu/wp-content/uploads/2021/07/UCY-SOCIAL-ACTIVITIES-1600x1071.jpg);">
+<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
 	<script>
 		function myFunction() {
 			var x = document.getElementById("password-field");

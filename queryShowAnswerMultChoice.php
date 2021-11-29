@@ -49,21 +49,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
     $conn = sqlsrv_connect($serverName, $connectionOptions);
 
     //Read Stored proc with param
-    $tsql = "{call Q5(?,?,?,?,?,?,?,?,?,?)} ";
+    $tsql = "{call ShowAnswerMultChoice(?,?)} ";
     $UserID = $_SESSION["User ID"];
-    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["question_id"] . $_POST["type"] . $_POST["description"] . $_POST["text"] . $_POST["restriction"] . $_POST["selectable_amount"] . $_POST["answers"] . $_POST["min"] . $_POST["max"] . "<br/>";
+    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["question_id"]  . "<br/>";
 
     $params = array(
         array($UserID, SQLSRV_PARAM_IN),
-        array($_POST["action"], SQLSRV_PARAM_IN),
         array($_POST["question_id"], SQLSRV_PARAM_IN),
-        array($_POST["type"], SQLSRV_PARAM_IN),
-        array($_POST["description"], SQLSRV_PARAM_IN),
-        array($_POST["text"], SQLSRV_PARAM_IN),
-        array($_POST["restriction"], SQLSRV_PARAM_IN),
-        array($_POST["selectable_amount"], SQLSRV_PARAM_IN),
-        array($_POST["min"], SQLSRV_PARAM_IN),
-        array($_POST["max"], SQLSRV_PARAM_IN)
     );
 
     $getResults = sqlsrv_query($conn, $tsql, $params);

@@ -21,7 +21,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
     </style>
 </head>
 
-<body class="img js-fullheight" style="background-image: url(https://www.yerun.eu/wp-content/uploads/2021/07/UCY-SOCIAL-ACTIVITIES-1600x1071.jpg);">
+<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
     <section class="ftco-section">
         <div class="container">
             <div class="row justify-content-center">
@@ -307,7 +307,6 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         </div>
                                         <div id="Multiple Choice" class="divShow">
                                             <div class="form-group"><input class="form-control" type="text" name="selectable_amount" placeholder="Selectable Amount"></div>
-                                            <div class="form-group"><input class="form-control" type="text" name="answers" placeholder="Answers"></div>
                                         </div>
                                         <div id="Arithmetic" class="divShow">
                                             <div class="form-group"><input class="form-control" type="text" name="min" placeholder="Min"></div>
@@ -316,13 +315,71 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                     </div>
                                     <br><input type="submit" name="Query 5" class="form-control btn btn-primary submit px-3" value="QUERY 5">
                                 </form>
+
+
+                                <!--Query Insert Answer Mult Choice-->
+                                <hr>
+                                <form action="queryInsertAnswerMultChoice.php" method="post">
+                                    <h3>Query Inswer Answer Multiple Choice</h3>
+                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                    <input type="submit" name="QueryInsertAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Insert Answer Mult Choice">
+                                </form>
+
+                                <!--Query Edit Answer Mult Choice-->
+                                <form action="queryEditAnswerMultChoice.php" method="post">
+                                    <h3>Query Edit Answer Multiple Choice</h3>
+                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="new_answer" placeholder="New Answer"></div>
+                                    <input type="submit" name="QueryEditAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Edit Answer Mult Choice">
+                                </form>
+
+                                <!--Query Delete Answer Mult Choice-->
+                                <hr>
+                                <form action="queryDeleteAnswerMultChoice.php" method="post">
+                                    <h3>Query Delete Answer Multiple Choice</h3>
+                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                    <input type="submit" name="QueryDeleteAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Delete Answer Mult Choice">
+                                </form>
+
+                                <!--Query Show Answer Mult Choice-->
+                                <form action="queryShowAnswerMultChoice.php" method="post">
+                                    <h3>Query Show Answer Multiple Choice</h3>
+                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                    <input type="submit" name="QueryShowAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Show Answer Mult Choice">
+                                </form>
+
                             <?php else : ?>
                                 <hr>
                                 <h2>Logged in as Simple User</h2>
                             <?php endif; ?>
 
+                            <!--Utilities -->
+                            <hr>
+                            <form action="queryShowQuestions.php" method="post">
+                                <h3>Query Show Questions</h3>
+                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Question">
+                            </form>
 
+                            <form action="queryShowQuestionDetails.php" method="post">
+                                <h3>Query Show Question Details</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <input type="submit" name="queryShowQuestionDetails" class="form-control btn btn-primary submit px-3" value="Show Question's Details">
+                            </form>
 
+                            <hr>
+                            <form action="queryShowQuestionnaires.php" method="post">
+                                <h3>Query Show Questionnaires</h3>
+                                <input type="submit" name="Query Show Questionnaires" class="form-control btn btn-primary submit px-3" value="Show Company's Questionnaires">
+                            </form>
+
+                            <hr>
+                            <form action="queryShowUsers.php" method="post">
+                                <h3>Query Show users</h3>
+                                <input type="submit" name="Query Show Users" class="form-control btn btn-primary submit px-3" value="Show Company's Users">
+                            </form>
 
                             <!--Query 7-->
                             <hr>
@@ -377,7 +434,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="query14.php" method="post">
                                 <h3>Query 14 (Questionaires which have at least the Questions of selected Questionnaire)</h3>
-                                <div class="form-group"><input class="form-control"type="text" name="@qn_id" placeholder="Questionnaire ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="@qn_id" placeholder="Questionnaire ID"></div>
                                 <input type="submit" name="Query 14" class="form-control btn btn-primary submit px-3" value="QUERY 14">
                             </form>
 

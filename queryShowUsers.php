@@ -49,32 +49,25 @@ $connectionOptions = $_SESSION["connectionOptions"];
     $conn = sqlsrv_connect($serverName, $connectionOptions);
 
     //Read Stored proc with param
-    $tsql = "{call Q5(?,?,?,?,?,?,?,?,?,?)} ";
+    $tsql = "{call ShowQUsers(?)}";
     $UserID = $_SESSION["User ID"];
-    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["question_id"] . $_POST["type"] . $_POST["description"] . $_POST["text"] . $_POST["restriction"] . $_POST["selectable_amount"] . $_POST["answers"] . $_POST["min"] . $_POST["max"] . "<br/>";
+    echo "Executing query: " . $tsql . ") with parameter " . $UserID . "<br/>";
 
     $params = array(
-        array($UserID, SQLSRV_PARAM_IN),
-        array($_POST["action"], SQLSRV_PARAM_IN),
-        array($_POST["question_id"], SQLSRV_PARAM_IN),
-        array($_POST["type"], SQLSRV_PARAM_IN),
-        array($_POST["description"], SQLSRV_PARAM_IN),
-        array($_POST["text"], SQLSRV_PARAM_IN),
-        array($_POST["restriction"], SQLSRV_PARAM_IN),
-        array($_POST["selectable_amount"], SQLSRV_PARAM_IN),
-        array($_POST["min"], SQLSRV_PARAM_IN),
-        array($_POST["max"], SQLSRV_PARAM_IN)
+        array($UserID, SQLSRV_PARAM_IN)
     );
 
     $getResults = sqlsrv_query($conn, $tsql, $params);
 
     echo ("Results:<br/>");
     echo ($getResults);
-    if ($getResults == FALSE) 
+    if ($getResults == FALSE){
         die(FormatErrors(sqlsrv_errors()));
+        echo("null");
+    }
 
     PrintResultSet($getResults);
-
+    //echo(var_dump($getResults));
     /* Free query  resources. */
     sqlsrv_free_stmt($getResults);
 
@@ -122,6 +115,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
     ?>
 
     <form method="post">
+        <input type="submit" name="disconnect" value="Disconnect" />
         <input type="submit" value="Menu" formaction="authenticated.php">
     </form>
 
