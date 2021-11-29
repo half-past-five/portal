@@ -718,7 +718,8 @@ ORDER BY QPQ.noOfQuestions ASC
 GO
 CREATE PROCEDURE dbo.Q8 @user_id int
 AS
-
+--DECLARE @user_id int
+--SET @user_id = 1
 DECLARE @maxNoOfQuestionnaires 	 int;
 SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)	
 								FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfQuestionnaires
@@ -733,8 +734,7 @@ SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)
 										GROUP BY QQP.[Question ID]
 										) as QuestionnaireCount
 										)
-print @maxNoOfQuestionnaires 	
-
+--print @maxNoOfQuestionnaires 	
 SELECT *
 FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
 		FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
