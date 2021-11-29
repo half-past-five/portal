@@ -233,134 +233,134 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                     <input type="submit" name="Query 4" class="form-control btn btn-primary submit px-3" value="QUERY 4">
                                 </form>
 
-                                <!-- Query 5 -->
-                                <script>
-                                    function showHideQuery5(value) {
-                                        if (value == "") {
-                                            document.getElementById("q5_insert").style.display = "none";
-                                            document.getElementById("q5_delete").style.display = "none";
-                                        }
-                                        if (value == "insert") {
-                                            document.getElementById("q5_insert").style.display = "block";
-                                            document.getElementById("q5_delete").style.display = "none";
-                                        }
-                                        if (value == "update") {
-                                            document.getElementById("q5_insert").style.display = "block";
-                                            document.getElementById("q5_delete").style.display = "block";
-                                        }
-                                        if (value == "delete") {
-                                            document.getElementById("q5_insert").style.display = "none";
-                                            document.getElementById("q5_delete").style.display = "block";
-                                        }
-                                    }
-                                </script>
 
-                                <script>
-                                    function showHideQuery5b(value) {
-                                        if (value == "") {
-                                            document.getElementById("Free Text").style.display = "none";
-                                            document.getElementById("Multiple Choice").style.display = "none";
-                                            document.getElementById("Arithmetic").style.display = "none";
-                                        }
-                                        if (value == "Free Text") {
-                                            document.getElementById("Free Text").style.display = "block";
-                                            document.getElementById("Multiple Choice").style.display = "none";
-                                            document.getElementById("Arithmetic").style.display = "none";
-                                        }
-                                        if (value == "Multiple Choice") {
-                                            document.getElementById("Free Text").style.display = "none";
-                                            document.getElementById("Multiple Choice").style.display = "block";
-                                            document.getElementById("Arithmetic").style.display = "none";
-                                        }
-                                        if (value == "Arithmetic") {
-                                            document.getElementById("Free Text").style.display = "none";
-                                            document.getElementById("Multiple Choice").style.display = "none";
-                                            document.getElementById("Arithmetic").style.display = "block";
-                                        }
-                                    }
-                                </script>
-
-                                <hr>
-                                <form action="query5.php" method="post">
-                                    <h3>Query 5 (Insert/Update/Delete Question)</h3>
-                                    <h4>Parameter:</h4>
-                                    <div class="form-group">Action <select id="action" name="action" class="form-control" onchange="showHideQuery5(this.value);">
-                                            <option value="" selected>Select function...</option>
-                                            <option value="insert">Insert</option>
-                                            <option value="update">Update</option>
-                                            <option value="delete">Delete</option>
-                                        </select></div>
-                                    <div id="q5_delete" class="divShow">
-                                        <div class="form-group"><input type="text" name="question_id" placeholder="Question ID"></div>
-                                    </div>
-                                    <div id="q5_insert" class="divShow">
-                                        <div class="form-group"><input class="form-control" type="text" name="description" placeholder="Description"></div>
-                                        <div class="form-group"><input class="form-control" type="text" name="text" placeholder="Text"></div>
-                                        <div class="form-group">Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
-                                                <option value="" selected>Select question...</option>
-                                                <option value="Free Text">Free Text</option>
-                                                <option value="Multiple Choice">Multiple Choice</option>
-                                                <option value="Arithmetic">Arithmetic</option>
-                                            </select></div>
-                                        <div id="Free Text" class="divShow">
-                                            <div class="form-group"><input class="form-control" type="text" name="restriction" placeholder="Restriction"></div>
-                                        </div>
-                                        <div id="Multiple Choice" class="divShow">
-                                            <div class="form-group"><input class="form-control" type="text" name="selectable_amount" placeholder="Selectable Amount"></div>
-                                        </div>
-                                        <div id="Arithmetic" class="divShow">
-                                            <div class="form-group"><input class="form-control" type="text" name="min" placeholder="Min"></div>
-                                            <div class="form-group"><input class="form-control" type="text" name="max" placeholder="Max"></div>
-                                        </div>
-                                    </div>
-                                    <br><input type="submit" name="Query 5" class="form-control btn btn-primary submit px-3" value="QUERY 5">
-                                </form>
-
-
-                                <!--Query Insert Answer Mult Choice-->
-                                <hr>
-                                <form action="queryInsertAnswerMultChoice.php" method="post">
-                                    <h3>Query Inswer Answer Multiple Choice</h3>
-                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
-                                    <input type="submit" name="QueryInsertAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Insert Answer Mult Choice">
-                                </form>
-
-                                <!--Query Edit Answer Mult Choice-->
-                                <form action="queryEditAnswerMultChoice.php" method="post">
-                                    <h3>Query Edit Answer Multiple Choice</h3>
-                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
-                                    <div class="form-group"><input class="form-control" type="text" name="new_answer" placeholder="New Answer"></div>
-                                    <input type="submit" name="QueryEditAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Edit Answer Mult Choice">
-                                </form>
-
-                                <!--Query Delete Answer Mult Choice-->
-                                <hr>
-                                <form action="queryDeleteAnswerMultChoice.php" method="post">
-                                    <h3>Query Delete Answer Multiple Choice</h3>
-                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                    <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
-                                    <input type="submit" name="QueryDeleteAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Delete Answer Mult Choice">
-                                </form>
-
-                                <!--Query Show Answer Mult Choice-->
-                                <form action="queryShowAnswerMultChoice.php" method="post">
-                                    <h3>Query Show Answer Multiple Choice</h3>
-                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                    <input type="submit" name="QueryShowAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Show Answer Mult Choice">
-                                </form>
 
                             <?php else : ?>
                                 <hr>
                                 <h2>Logged in as Simple User</h2>
                             <?php endif; ?>
+                            <!-- Query 5 -->
+                            <script>
+                                function showHideQuery5(value) {
+                                    if (value == "") {
+                                        document.getElementById("q5_insert").style.display = "none";
+                                        document.getElementById("q5_delete").style.display = "none";
+                                    }
+                                    if (value == "insert") {
+                                        document.getElementById("q5_insert").style.display = "block";
+                                        document.getElementById("q5_delete").style.display = "none";
+                                    }
+                                    if (value == "update") {
+                                        document.getElementById("q5_insert").style.display = "block";
+                                        document.getElementById("q5_delete").style.display = "block";
+                                    }
+                                    if (value == "delete") {
+                                        document.getElementById("q5_insert").style.display = "none";
+                                        document.getElementById("q5_delete").style.display = "block";
+                                    }
+                                }
+                            </script>
 
+                            <script>
+                                function showHideQuery5b(value) {
+                                    if (value == "") {
+                                        document.getElementById("Free Text").style.display = "none";
+                                        document.getElementById("Multiple Choice").style.display = "none";
+                                        document.getElementById("Arithmetic").style.display = "none";
+                                    }
+                                    if (value == "Free Text") {
+                                        document.getElementById("Free Text").style.display = "block";
+                                        document.getElementById("Multiple Choice").style.display = "none";
+                                        document.getElementById("Arithmetic").style.display = "none";
+                                    }
+                                    if (value == "Multiple Choice") {
+                                        document.getElementById("Free Text").style.display = "none";
+                                        document.getElementById("Multiple Choice").style.display = "block";
+                                        document.getElementById("Arithmetic").style.display = "none";
+                                    }
+                                    if (value == "Arithmetic") {
+                                        document.getElementById("Free Text").style.display = "none";
+                                        document.getElementById("Multiple Choice").style.display = "none";
+                                        document.getElementById("Arithmetic").style.display = "block";
+                                    }
+                                }
+                            </script>
+
+                            <hr>
+                            <form action="query5.php" method="post">
+                                <h3>Query 5 (Insert/Update/Delete Question)</h3>
+                                <h4>Parameter:</h4>
+                                <div class="form-group">Action <select id="action" name="action" class="form-control" onchange="showHideQuery5(this.value);">
+                                        <option value="" selected>Select function...</option>
+                                        <option value="insert">Insert</option>
+                                        <option value="update">Update</option>
+                                        <option value="delete">Delete</option>
+                                    </select></div>
+                                <div id="q5_delete" class="divShow">
+                                    <div class="form-group"><input type="text" name="question_id" placeholder="Question ID"></div>
+                                </div>
+                                <div id="q5_insert" class="divShow">
+                                    <div class="form-group"><input class="form-control" type="text" name="description" placeholder="Description"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="text" placeholder="Text"></div>
+                                    <div class="form-group">Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
+                                            <option value="" selected>Select question...</option>
+                                            <option value="Free Text">Free Text</option>
+                                            <option value="Multiple Choice">Multiple Choice</option>
+                                            <option value="Arithmetic">Arithmetic</option>
+                                        </select></div>
+                                    <div id="Free Text" class="divShow">
+                                        <div class="form-group"><input class="form-control" type="text" name="restriction" placeholder="Restriction"></div>
+                                    </div>
+                                    <div id="Multiple Choice" class="divShow">
+                                        <div class="form-group"><input class="form-control" type="text" name="selectable_amount" placeholder="Selectable Amount"></div>
+                                    </div>
+                                    <div id="Arithmetic" class="divShow">
+                                        <div class="form-group"><input class="form-control" type="text" name="min" placeholder="Min"></div>
+                                        <div class="form-group"><input class="form-control" type="text" name="max" placeholder="Max"></div>
+                                    </div>
+                                </div>
+                                <br><input type="submit" name="Query 5" class="form-control btn btn-primary submit px-3" value="QUERY 5">
+                            </form>
+
+
+                            <!--Query Insert Answer Mult Choice-->
+                            <hr>
+                            <form action="queryInsertAnswerMultChoice.php" method="post">
+                                <h3>Query Inswer Answer Multiple Choice</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                <input type="submit" name="QueryInsertAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Insert Answer Mult Choice">
+                            </form>
+
+                            <!--Query Edit Answer Mult Choice-->
+                            <form action="queryEditAnswerMultChoice.php" method="post">
+                                <h3>Query Edit Answer Multiple Choice</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="new_answer" placeholder="New Answer"></div>
+                                <input type="submit" name="QueryEditAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Edit Answer Mult Choice">
+                            </form>
+
+                            <!--Query Delete Answer Mult Choice-->
+                            <hr>
+                            <form action="queryDeleteAnswerMultChoice.php" method="post">
+                                <h3>Query Delete Answer Multiple Choice</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
+                                <input type="submit" name="QueryDeleteAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Delete Answer Mult Choice">
+                            </form>
+
+                            <!--Query Show Answer Mult Choice-->
+                            <form action="queryShowAnswerMultChoice.php" method="post">
+                                <h3>Query Show Answer Multiple Choice</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <input type="submit" name="QueryShowAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Show Answer Mult Choice">
+                            </form>
                             <!--Utilities -->
                             <hr>
                             <form action="queryShowQuestions.php" method="post">
                                 <h3>Query Show Questions</h3>
-                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Question">
+                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Questions">
                             </form>
 
                             <form action="queryShowQuestionDetails.php" method="post">

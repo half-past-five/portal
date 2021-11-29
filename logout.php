@@ -8,6 +8,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <html>
 
 <head>
+    <title>BYE-BYE!!</title>
     <style>
         table th {
             background: grey
