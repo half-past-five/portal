@@ -10,34 +10,31 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <head>
     <style>
         table th {
-            background: grey
+            background: black
         }
 
         table tr:nth-child(odd) {
-            background: LightYellow
+            background: #4F1092
         }
 
         table tr:nth-child(even) {
-            background: LightGray
+            background: #9C1092
         }
     </style>
+    <title>Small Questionnaires</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <table cellSpacing=0 cellPadding=5 width="100%" border=0>
-        <tr>
-            <td vAlign=top width=170><img height=91 alt=UCY src="images/ucy.jpg" width=94>
-                <h5>
-                    <a href="http://www.ucy.ac.cy/">University of Cyprus</a><BR />
-                    <a href="http://www.cs.ucy.ac.cy/">Dept. of Computer Science</a>
-                </h5>
-            </td>
-            <td vAlign=center align=middle>
-                <h2>Welcome to the EPL342 project test page</h2>
-            </td>
-        </tr>
-    </table>
-    <hr>
+<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
+    <section class="ftco-section">
+        <!-- <div class="container"> -->
+        <div class="row justify-content-center">
+            <!-- <div class="col-md-6 col-lg-4"> -->
+            <div class="login-wrap p-0">
 
     <?php
     $time_start = microtime(true);
@@ -77,46 +74,52 @@ $connectionOptions = $_SESSION["connectionOptions"];
     echo ('<br>QueryTime: ' . $execution_time . ' ms');
 
     function PrintResultSet($resultSet)
-    {
-        echo ("<table><tr >");
+                {
+                    echo ("<table style='color: white'><tr >");
 
-        foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
-            echo ("<th>");
-            echo $fieldMetadata["Name"];
-            echo ("</th>");
-        }
-        echo ("</tr>");
+                    foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
+                        echo ("<th>");
+                        echo $fieldMetadata["Name"];
+                        echo ("</th>");
+                    }
+                    echo ("</tr>");
 
-        while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
-            echo ("<tr>");
-            foreach ($row as $col) {
-                echo ("<td>");
-                echo (is_null($col) ? "Null" : $col);
-                echo ("</td>");
-            }
-            echo ("</tr>");
-        }
-        echo ("</table>");
-    }
+                    while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
+                        echo ("<tr>");
+                        foreach ($row as $col) {
+                            echo ("<td>");
+                            echo (is_null($col) ? "Null" : $col);
+                            echo ("</td>");
+                        }
+                        echo ("</tr>");
+                    }
+                    echo ("</table>");
+                }
 
-    function FormatErrors( $errors ){
-		/* Display errors. */
-		echo "Error information: ";
+                function FormatErrors($errors)
+                {
+                    /* Display errors. */
+                    echo "Error information: ";
 
-		foreach ( $errors as $error )
-		{
-			echo "SQLSTATE: ".$error['SQLSTATE']."";
-			echo "Code: ".$error['code']."";
-			echo "Message: ".$error['message']."";
-		}
-	}
-    ?>
+                    foreach ($errors as $error) {
+                        echo "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        echo "Code: " . $error['code'] . "";
+                        echo "Message: " . $error['message'] . "";
+                    }
+                }
+                ?>
 
-    <form method="post">
-        <input type="submit" name="disconnect" value="Disconnect" />
-        <input type="submit" value="Menu" formaction="authenticated.php">
-    </form>
+                <form method="post">
+                    <div class="form-group">
+                        <input type="submit" value="Menu" class="form-control btn btn-primary submit px-3" formaction="authenticated.php">
+                    </div>
+                </form>
 
+            </div>
+            <!-- </div> -->
+        </div>
+        <!-- </div> -->
+    </section>
 </body>
 
 </html>

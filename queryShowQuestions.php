@@ -21,7 +21,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
             background: #9C1092
         }
     </style>
-    <title>Query Show Questions</title>
+    <title>Show Questions</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -116,6 +116,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                         <input type="submit" value="Menu" class="form-control btn btn-primary submit px-3" formaction="authenticated.php">
                     </div>
                 </form>
+                
             </div>
             <!-- </div> -->
         </div>

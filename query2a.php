@@ -10,114 +10,118 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <head>
     <style>
         table th {
-            background: grey
+            background: black
         }
 
         table tr:nth-child(odd) {
-            background: LightYellow
+            background: #4F1092
         }
 
         table tr:nth-child(even) {
-            background: LightGray
+            background: #9C1092
         }
     </style>
+    <title>Insert/Update/View Company</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <table cellSpacing=0 cellPadding=5 width="100%" border=0>
-        <tr>
-            <td vAlign=top width=170><img height=91 alt=UCY src="images/ucy.jpg" width=94>
-                <h5>
-                    <a href="http://www.ucy.ac.cy/">University of Cyprus</a><BR />
-                    <a href="http://www.cs.ucy.ac.cy/">Dept. of Computer Science</a>
-                </h5>
-            </td>
-            <td vAlign=center align=middle>
-                <h2>Welcome to the EPL342 project test page</h2>
-            </td>
-        </tr>
-    </table>
-    <hr>
+<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
+    <section class="ftco-section">
+        <!-- <div class="container"> -->
+        <div class="row justify-content-center">
+            <!-- <div class="col-md-6 col-lg-4"> -->
+            <div class="login-wrap p-0">
 
-    <?php
-    $time_start = microtime(true);
+                <?php
+                $time_start = microtime(true);
 
-    //Establishes the connection
-    echo "Connecting to SQL server (" . $serverName . ")<br/>";
-    echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
-    //echo "Pass: " . $connectionOptions[PWD] . "<br/>";
-    $conn = sqlsrv_connect($serverName, $connectionOptions);
+                //Establishes the connection
+                echo "Connecting to SQL server (" . $serverName . ")<br/>";
+                echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
+                //echo "Pass: " . $connectionOptions[PWD] . "<br/>";
+                $conn = sqlsrv_connect($serverName, $connectionOptions);
 
-    //Read Stored proc with param
-    $tsql = "{call Q2a(?,?,?,?)} ";
-    echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["company_id"] . $_POST["brand_name"] . $_POST["new_date"] . "<br/>";
+                //Read Stored proc with param
+                $tsql = "{call Q2a(?,?,?,?)} ";
+                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["company_id"] . $_POST["brand_name"] . $_POST["new_date"] . "<br/>";
 
-    $params = array(
-        array($_POST["action"], SQLSRV_PARAM_IN),
-        array($_POST["company_id"], SQLSRV_PARAM_IN),
-        array($_POST["brand_name"], SQLSRV_PARAM_IN),
-        array($_POST["new_date"], SQLSRV_PARAM_IN),
-    );
+                $params = array(
+                    array($_POST["action"], SQLSRV_PARAM_IN),
+                    array($_POST["company_id"], SQLSRV_PARAM_IN),
+                    array($_POST["brand_name"], SQLSRV_PARAM_IN),
+                    array($_POST["new_date"], SQLSRV_PARAM_IN),
+                );
 
-    $getResults = sqlsrv_query($conn, $tsql, $params);
+                $getResults = sqlsrv_query($conn, $tsql, $params);
 
-    echo ("Results:<br/>");
-    echo ($getResults);
-    if ($getResults == FALSE) 
-        die(FormatErrors(sqlsrv_errors()));
-    
+                echo ("Results:<br/>");
+                echo ($getResults);
+                if ($getResults == FALSE)
+                    die(FormatErrors(sqlsrv_errors()));
 
-    PrintResultSet($getResults);
-    /* Free query  resources. */
-    sqlsrv_free_stmt($getResults);
 
-    /* Free connection resources. */
-    sqlsrv_close($conn);
+                PrintResultSet($getResults);
+                /* Free query  resources. */
+                sqlsrv_free_stmt($getResults);
 
-    $time_end = microtime(true);
-    $execution_time = round((($time_end - $time_start) * 1000), 2);
-    echo ('<br>QueryTime: ' . $execution_time . ' ms');
+                /* Free connection resources. */
+                sqlsrv_close($conn);
 
-    function PrintResultSet($resultSet)
-    {
-        echo ("<table><tr >");
+                $time_end = microtime(true);
+                $execution_time = round((($time_end - $time_start) * 1000), 2);
+                echo ('<br>QueryTime: ' . $execution_time . ' ms');
 
-        foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
-            echo ("<th>");
-            echo $fieldMetadata["Name"];
-            echo ("</th>");
-        }
-        echo ("</tr>");
+                function PrintResultSet($resultSet)
+                {
+                    echo ("<table style='color: white'><tr >");
 
-        while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
-            echo ("<tr>");
-            foreach ($row as $col) {
-                echo ("<td>");
-                echo (is_null($col) ? "Null" : $col);
-                echo ("</td>");
-            }
-            echo ("</tr>");
-        }
-        echo ("</table>");
-    }
+                    foreach (sqlsrv_field_metadata($resultSet) as $fieldMetadata) {
+                        echo ("<th>");
+                        echo $fieldMetadata["Name"];
+                        echo ("</th>");
+                    }
+                    echo ("</tr>");
 
-    function FormatErrors( $errors ){
-		/* Display errors. */
-		echo "Error information: ";
+                    while ($row = sqlsrv_fetch_array($resultSet, SQLSRV_FETCH_ASSOC)) {
+                        echo ("<tr>");
+                        foreach ($row as $col) {
+                            echo ("<td>");
+                            echo (is_null($col) ? "Null" : $col);
+                            echo ("</td>");
+                        }
+                        echo ("</tr>");
+                    }
+                    echo ("</table>");
+                }
 
-		foreach ( $errors as $error )
-		{
-			echo "SQLSTATE: ".$error['SQLSTATE']."";
-			echo "Code: ".$error['code']."";
-			echo "Message: ".$error['message']."";
-		}
-	}
-    ?>
+                function FormatErrors($errors)
+                {
+                    /* Display errors. */
+                    echo "Error information: ";
 
-    <form method="post">
-        <input type="submit" value="Menu" formaction="authenticated.php">
-    </form>
+                    foreach ($errors as $error) {
+                        echo "SQLSTATE: " . $error['SQLSTATE'] . "";
+                        echo "Code: " . $error['code'] . "";
+                        echo "Message: " . $error['message'] . "";
+                    }
+                }
+                ?>
 
+                <form method="post">
+                    <div class="form-group">
+                        <input type="submit" value="Menu" class="form-control btn btn-primary submit px-3" formaction="authenticated.php">
+                    </div>
+                </form>
+
+            </div>
+            <!-- </div> -->
+        </div>
+        <!-- </div> -->
+    </section>
 </body>
 
 </html>

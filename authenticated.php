@@ -49,7 +49,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query 1-->
                             <hr>
                             <form action="query1.php" method="post">
-                                <h3>Query 1 (Add Company Admin with Company)</h3>
+                                <h3>1 (Add Company Admin with Company)</h3>
                                 <h4>Parameter:</h4>
                                 <div class="form-group">
                                     <input type="text" name="name" placeholder="Admin Name" class="form-control">
@@ -92,7 +92,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <hr>
                             <form action="query2a.php" method="post">
-                                <h3>Query 2A (Insert/Update/View Company)</h3>
+                                <h3>2A (Insert/Update/View Company)</h3>
                                 <h4>Parameter:</h4>
                                 <label for="action">Action</label>
                                 <div class="form-group"><select id="action" name="action" class="form-control" onchange="showHideQuery2a(this.value);">
@@ -132,7 +132,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <hr>
                             <form action="query2b.php" method="post">
-                                <h3>Query 2B (Insert/Update/View Admin)</h3>
+                                <h3>2B (Insert/Update/View Admin)</h3>
                                 <h4>Parameter:</h4>
                                 <label for="action">Action</label>
                                 <div class="form-group"><select id="action" class="form-control" name="action" class="default" onchange="showHideQuery2b(this.value);">
@@ -168,9 +168,9 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <!--Query 3-->
                                 <hr>
                                 <form action="query3.php" method="post">
-                                    <h3>Query 3 (Add Simple User)</h3>
+                                    <h3>3 (Add Simple User)</h3>
                                     <h4>Parameter:</h4>
-                                    <input type="text" name="name" placeholder="Admin Name" class="form-control">
+                                    <input type="text" name="name" placeholder="Name" class="form-control">
                                     <div class="form-group">
                                         Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
                                         Sex<select id="sex" name="sex" class="form-control">
@@ -205,7 +205,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                                 <hr>
                                 <form action="query4.php" method="post">
-                                    <h3>Query 4 (Insert/Update/View Company Admin)</h3>
+                                    <h3>4 (Insert/Update/View User)</h3>
                                     <h4>Parameters:</h4>
                                     <label for="action">Action</label>
                                     <div class="form-group"><select id="action" class="form-control" name="action" class="default" onchange="showHideQuery4(this.value);">
@@ -239,6 +239,31 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <hr>
                                 <h2>Logged in as Simple User</h2>
                             <?php endif; ?>
+                            <!--Utilities -->
+                            <hr>
+                            <form action="queryShowQuestions.php" method="post">
+                                <h3>Extra1 (Show Questions)</h3>
+                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Questions">
+                            </form>
+
+                            <form action="queryShowQuestionDetails.php" method="post">
+                                <h3>Extra 2 (Show Question Details)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
+                                <input type="submit" name="queryShowQuestionDetails" class="form-control btn btn-primary submit px-3" value="Show Question's Details">
+                            </form>
+
+                            <hr>
+                            <form action="queryShowQuestionnaires.php" method="post">
+                                <h3>Extra 3 (Show Questionnaires)</h3>
+                                <input type="submit" name="Query Show Questionnaires" class="form-control btn btn-primary submit px-3" value="Show Company's Questionnaires">
+                            </form>
+
+                            <hr>
+                            <form action="queryShowUsers.php" method="post">
+                                <h3>Extra 4 (Show users)</h3>
+                                <input type="submit" name="Query Show Users" class="form-control btn btn-primary submit px-3" value="Show Company's Users">
+                            </form>
+
                             <!-- Query 5 -->
                             <script>
                                 function showHideQuery5(value) {
@@ -288,7 +313,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <hr>
                             <form action="query5.php" method="post">
-                                <h3>Query 5 (Insert/Update/Delete Question)</h3>
+                                <h3>5 (Insert/Update/Delete Question)</h3>
                                 <h4>Parameter:</h4>
                                 <div class="form-group">Action <select id="action" name="action" class="form-control" onchange="showHideQuery5(this.value);">
                                         <option value="" selected>Select function...</option>
@@ -297,7 +322,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         <option value="delete">Delete</option>
                                     </select></div>
                                 <div id="q5_delete" class="divShow">
-                                    <div class="form-group"><input type="text" name="question_id" placeholder="Question ID"></div>
+                                    <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 </div>
                                 <div id="q5_insert" class="divShow">
                                     <div class="form-group"><input class="form-control" type="text" name="description" placeholder="Description"></div>
@@ -326,7 +351,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query Insert Answer Mult Choice-->
                             <hr>
                             <form action="queryInsertAnswerMultChoice.php" method="post">
-                                <h3>Query Inswer Answer Multiple Choice</h3>
+                                <h3>5A (Insert Multiple Choice's Answer)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
                                 <input type="submit" name="QueryInsertAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Insert Answer Mult Choice">
@@ -334,7 +359,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <!--Query Edit Answer Mult Choice-->
                             <form action="queryEditAnswerMultChoice.php" method="post">
-                                <h3>Query Edit Answer Multiple Choice</h3>
+                                <h3>5B (Edit Multiple Choice's Answer)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="new_answer" placeholder="New Answer"></div>
@@ -344,7 +369,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query Delete Answer Mult Choice-->
                             <hr>
                             <form action="queryDeleteAnswerMultChoice.php" method="post">
-                                <h3>Query Delete Answer Multiple Choice</h3>
+                                <h3>5C (Remove Answer Multiple Choice)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="answer" placeholder="Answer"></div>
                                 <input type="submit" name="QueryDeleteAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Delete Answer Mult Choice">
@@ -352,88 +377,65 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                             <!--Query Show Answer Mult Choice-->
                             <form action="queryShowAnswerMultChoice.php" method="post">
-                                <h3>Query Show Answer Multiple Choice</h3>
+                                <h3>5D (Show Answer Multiple Choice)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 <input type="submit" name="QueryShowAnswerMultChoice" class="form-control btn btn-primary submit px-3" value="Show Answer Mult Choice">
                             </form>
-                            <!--Utilities -->
-                            <hr>
-                            <form action="queryShowQuestions.php" method="post">
-                                <h3>Query Show Questions</h3>
-                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Questions">
-                            </form>
 
-                            <form action="queryShowQuestionDetails.php" method="post">
-                                <h3>Query Show Question Details</h3>
-                                <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                <input type="submit" name="queryShowQuestionDetails" class="form-control btn btn-primary submit px-3" value="Show Question's Details">
-                            </form>
-
-                            <hr>
-                            <form action="queryShowQuestionnaires.php" method="post">
-                                <h3>Query Show Questionnaires</h3>
-                                <input type="submit" name="Query Show Questionnaires" class="form-control btn btn-primary submit px-3" value="Show Company's Questionnaires">
-                            </form>
-
-                            <hr>
-                            <form action="queryShowUsers.php" method="post">
-                                <h3>Query Show users</h3>
-                                <input type="submit" name="Query Show Users" class="form-control btn btn-primary submit px-3" value="Show Company's Users">
-                            </form>
 
                             <!--Query 7-->
                             <hr>
                             <form action="query7.php" method="post">
-                                <h3>Query 7 (Company's Questionnaires)</h3>
+                                <h3>7 (Company's Questionnaires)</h3>
                                 <input type="submit" name="Query 7" class="form-control btn btn-primary submit px-3" value="QUERY 7">
                             </form>
 
                             <!--Query 8-->
                             <hr>
                             <form action="query8.php" method="post">
-                                <h3>Query 8 (Most Popular Questionnaires)</h3>
+                                <h3>8 (Most Popular Questionnaires)</h3>
                                 <input type="submit" name="Query 8" class="form-control btn btn-primary submit px-3" value="QUERY 8">
                             </form>
 
                             <!--Query 9-->
                             <hr>
                             <form action="query9.php" method="post">
-                                <h3>Query 9 (All Questionnaires)</h3>
+                                <h3>9 (All Questionnaires)</h3>
                                 <input type="submit" name="Query 9" class="form-control btn btn-primary submit px-3" value="QUERY 9">
                             </form>
 
                             <!--Query 10-->
                             <hr>
                             <form action="query10.php" method="post">
-                                <h3>Query 10 (Average Question per Questionnaire)</h3>
+                                <h3>10 (Average Question per Questionnaire)</h3>
                                 <input type="submit" name="Query 10" class="form-control btn btn-primary submit px-3" value="QUERY 10">
                             </form>
 
                             <!--Query 11-->
                             <hr>
                             <form action="query11.php" method="post">
-                                <h3>Query 11 (Large Questionnaires)</h3>
+                                <h3>11 (Large Questionnaires)</h3>
                                 <input type="submit" name="Query 11" class="form-control btn btn-primary submit px-3" value="QUERY 11">
                             </form>
 
                             <!--Query 12-->
                             <hr>
                             <form action="query12.php" method="post">
-                                <h3>Query 12 (Small Questionnaires)</h3>
+                                <h3>12 (Small Questionnaires)</h3>
                                 <input type="submit" name="Query 12" class="form-control btn btn-primary submit px-3" value="QUERY 12">
                             </form>
 
                             <!--Query 13-->
                             <hr>
                             <form action="query13.php" method="post">
-                                <h3>Query 13 (Questionnaires with exact same Questions)</h3>
+                                <h3>13 (Questionnaires with exact same Questions)</h3>
                                 <input type="submit" name="Query 13" class="form-control btn btn-primary submit px-3" value="QUERY 13">
                             </form>
 
                             <!--Query 14-->
                             <hr>
                             <form action="query14.php" method="post">
-                                <h3>Query 14 (Questionaires which have at least the Questions of selected Questionnaire)</h3>
+                                <h3>14 (Questionaires which have at least the Questions of selected Questionnaire)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="@qn_id" placeholder="Questionnaire ID"></div>
                                 <input type="submit" name="Query 14" class="form-control btn btn-primary submit px-3" value="QUERY 14">
                             </form>
@@ -442,7 +444,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query 15-->
                             <hr>
                             <form action="query15.php" method="post">
-                                <h3>Query 15 (k Least Used Questions)</h3>
+                                <h3>15 (k Least Used Questions)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="@q@k_min" placeholder="Number k"></div>
                                 <input type="submit" name="Query 15" class="form-control btn btn-primary submit px-3" value="QUERY 15">
                             </form>
@@ -450,7 +452,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query 16-->
                             <hr>
                             <form action="query16.php" method="post">
-                                <h3>Query 16 (Small Questionnaires)</h3>
+                                <h3>16 (Small Questionnaires)</h3>
                                 <input type="submit" name="Query 16" class="form-control btn btn-primary submit px-3" value="QUERY 16">
                             </form>
 
