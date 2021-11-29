@@ -456,6 +456,14 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <input type="submit" name="Query 16" class="form-control btn btn-primary submit px-3" value="QUERY 16">
                             </form>
 
+                            <!--Query 17-->
+                            <hr>
+                            <form action="query17.php" method="post">
+                                <h3>17 (Find New Versions)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <input type="submit" name="Query 17" class="form-control btn btn-primary submit px-3" value="QUERY 17">
+                            </form>
+
                         <?php endif; ?>
 
 

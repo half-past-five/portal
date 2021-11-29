@@ -8,43 +8,45 @@ $connectionOptions = $_SESSION["connectionOptions"];
 <html>
 
 <head>
-    <title>BYE-BYE!!</title>
     <style>
         table th {
-            background: grey
+            background: black
         }
 
         table tr:nth-child(odd) {
-            background: LightYellow
+            background: #4F1092
         }
 
         table tr:nth-child(even) {
-            background: LightGray
+            background: #9C1092
         }
     </style>
+    <title>BYE - BYE!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
-    <table cellSpacing=0 cellPadding=5 width="100%" border=0>
-        <tr>
-            <td vAlign=top width=170><img height=91 alt=UCY src="images/ucy.jpg" width=94>
-                <h5>
-                    <a href="http://www.ucy.ac.cy/">University of Cyprus</a><BR />
-                    <a href="http://www.cs.ucy.ac.cy/">Dept. of Computer Science</a>
-                </h5>
-            </td>
-            <td vAlign=center align=middle>
-                <h2>Welcome to the EPL342 project test page</h2>
-            </td>
-        </tr>
-    </table>
-    <?php
-    if (isset($_POST['disconnect'])) {
-        echo "<hr><h3>Clossing session and redirecting to start page</br>";
-        echo "Thank you for choosing EPL342 Team 1!</h3>";
-        session_unset();
-        session_destroy();
-        die('<meta http-equiv="refresh" content="3; url=index.php" />');
-    }
-    ?>
+<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <!-- <div class="col-md-6 col-lg-4"> -->
+                    <div class="login-wrap p-0">
+                        <?php
+                        if (isset($_POST['disconnect'])) {
+                            echo "<h3>Clossing session and redirecting to start page</h3></br></br>";
+                            echo "<h2 style='color:white'>Thank you for choosing EPL342 Team 1!<h2>";
+                            session_unset();
+                            session_destroy();
+                            die('<meta http-equiv="refresh" content="3.5; url=index.php" />');
+                        }
+                        ?>
+                    </div>
+                <!-- </div> -->
+            </div>
+        </div>
+    </section>
 </body>
