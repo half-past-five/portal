@@ -53,15 +53,16 @@ CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
 
 CREATE TABLE dbo.[T1-User] (
 	[User ID] int IDENTITY(1,1) not null, --IDENTITY added 
+	[IDCard] int not null,
 	[Name] varchar(30) not null,
 	[Birth Date] date not null,
 	Sex char(1) not null,
-	Position varchar(30) not null,
+	Position varchar(30) DEFAULT 'employee' not null,
 	Username varchar(30) not null,
 	[Password] varchar(30) not null,
 	Privilages int not null,
 	[Company ID] int,
-	[Manager ID] int,
+	[Manager ID] int DEFAULT '1',
 	UNIQUE(Username),
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
 	CHECK ([Privilages] in ('1', '2', '3'))
@@ -135,99 +136,76 @@ CREATE TABLE [dbo].[T1-Log](
 ---------- INSERTS ----------
 
 --COMPANY DATA
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('1', 'Company 1', '2020/11/10')
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('2', 'Company 2', '2020/11/10')
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('3', 'Company 3', '2020/11/10')
-INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES ('99', 'Kass Business', '2020/11/10')
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (728386,'Zing Zang','2021/06/20');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (250001,'Icy Cool','2021/03/26');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (907205,'Riverbed','2020/06/07');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (320807,'Avatar Tech','2020/11/03');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (493089,'Vantage Group','2020/04/03');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (616571,'Effectus Solutions','2020/03/07');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (206439,'Life Of Pie','2020/05/13');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (982085,'Band Of Flowers','2021/08/25');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (862528,'Progressive Technology Solutions','2021/01/01');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (928187,'Wire Attire','2020/01/13');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (424588,'Tech Partners','2020/06/15');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (732380,'Klasp','2020/08/28');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (613487,'Cool Collective','2020/10/22');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (311955,'Birdsong','2020/06/01');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (871797,'Slick Systems','2021/05/16');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (977622,'DeployDash','2020/02/01');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (121278,'Clip Shop','2021/03/07');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (821815,'Nationale Digitale','2021/02/09');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (693458,'Top in Tech','2021/08/19');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (725083,'Success Tech','2021/04/10');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (807847,'The Whisperer','2020/09/28');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (928539,'The Nosh Pit','2021/02/24');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (949326,'Futuratech','2021/07/08');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (314761,'Compelling Convo','2020/02/20');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (830305,'Files and Firewalls','2021/09/11');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (201463,'InDesign','2021/07/13');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (164419,'Turner’s Tech Helpers','2020/06/09');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (218264,'Techware','2020/08/12');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (695397,'Will Thrill','2021/10/20');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (217528,'The Lonely Traveler','2021/06/13');
+
+
 
 
 --USER data
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 1', '2000/6/26', 'M', 'Development', 'manager1', 'hoho', '2', '1', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 2', '2000/6/26', 'M', 'Development', 'manager2', 'hoho', '2', '2', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Manager 3', '2000/6/26', 'M', 'Development', 'manager3', 'hoho', '2', '3', NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 1', '2000/6/26', 'M', 'Marketing', 'user1', 'hoho', '3', 1, '1')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 2', '2000/6/26', 'M', 'Marketing', 'user2', 'hoho', '3', 2, '2')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('User 3', '2000/6/26', 'M', 'Marketing', 'user3', 'hoho', '3', 3, '3')
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Kass', '2000/6/26', 'M', 'ADMIN', 'ckasou01', 'hoho', '2', '99', NULL)
---OBSERVER ADMIN
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Larkos', '2000/6/26', 'M', 'OBSERVER', 'klarko01', 'hihi', '1', NULL, NULL)
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES ('Loukis', '2000/6/26', 'M', 'OBSERVER', 'lpapal03', 'hihi', '1', NULL, NULL)
---QUESTIONNAIRE data
-
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1',1,NULL,1,'https://www.qnnaire1.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2',1,NULL,2,'https://www.qnnaire2.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3',1,NULL,3,'https://www.qnnaire3.com')
-
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1',2,1,4,'https://www.qnnaire1-1.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1',2,2,5,'https://www.qnnaire2-1.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3-1',2,3,6,'https://www.qnnaire3-1.com')	
-
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-1',3,4,1,'https://www.qnnaire1-1-1.com')	
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-2',3,4,4,'https://www.qnnaire1-1-2.com')		
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1-1',3,5,2,'https://www.qnnaire2-1-1.com')	
-
-
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 1-1-1',4,4,4,NULL)
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 2-1-1',4,5,5,NULL)
-INSERT INTO [dbo].[T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL])VALUES('Qnnaire 3-1-1',4,6,5,NULL)
---QUESTION data
-
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'I am question 1', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('2', 'Free Text', 'I am question 2', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('3', 'Free Text', 'I am question 3', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('4', 'Free Text', 'I am question 4', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('5', 'Free Text', 'I am question 5', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('6', 'Free Text', 'I am question 6', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'I am question 7', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('1', 'Free Text', 'I am question 8', 'Text cell')
-INSERT INTO	[T1-Question] ([Creator ID], [Type], [Description], [Text]) VALUES ('2', 'Free Text', 'I am question 9', 'Text cell')
-
---FREE TEXT QUESTIONS
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('1', '<1')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('2', '<2')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('3', '<3')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('4', '<4')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('5', '<5')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('6', '<6')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('7', '<7')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('8', '<8')
-INSERT INTO [T1-Free Text Question] ([Question ID], [Restriction]) VALUES ('9', '<9')
---QQP data
-
---Company 1 related
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,1)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(4,1)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,4)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(4,4)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(7,4)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,7)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(4,7)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(7,7)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(8,7)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,8)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(4,8)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(7,8)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(8,8)
-
-																							 
---Company 2 related                                                                          
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,2)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,5)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(5,5)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,9)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(5,9)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(9,9)
-																							 
---Company 3 related                                                                          
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,3)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,6)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(6,6)
-																							
---NOT COMPLETED (URL = NULL) qqp                                                            
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(1,10)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(2,11)
-INSERT INTO [dbo].[T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID])VALUES(3,12)
-
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1,'Konstantinos Larkos','2000/06/04 00:00:00.000','M','klarko01','hihi',1,0);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (2,'Christos Kasoulides','2000/06/04 00:00:00.000','M','ckasou01','hoho',1,0);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (3,'Loukas Papalazarou','2000/06/04 00:00:00.000','M','lpapal03','hoho',1,0);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (4,'Christos Eleftheriou','2000/06/04 00:00:00.000','M','celeft01','hoho',1,0);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (5,'Marios Vasileiou','2000/06/04 00:00:00.000','M','mvasei01','hoho',1,0);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (648692,'Sibill Nicks','1982/10/02 00:00:00.000','M','User6','Pass6',2,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1071309,'Silvester Cloke','1998/02/03 00:00:00.000','M','User7','Pass7',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (398688,'Vaggelis Burnell','1989/07/19 00:00:00.000','M','User8','Pass8',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (701468,'Jeremy Parr','1973/02/16 00:00:00.000','M','User9','Pass9',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (552697,'Stefanos Lock','1979/04/02 00:00:00.000','M','User10','Pass10',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (699428,'Lawrence Dennis','1970/09/08 00:00:00.000','M','User11','Pass11',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (120928,'Jesse Mutter','1986/04/22 00:00:00.000','M','User12','Pass12',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (434463,'Osmund Smith','1989/09/09 00:00:00.000','M','User13','Pass13',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (149604,'Dimosthenis Low','1998/08/26 00:00:00.000','M','User14','Pass14',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (737153,'Humphry Fowler','1964/12/16 00:00:00.000','M','User15','Pass15',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (256357,'Apostolos Woodman','1990/10/29 00:00:00.000','M','User16','Pass16',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (124505,'Pompey Putt','1986/03/24 00:00:00.000','M','User17','Pass17',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (225897,'Ellis Braund','1980/09/15 00:00:00.000','M','User18','Pass18',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (919447,'Xenofon Symons','1983/04/19 00:00:00.000','M','User19','Pass19',3,1);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (568619,'Erasmus Germon','1992/03/28 00:00:00.000','M','User20','Pass20',2,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (247771,'Isabella  Vittery','1978/04/08 00:00:00.000','F','User21','Pass21',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (668258,'Petros Jarvis','1975/03/05 00:00:00.000','M','User22','Pass22',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (364868,'Ann Halfyard','1992/05/30 00:00:00.000','M','User23','Pass23',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (700410,'Maurice Drake','1973/11/13 00:00:00.000','M','User24','Pass24',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (264470,'Petros Smith','1964/08/14 00:00:00.000','M','User25','Pass25',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1023827,'Marinos Edmonston','1987/01/19 00:00:00.000','M','User26','Pass26',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1013321,'Dimitri Howis','1970/06/07 00:00:00.000','M','User27','Pass27',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (859388,'Silvester Westcott','1984/10/10 00:00:00.000','M','User28','Pass28',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (605170,'Joice Padfield','1989/09/07 00:00:00.000','M','User29','Pass29',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (255531,'Joseph James','1975/08/05 00:00:00.000','M','User30','Pass30',3,2);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1050840,'Christopher Discombe','1995/08/29 00:00:00.000','M','User31','Pass31',2,3);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (474820,'Ellen  Vodden','1973/11/04 00:00:00.000','F','User32','Pass32',3,3);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (247797,'Panayiotis Lock','1964/12/25 00:00:00.000','M','User33','Pass33',3,3);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (327940,'Rose  Perry','1978/10/04 00:00:00.000','F','User34','Pass34',3,3);
+INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (542602,'Lancelot Pinsent','1997/06/04 00:00:00.000','M','User35','Pass35',3,3);
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
