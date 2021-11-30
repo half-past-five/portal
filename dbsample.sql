@@ -319,6 +319,7 @@ WHERE [Creator ID] in (
 RETURN 1
 END;
 
+
 GO
 CREATE FUNCTION dbo.generateURL(@questionnaire_id int)
 RETURNS varchar(100)
@@ -328,6 +329,7 @@ DECLARE @out_put varchar(100)
 SET @out_put ='https://www.obervers.com/questionnaire_no_' + CAST(@questionnaire_id AS varchar(30))
 RETURN @out_put
 END;
+
 
 
 GO
@@ -408,23 +410,6 @@ WHERE [Creator ID] in (
 	)
 
 
---SHOW QUESTIONS OF QUESTIONNAIRE--
-GO
-CREATE PROCEDURE dbo.ShowQuestionsOfQuestionnaire @caller_id int, @questionnaire_id int
-AS
-IF dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id) = 0 RETURN 
-SELECT q.[Question ID],q.[Creator ID], q.[Type], q.[Description], q.[Text]
-FROM [T1-Questionnaire] qr, [T1-Question] q, [T1-Question Questionnaire Pairs] qqp
-WHERE qr.[Creator ID] in (
-	SELECT [User ID]
-	FROM [T1-User] u
-	WHERE u.[Company ID] = (
-		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
-		)
-	)
-AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Question ID] AND qr.[Questionnaire ID]=@questionnaire_id
-
-
 --QUERY SHOW ALL COMPANY USERS--
 GO
 CREATE PROCEDURE dbo.ShowQUsers @caller_id int
@@ -483,6 +468,14 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 SELECT [Answer] FROM [T1-Multiple Choice Answers] WHERE @question_id = [Question ID]
+
+
+--SET QUESTIONNAIRE TO 'NOT DONE'--
+GO
+CREATE PROCEDURE dbo.setQuestionnaireNotDone @caller_id int, @questionnaire_id int
+AS
+IF dbo.canUserSeeQuestion(@caller_id, @questionnaire_id) = 0 RETURN
+UPDATE [T1-Questionnaire] SET [URL] = NULL
 
 
 --QUERY 1--
@@ -676,23 +669,34 @@ INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [U
 GO
 CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int
 AS
-IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN
-SELECT *
-FROM [T1-Question Questionnaire Pairs] qqp, [T1-Question] q
-WHERE qqp.[Questionnaire ID] = @questionnaire_id AND qqp.[Question ID] = q.[Question ID]
+IF dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id) = 0 RETURN 
+SELECT q.[Question ID],q.[Creator ID], q.[Type], q.[Description], q.[Text]
+FROM [T1-Questionnaire] qr, [T1-Question] q, [T1-Question Questionnaire Pairs] qqp
+WHERE qr.[Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Question ID] AND qr.[Questionnaire ID]=@questionnaire_id
 
---exec Q6b @caller_id='3', @questionnaire_id='1'
+/*
+exec Q6b @caller_id='1', @questionnaire_id='1'
+exec Q6a @caller_id = '1', @title = 'newquest'
+exec ShowQuestionnaires @caller_id = '1'
+exec Q6c @caller_id = '1', @questionnaire_id = '13', @question_id = '1'
+*/
 
 
 --QUERY 6c (ADD QUESTION TO QUESTIONNAIRE)--
 GO
 CREATE PROCEDURE dbo.Q6c @caller_id int, @questionnaire_id int, @question_id int
 AS
+IF (SELECT [URL] FROM [T1-Questionnaire] q WHERE @questionnaire_id = q.[Questionnaire ID]) <> NULL RETURN 
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
-UPDATE [T1-Questionnaire] SET [URL] = NULL
-INSERT INTO [T1-Question Questionnaire Pairs]([Question ID], [Questionnaire ID]) VALUES (@questionnaire_id, @question_id)
-UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+INSERT INTO [T1-Question Questionnaire Pairs]([Questionnaire ID], [Question ID]) VALUES (@questionnaire_id, @question_id)
 
 /*
 exec ShowQuestions @caller_id = '1'
@@ -720,7 +724,8 @@ IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETUR
 UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
 --exec Q6e @caller_id='1', @questionnaire_id='6'
 
---QUERY 6f (CLONE)--
+
+--QUERY 6f (CLONE)-- ***NOT DONE***
 GO
 CREATE PROCEDURE dbo.Q6f @caller_id int, @questionnaire_id int
 AS
