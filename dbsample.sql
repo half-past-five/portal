@@ -408,6 +408,23 @@ WHERE [Creator ID] in (
 	)
 
 
+--SHOW QUESTIONS OF QUESTIONNAIRE--
+GO
+CREATE PROCEDURE dbo.ShowQuestionsOfQuestionnaire @caller_id int, @questionnaire_id int
+AS
+IF dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id) = 0 RETURN 
+SELECT q.[Question ID],q.[Creator ID], q.[Type], q.[Description], q.[Text]
+FROM [T1-Questionnaire] qr, [T1-Question] q, [T1-Question Questionnaire Pairs] qqp
+WHERE qr.[Creator ID] in (
+	SELECT [User ID]
+	FROM [T1-User] u
+	WHERE u.[Company ID] = (
+		SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @caller_id
+		)
+	)
+AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Question ID] AND qr.[Questionnaire ID]=@questionnaire_id
+
+
 --QUERY SHOW ALL COMPANY USERS--
 GO
 CREATE PROCEDURE dbo.ShowQUsers @caller_id int
@@ -676,6 +693,14 @@ IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETUR
 UPDATE [T1-Questionnaire] SET [URL] = NULL
 INSERT INTO [T1-Question Questionnaire Pairs]([Question ID], [Questionnaire ID]) VALUES (@questionnaire_id, @question_id)
 UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+
+/*
+exec ShowQuestions @caller_id = '1'
+exec ShowQuestionnaires @caller_id = '1'
+exec ShowQuestionsOfQuestionnaire @caller_id = '1', @questionnaire_id = '1'
+exec Q6c @caller_id = '1', @questionnaire_id = '1', @question_id = '1'
+exec Q6d @caller_id = '1', @questionnaire_id = '1', @question_id = '1'
+*/
 
 
 --QUERY 6d (REMOVE QUESTION FROM QUESTIONNAIRE)--
