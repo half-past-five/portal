@@ -243,25 +243,25 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="queryShowQuestions.php" method="post">
                                 <h3>Extra1 (Show Questions)</h3>
-                                <input type="submit" name="Query Show Questions" class="form-control btn btn-primary submit px-3" value="Show Company's Questions">
+                                <input type="submit" name="Query Show Questions" class="form-control btnnn btnnn-primary submit px-3" value="Show Company's Questions">
                             </form>
 
                             <form action="queryShowQuestionDetails.php" method="post">
                                 <h3>Extra 2 (Show Question Details)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
-                                <input type="submit" name="queryShowQuestionDetails" class="form-control btn btn-primary submit px-3" value="Show Question's Details">
+                                <input type="submit" name="queryShowQuestionDetails" class="form-control btnnn btnnn-primary submit px-3" value="Show Question's Details">
                             </form>
 
                             <hr>
                             <form action="queryShowQuestionnaires.php" method="post">
                                 <h3>Extra 3 (Show Questionnaires)</h3>
-                                <input type="submit" name="Query Show Questionnaires" class="form-control btn btn-primary submit px-3" value="Show Company's Questionnaires">
+                                <input type="submit" name="Query Show Questionnaires" class="form-control btnnn btnnn-primary submit px-3" value="Show Company's Questionnaires">
                             </form>
 
                             <hr>
                             <form action="queryShowUsers.php" method="post">
                                 <h3>Extra 4 (Show users)</h3>
-                                <input type="submit" name="Query Show Users" class="form-control btn btn-primary submit px-3" value="Show Company's Users">
+                                <input type="submit" name="Query Show Users" class="form-control btnnn btnnn-primary submit px-3" value="Show Company's Users">
                             </form>
 
                             <!-- Query 5 -->
@@ -503,7 +503,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                         <hr>
                         <form method="post" action="logout.php">
-                            <button type="submit" name="disconnect" class="form-control btn btn-primary submit px-3">Disconnect</button>
+                            <button type="submit" name="disconnect" class="form-control btnn btnn-primary submit px-3">Disconnect</button>
                         </form>
                     </div>
                 </div>
