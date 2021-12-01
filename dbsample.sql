@@ -43,17 +43,17 @@ IF OBJECT_ID (N'dbo.canUserSeeUser', N'FN') IS NOT NULL DROP FUNCTION canUserSee
 
 ----------CREATE TABLES----------
 
-
-CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
-	[Question ID] int not null,
-	[Questionnaire ID] int not null,
-	UNIQUE([Question ID], [Questionnaire ID])
-	)
+CREATE TABLE [dbo].[T1-Company](
+	[Registration Number] int not null, --NOT SPECIFIED BY US
+	[Brand Name] varchar(50) not null,
+	[Induction Date] date not null,
+	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Registration Number])
+)
 
 
 CREATE TABLE dbo.[T1-User] (
 	[User ID] int IDENTITY(1,1) not null, --IDENTITY added 
-	[IDCard] int not null,
+	[IDCard] int not null, --ADD DEFAULT
 	[Name] varchar(30) not null,
 	[Birth Date] date not null,
 	Sex char(1) not null,
@@ -62,26 +62,19 @@ CREATE TABLE dbo.[T1-User] (
 	[Password] varchar(30) not null,
 	Privilages int not null,
 	[Company ID] int,
-	[Manager ID] int DEFAULT '1',
+	[Manager ID] int DEFAULT NULL,
 	UNIQUE(Username),
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
 	CHECK ([Privilages] in ('1', '2', '3'))
 )
 
 
-CREATE TABLE [dbo].[T1-Company](
-	[Registration Number] int not null, --NOT SPECIFIED BY US
-	[Brand Name] varchar(50) not null,
-	[Induction Date] date not null,
-	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Registration Number])
-	)
-
-
 CREATE TABLE dbo.[T1-Question] (
 	[Question ID] int IDENTITY(1,1) not null,
+	[Question Code] varchar(30) not null,	
 	[Creator ID] int,
 	[Type] varchar(30),
-	[Description] varchar(50) not null,
+	[Description] varchar(50) DEFAULT 'This is decription' not null,
 	[Text] varchar(100) not null,
 	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
 	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
@@ -90,10 +83,18 @@ CREATE TABLE dbo.[T1-Question] (
 
 CREATE TABLE dbo.[T1-Free Text Question] (
 	[Question ID] int not null,
-	[Restriction] varchar(30)
+	[Question Code] varchar(30) not null,
+	[Restriction] varchar(30) DEFAULT null
 	UNIQUE([Question ID])
 )	
 
+CREATE TABLE dbo.[T1-Arithmetic Question] (
+	[Question ID] int not null,
+	[Question Code] varchar(30) not null,
+	[MIN value] int DEFAULT null, 
+	[MAX value] int DEFAULT null, --min & max value added for range	
+	CHECK ([MAX value] > [MIN value])
+)
 
 CREATE TABLE dbo.[T1-Multiple Choice Question] (
 	[Question ID] int not null,
@@ -106,16 +107,6 @@ CREATE TABLE dbo.[T1-Multiple Choice Answers] (
 	[Answer] varchar(50)
 	UNIQUE([Question ID], [Answer])
 	)
-	
-
-CREATE TABLE dbo.[T1-Arithmetic Question] (
-	[Question ID] int not null,
-	[MIN value] int not null, 
-	[MAX value] int not null, --min & max value added for range	
-	CHECK ([MAX value] > [MIN value])
-)
-
-
 
 CREATE TABLE [dbo].[T1-Questionnaire](
 	[Questionnaire ID] int IDENTITY(1,1) not null,
@@ -126,6 +117,12 @@ CREATE TABLE [dbo].[T1-Questionnaire](
 	[URL] nvarchar(2083),
 	UNIQUE (Title, [Version]),
 	CONSTRAINT [PK-Questionnaire] PRIMARY KEY NONCLUSTERED ([Questionnaire ID])
+	)
+
+	CREATE TABLE dbo.[T1-Question Questionnaire Pairs] (
+	[Question ID] int not null,
+	[Questionnaire ID] int not null,
+	UNIQUE([Question ID], [Questionnaire ID])
 	)
 	
 
@@ -162,13 +159,10 @@ INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VA
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (314761,'Compelling Convo','2020/02/20');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (830305,'Files and Firewalls','2021/09/11');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (201463,'InDesign','2021/07/13');
-INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (164419,'Turner’s Tech Helpers','2020/06/09');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (164419,'Turners Tech Helpers','2020/06/09');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (218264,'Techware','2020/08/12');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (695397,'Will Thrill','2021/10/20');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (217528,'The Lonely Traveler','2021/06/13');
-
-
-
 
 --USER data
 INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (1,'Konstantinos Larkos','2000/06/04 00:00:00.000','M','klarko01','hihi',1,0);
@@ -206,6 +200,51 @@ INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[
 INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (247797,'Panayiotis Lock','1964/12/25 00:00:00.000','M','User33','Pass33',3,3);
 INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (327940,'Rose  Perry','1978/10/04 00:00:00.000','F','User34','Pass34',3,3);
 INSERT INTO [T1-User]([IDCard],[Name],[Birth Date],[Sex],[Username],[Password],[Privilages],[Company ID]) VALUES (542602,'Lancelot Pinsent','1997/06/04 00:00:00.000','M','User35','Pass35',3,3);
+
+--QUESTION data
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX1',9,'Free Text','(FTX1): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX2',9,'Free Text','(FTX2): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX3',9,'Free Text','(FTX3): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX4',12,'Free Text','(FTX4): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX5',13,'Free Text','(FTX5): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX6',14,'Free Text','(FTX6): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX7',15,'Free Text','(FTX7): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX8',17,'Free Text','(FTX8): This is a free text question');
+INSERT INTO [T1-Question]([Question Code],[Creator ID],[Type],[Text]) VALUES ('FTX9',20,'Free Text','(FTX9): This is a free text question');
+
+--FREE TEXT Question
+INSERT INTO [T1-Free Text Question]([Question ID],[Question Code]) VALUES (11,'FTX1');
+INSERT INTO [T1-Free Text Question]([Question ID],[Question Code]) VALUES (12,'FTX2');
+INSERT INTO [T1-Free Text Question]([Question ID],[Question Code]) VALUES (13,'FTX3');
+INSERT INTO [T1-Free Text Question]([Question ID],[Question Code]) VALUES (19,'FTX4');
+INSERT INTO [T1-Free Text Question]([Question ID],[Question Code]) VALUES (23,'FTX5');
+
+--ARITHMETIC Question
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code]) VALUES (1,'NUM1');
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code]) VALUES (5,'NUM2');
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code]) VALUES (7,'NUM3');
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code]) VALUES (10,'NUM4');
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code]) VALUES (16,'NUM5');
+
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code],[MIN value],[MAX value]) VALUES (6,'NUB1',780,1484);
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code],[MIN value],[MAX value]) VALUES (20,'NUB2',242,373);
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code],[MIN value],[MAX value]) VALUES (22,'NUB3',326,1297);
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code],[MIN value],[MAX value]) VALUES (35,'NUB4',872,1562);
+INSERT INTO [T1-Arithmetic Question]([Question ID],[Question Code],[MIN value],[MAX value]) VALUES (37,'NUB5',374,467);
+
+--QUESTIONNAIRE data
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10010001',2,8,10,'http://someserver.com/QS10010001');
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10013002',1,NULL,13,NULL);
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10018003',3,1,18,'http://someserver.com/QS10018003');
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10013004',4,3,13,'http://someserver.com/QS10013004');
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10006005',5,4,6,'http://someserver.com/QS10006005');
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10012006',1,NULL,12,NULL);
+INSERT INTO [T1-Questionnaire]([Title],[Version],[Parent ID],[Creator ID],[URL]) VALUES ('QS10011007',1,NULL,11,NULL);
+
+--QUESTION QUESTIONNAIRE PAIRS data
+INSERT INTO [T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID]) VALUES (1,1);
+INSERT INTO [T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID]) VALUES (1,2);
+INSERT INTO [T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID]) VALUES (1,5);
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
