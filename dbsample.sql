@@ -44,10 +44,12 @@ IF OBJECT_ID (N'dbo.canUserSeeUser', N'FN') IS NOT NULL DROP FUNCTION canUserSee
 ----------CREATE TABLES----------
 
 CREATE TABLE [dbo].[T1-Company](
+	[Company ID] int IDENTITY(1,1) not null,
 	[Registration Number] int not null, --NOT SPECIFIED BY US
 	[Brand Name] varchar(50) not null,
 	[Induction Date] date not null,
-	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Registration Number])
+	CONSTRAINT [PK-Company] PRIMARY KEY NONCLUSTERED ([Company ID]),
+	UNIQUE([Registration Number])
 )
 
 
@@ -249,7 +251,7 @@ INSERT INTO [T1-Question Questionnaire Pairs]([Question ID],[Questionnaire ID]) 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
 CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]), --TRIGGER
-CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Registration Number]) ON UPDATE CASCADE ON DELETE CASCADE
+CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Company ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE dbo.[T1-Question] ADD
 CONSTRAINT [FK-Question-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES [dbo].[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE SET NULL
@@ -504,7 +506,7 @@ AS
 ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
 ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ))
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', SCOPE_IDENTITY(), @manager_id)
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
