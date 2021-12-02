@@ -16,6 +16,7 @@ $_SESSION["connectionOptions"] = array(
 
 <head>
 	<title>Team 1</title>
+	<link rel="icon" href="https://i.imgur.com/rWjWE94.png">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -36,16 +37,36 @@ $_SESSION["connectionOptions"] = array(
 	</script>
 
 	<style>
-		.myDIV:hover {
-			background-color: blue;
+		.center {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			-ms-transform: translate(-50%, -50%);
+			/* for IE 9 */
+			-webkit-transform: translate(-50%, -50%);
+			/* for Safari */
+
+			/* optional size in px or %: */
+			width: 100px;
+			height: 100px;
+		}
+
+		.center-image {
+			display: flex;
+			justify-content: center;
 		}
 	</style>
+
 
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
+						<div class="center-image">
+							<img src="https://i.imgur.com/70ln1bX.png" alt="LOGO IMAGE">
+						</div>
 						<h3 class="mb-4 text-center">Observers System <br>Sign In</h3>
 						<form action="auth.php" method="post" class="signin-form">
 							<div class="form-group">
