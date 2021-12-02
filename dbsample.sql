@@ -784,7 +784,7 @@ set @noOfQuestionnaires =(SELECT    COUNT( Qnnaire.[Questionnaire ID])
 				)
 				)
 
-	print @noOfQuestionnaires
+	--print @noOfQuestionnaires
 
 SELECT *
 FROM ( SELECT QQP.[Question ID], COUNT(QQP.[Questionnaire ID]) AS noOfQuestionAppearances 
@@ -819,12 +819,31 @@ exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multipl
 @description='test question', @text='do u liek db?', @free_text_restriction='<=100', @mult_choice_selectable_amount='3',
 @mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
 
-exec Q7 @user_id = '1'
+exec Q7 @user_id = '276' --sosto
 
-exec Q8 @user_id = '1'
+exec Q8 @user_id = '276' --oi
 
-exec Q9
+exec Q9 --idios arithmos
 
+exec Q10 @user_id = '276' --oi 16.125(16)
+
+exec Q11 @user_id = '276' --sosto
+
+exec Q12 @user_id = '276' --sosto
+
+exec Q13 @user_id = '14' --oi? mporei na doulevi je na men eshi ta idia(evalan ofkera gia test)
+
+exec Q14 @user_id = '276', @qn_id = '1' --oi? mporei na men eshi me ta idia
+
+exec Q15 @user_id = '276', @k_min = '3'
+
+exec Q16 @user_id = '276' --oi
+
+select *
+from [T1-Question Questionnaire Pairs] q
+where q.[Question ID] = '948'
+
+select * from [T1-Questionnaire] where [Questionnaire ID] = 197
 /*
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
