@@ -665,7 +665,8 @@ AS
 DECLARE @user_id int
 SET @user_id = 1
 */
-SELECT DISTINCT CompanyQuestionnaires1.[Questionnaire ID],CompanyQuestionnaires1.Title,CompanyQuestionnaires1.noOfQuestions
+--SELECT DISTINCT CompanyQuestionnaires1.[Questionnaire ID],CompanyQuestionnaires1.Title,CompanyQuestionnaires1.noOfQuestions
+SELECT *
 FROM (	SELECT   Qnnaire.[Questionnaire ID],Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
 		FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
 		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
@@ -830,6 +831,16 @@ exec Q9 --idios arithmos
 exec Q10 @user_id = '276' --oi 16.125(16)
 
 exec Q11 @user_id = '276' --sosto
+<<<<<<< Updated upstream
+
+exec Q12 @user_id = '276' --sosto
+
+exec Q13 @user_id = '14' --oi? mporei na doulevi je na men eshi ta idia(evalan ofkera gia test)
+
+exec Q14 @user_id = '276', @qn_id = '1' --oi? mporei na men eshi me ta idia
+
+exec Q15 @user_id = '276', @k_min = '3'
+=======
 
 exec Q12 @user_id = '276' --sosto
 
@@ -850,3 +861,54 @@ select * from [T1-Questionnaire] where [Questionnaire ID] = 197
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
 */
+
+--Query 13 testing 
+/*
+exec Q13 @user_id = '6'
+exec Q13 @user_id = '20'
+exec Q13 @user_id = '31'
+exec Q13 @user_id = '44'
+exec Q13 @user_id = '58'
+exec Q13 @user_id = '71'
+exec Q13 @user_id = '82'
+exec Q13 @user_id = '93'
+exec Q13 @user_id = '108'
+exec Q13 @user_id = '123'
+exec Q13 @user_id = '140'
+exec Q13 @user_id = '152'
+exec Q13 @user_id = '164'
+exec Q13 @user_id = '179'
+exec Q13 @user_id = '194'
+exec Q13 @user_id = '209'
+exec Q13 @user_id = '223'
+exec Q13 @user_id = '236'
+exec Q13 @user_id = '253'
+exec Q13 @user_id = '268'
+exec Q13 @user_id = '279'
+exec Q13 @user_id = '293'
+exec Q13 @user_id = '308'
+exec Q13 @user_id = '320'
+exec Q13 @user_id = '333'
+exec Q13 @user_id = '349'
+exec Q13 @user_id = '362'
+exec Q13 @user_id = '374'
+exec Q13 @user_id = '384'
+exec Q13 @user_id = '394'
+*/
+>>>>>>> Stashed changes
+
+exec Q16 @user_id = '276' --oi
+
+<<<<<<< Updated upstream
+select *
+from [T1-Question Questionnaire Pairs] q
+where q.[Question ID] = '948'
+
+select * from [T1-Questionnaire] where [Questionnaire ID] = 197
+/*
+@description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
+@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
+*/
+=======
+
+>>>>>>> Stashed changes
