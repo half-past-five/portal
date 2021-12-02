@@ -51,6 +51,7 @@ FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Q
 WHERE QQP.[Questionnaire ID] = Q.[Questionnaire ID] AND Q.[URL] <> 'NULL'
 GROUP BY QQP.[Questionnaire ID]
 
+
 ---------- UDFs ----------
 GO  
 CREATE FUNCTION dbo.canUserSeeQuestion(@caller_id int, @question_id int)  
@@ -437,7 +438,7 @@ AS
 INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL) 
 
 
---QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)-- ***NOT DONE***
+--QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)-- 
 GO
 CREATE PROCEDURE dbo.Q6b @caller_id int, @questionnaire_id int
 AS
@@ -497,7 +498,7 @@ UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [
 --exec Q6e @caller_id='1', @questionnaire_id='6'
 
 
---QUERY 6f (CLONE)-- ***NOT DONE***
+--QUERY 6f (CLONE)--
 GO
 CREATE PROCEDURE dbo.Q6f @caller_id int, @questionnaire_id int
 AS
@@ -505,17 +506,27 @@ IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETUR
 IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL RETURN --cannot be cloned because its not completed
 DECLARE @title varchar(30)
 SET @title = (SELECT [Title] q FROM [T1-Questionnaire] q WHERE [Questionnaire ID] = @questionnaire_id)
-DECLARE @version int 
-SET @version = (SELECT [Version] q FROM [T1-Questionnaire] q WHERE [Questionnaire ID] = @questionnaire_id)
+DECLARE @version int
+
+SET @version = (SELECT MAX([Version]) FROM [T1-Questionnaire] q WHERE [Title] = (SELECT [Title] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id))
 SET @version = @version + 1
-INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, @version, @questionnaire_id, @caller_id, NULL) 
+INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, @version, @questionnaire_id, @caller_id, NULL)
+DECLARE @new_questionnaire_id int = SCOPE_IDENTITY()
+DECLARE @temp TABLE(QID int)
+INSERT INTO @temp SELECT [Question ID] FROM [T1-Question Questionnaire Pairs] qqp WHERE qqp.[Questionnaire ID] = @questionnaire_id
+DECLARE @qid int
+WHILE EXISTS(SELECT * FROM @temp)
+BEGIN
+	SET @qid = (SELECT TOP 1 QID FROM @temp)
+	INSERT INTO [T1-Question Questionnaire Pairs]([Questionnaire ID], [Question ID]) VALUES (@new_questionnaire_id, @qid)
+	DELETE TOP(1) FROM @temp 
+END
 
 
 --QUERY 7-- WORKS
 GO
 CREATE PROCEDURE dbo.Q7 @user_id int
 AS
-
 SELECT Q.Title, Q.Version, QPQ.noOfQuestions
 FROM [T1-Questionnaire] Q, [Questions per Questionnaire] QPQ
 WHERE [Creator ID] in (
@@ -827,7 +838,7 @@ exec Q8 @user_id = '276' --oi
 
 exec Q9 --idios arithmos
 
-exec Q10 @user_id = '276' --oi 16.125(16)
+exec Q10 @user_id = '276' --sosto
 
 exec Q11 @user_id = '276' --sosto
 
