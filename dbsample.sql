@@ -540,7 +540,7 @@ DECLARE @maxNoOfQuestionnaires 	 int;
 SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)	
 								FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfQuestionnaires
 										FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
-										WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+										WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Company ID] AND Qnnaire.[Creator ID] in (
 												SELECT [User ID]
 												FROM [T1-User] u
 												WHERE u.[Company ID] = (
@@ -554,7 +554,7 @@ SET @maxNoOfQuestionnaires = (SELECT MAX(QuestionnaireCount.noOfQuestionnaires)
 SELECT *
 FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
 		FROM  [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
-		WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+		WHERE QQP.[Questionnaire ID] = Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Company ID] AND Qnnaire.[Creator ID] in (
 		SELECT [User ID]
 		FROM [T1-User] u
 		WHERE u.[Company ID] = (
@@ -594,7 +594,7 @@ SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions'
 
 SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions' 
 	FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire, [T1-User] U, [T1-Company] C
-	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Registration Number] AND Qnnaire.[Creator ID] in (
+	WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] = U.[User ID] AND U.[Company ID] = C.[Company ID] AND Qnnaire.[Creator ID] in (
 		SELECT [User ID]
 		FROM [T1-User] u
 		WHERE u.[Company ID] = (
@@ -608,6 +608,8 @@ SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions'
 GO
 CREATE PROCEDURE dbo.Q11 @user_id int
 AS
+--declare @user_id int
+--@user_id = '6'
 DECLARE @avgNoOfQuestions int;
 
 SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) 
@@ -619,7 +621,7 @@ SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions)
 					)
 					)
 
---print @avgNoOfQuestions 	
+print @avgNoOfQuestions 	
 
 SELECT  Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
 FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
