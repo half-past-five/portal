@@ -291,11 +291,11 @@ IF @action = 'show'
 --QUERY 2b--
 GO
 CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int, @IDCard int
 AS
 IF  @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id)
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @IDCard)
 	END
 
 IF @action = 'update'
@@ -307,11 +307,13 @@ IF @action = 'update'
 	IF @password <>'' BEGIN UPDATE [T1-User] SET [Password] = @password WHERE Username = @username END
 	IF @manager_id <>'' BEGIN UPDATE [T1-User] SET [Manager ID] = @manager_id WHERE Username = @username END
 	IF @company_id <>'' BEGIN UPDATE [T1-User] SET [Company ID] = @company_id WHERE Username = @username END
+	IF @IDCard <>'' BEGIN UPDATE [T1-User] SET [IDCard] = @IDCard WHERE Username = @username END
 	END
 IF  @action = 'show'
 	BEGIN
 	SELECT 
 	CAST([Name] AS varchar(30)) as [Name],
+	CAST([IDCard] AS varchar(30)) as [IDCard],
 	CAST([Birth Date] AS varchar(30)) as [Birth Date],
 	CAST([Sex] AS varchar(30)) as [Sex],
 	CAST([Position] AS varchar(30)) as [Position],
@@ -814,12 +816,17 @@ WHERE array.noOfQuestionAppearances = @noOfQuestionnaires
 /*
 ---------- TESTING ----------
 
-exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
-@position='Manager', @username='lpapal03', @password='hehehe', @manager_id=NULL, 
-@company_reg_num ='999', @company_brand_name='Noname Company'
+exec Q1 @name='Konstantinos Larkos', @bday='2000/6/26', @sex='M', 
+@position='Employee', @username='klarko03', @password='hihi', @manager_id=NULL, 
+@company_reg_num ='988', @company_brand_name='Test Company', @IDCard = '988'
 
-exec Q2b @action='insert', @name = 'KAS', @bday='2000/6/26', @sex='F', 
-@position='Katotatos', @username='klarko02', @password='hihi', @manager_id=NULL, @company_id = '1'
+exec Q2a @action='insert', @company_id='985', @brand_name='Test 2a', @new_date = '2000/6/26'
+
+exec Q2b @action='update', @name = 'KAS', @bday='2000/6/26', @sex='F', 
+@position='Katotatos', @username='ckasou02', @password='hihi', @manager_id=NULL, @company_id = '1', @IDCard = '55556'
+
+exec Q2b @action='show', @name = '', @bday='', @sex='', 
+@position='', @username='ckasou02', @password='', @manager_id=NULL, @company_id = '', @IDCard = ''
 
 exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
