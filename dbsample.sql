@@ -745,18 +745,17 @@ WHERE  NOT EXISTS
 GO
 CREATE PROCEDURE dbo.Q15 @user_id int, @k_min int 
 AS
-
 /*
 DECLARE @k_min int
 SET @k_min = 1
 DECLARE @user_id int
-SET @user_id = 1
+SET @user_id = 31
 */
 
-SELECT Q.[Question ID]
-FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUNT
+SELECT Q.[Question ID], MinimumQ.qn_COUNT AS 'Questionnaire Count'
+FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUNT , COUNT(Qnnaire.[Questionnaire ID]) AS qn_COUNT
 						FROM [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire
-						WHERE QQP.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+						WHERE QQP.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[URL] <> 'NULL' AND Qnnaire.[Creator ID] IN (
 							SELECT [User ID]
 							FROM [T1-User] U
 							WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
@@ -764,7 +763,7 @@ FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUN
 						GROUP BY QQP.[Question ID]
 						ORDER BY q_COUNT ASC
 					) MinimumQ
-WHERE Q.[Question ID] = MinimumQ.[Question ID]
+WHERE Q.[Question ID] = MinimumQ.[Question ID] 
 
 
 
@@ -774,7 +773,7 @@ CREATE PROCEDURE dbo.Q16 @user_id int
 AS
 
 /*DECLARE @user_id int
-SET @user_id = 3
+SET @user_id = 276
 */
 DECLARE @noOfQuestionnaires int
 
@@ -787,7 +786,7 @@ set @noOfQuestionnaires =(SELECT    COUNT( Qnnaire.[Questionnaire ID])
 				)
 				)
 
-	--print @noOfQuestionnaires
+	print @noOfQuestionnaires
 
 SELECT *
 FROM ( SELECT QQP.[Question ID], COUNT(QQP.[Questionnaire ID]) AS noOfQuestionAppearances 
@@ -801,7 +800,7 @@ GROUP BY QQP.[Question ID]) as  array
 WHERE array.noOfQuestionAppearances = @noOfQuestionnaires
 
 
-
+/*
 ---------- TESTING ----------
 
 exec Q1 @name='Loukis', @bday='2000/6/26', @sex='M', 
@@ -831,7 +830,6 @@ exec Q9 --idios arithmos
 exec Q10 @user_id = '276' --oi 16.125(16)
 
 exec Q11 @user_id = '276' --sosto
-<<<<<<< Updated upstream
 
 exec Q12 @user_id = '276' --sosto
 
@@ -839,18 +837,12 @@ exec Q13 @user_id = '14' --oi? mporei na doulevi je na men eshi ta idia(evalan o
 
 exec Q14 @user_id = '276', @qn_id = '1' --oi? mporei na men eshi me ta idia
 
-exec Q15 @user_id = '276', @k_min = '3'
-=======
-
-exec Q12 @user_id = '276' --sosto
-
-exec Q13 @user_id = '14' --oi? mporei na doulevi je na men eshi ta idia(evalan ofkera gia test)
-
-exec Q14 @user_id = '276', @qn_id = '1' --oi? mporei na men eshi me ta idia
-
-exec Q15 @user_id = '276', @k_min = '3'
+exec Q15 @user_id = '276', @k_min = '15'
 
 exec Q16 @user_id = '276' --oi
+
+
+exec Q17
 
 select *
 from [T1-Question Questionnaire Pairs] q
@@ -895,20 +887,6 @@ exec Q13 @user_id = '374'
 exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
 */
->>>>>>> Stashed changes
 
-exec Q16 @user_id = '276' --oi
-
-<<<<<<< Updated upstream
-select *
-from [T1-Question Questionnaire Pairs] q
-where q.[Question ID] = '948'
-
-select * from [T1-Questionnaire] where [Questionnaire ID] = 197
-/*
-@description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
-@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
 */
-=======
 
->>>>>>> Stashed changes
