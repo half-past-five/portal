@@ -422,6 +422,21 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <input type="submit" name="Query 6d" class="form-control btn btn-primary submit px-3" value="QUERY 6D">
                             </form>
 
+                            <!--Query 6e-->
+                            <hr>
+                            <form action="query6e.php" method="post">
+                                <h3>6E (Change Questionnaire's status)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <input type="submit" name="Query 6E" class="form-control btn btn-primary submit px-3" value="QUERY 6E">
+                            </form>
+
+                            <!--Query 6f-->
+                            <hr>
+                            <form action="query6f.php" method="post">
+                                <h3>6F (Clone Questionnaire)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <input type="submit" name="Query 6F" class="form-control btn btn-primary submit px-3" value="QUERY 6F">
+                            </form>
 
                             <!--Query 7-->
                             <hr>
