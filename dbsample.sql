@@ -122,6 +122,14 @@ END;
 
 ---------- SPOCS ----------
 
+--LOG--
+GO
+CREATE PROCEDURE dbo.[Log] @event varchar(100)
+AS
+INSERT INTO [T1-Log]([Event]) VALUES (CAST( GETDATE() AS varchar ) + @event)
+exec [Log] 'aaaaaa'
+select * from [T1-Log]
+
 --QUERY AUTHENTICATE--
 GO
 CREATE PROCEDURE dbo.Authenticate @username varchar(30), @password varchar(30)
@@ -415,10 +423,7 @@ IF @action = 'update'
 	IF @description <>'' BEGIN UPDATE [T1-Question] SET [Description] = @description WHERE [Question ID] = @question_id END
 	IF @text <>'' BEGIN UPDATE [T1-Question] SET [Text] = @text WHERE [Question ID] = @question_id END
 	IF @code <>'' BEGIN UPDATE [T1-Question] SET [Question Code] = @code WHERE [Question ID] = @question_id END
-	IF @type = 'Free Text'
-		BEGIN
-		IF @free_text_restriction <>'' BEGIN UPDATE [T1-Free Text Question] SET [Restriction] = @free_text_restriction WHERE [Question ID] = @question_id END
-		END
+
 	IF @type = 'Multiple Choice'
 		BEGIN
 		IF @mult_choice_selectable_amount <> '' BEGIN UPDATE [T1-Multiple Choice Question] SET [Selectable Amount] = @mult_choice_selectable_amount WHERE [Question ID] = @question_id END
@@ -912,9 +917,10 @@ exec Q4 @action='show', @idcard = 100000001, @admin_id='6', @name='Kosteassss', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
 
-exec Q5 @caller_id=6, @action='insert', @question_id=10, @code='CODE', @type='Arithmetic',
+exec Q5 @caller_id=6, @action='update', @question_id=1443, @code='CODE111', @type='Arithmetic',
 @description='pejesi', @text='ekourastika?', @free_text_restriction=NULL, @mult_choice_selectable_amount=NULL,
 @arithm_min=1, @arithm_max=1
+select * from [T1-Question]
 
 exec Q7 @user_id = '276' --sosto
 
@@ -946,13 +952,13 @@ from [T1-Question Questionnaire Pairs] q
 where q.[Question ID] = '948'
 
 select * from [T1-Questionnaire] where [Questionnaire ID] = 197
-/*
+
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
-*/
+
 
 --Query 13 testing 
-/*
+
 exec Q13 @user_id = '6'
 exec Q13 @user_id = '20'
 exec Q13 @user_id = '31'
