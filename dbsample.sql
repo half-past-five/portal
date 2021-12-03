@@ -162,6 +162,10 @@ WHERE [Creator ID] in (
 		)
 	)
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestions' 
+EXEC [LOG] @log
+
 
 --SHOW QUESTION DETAILS--
 GO
@@ -182,7 +186,12 @@ IF @q_type = 'Arithmetic'
 IF @q_type = 'Multiple Choice'
 	BEGIN
 	SELECT * FROM [T1-Multiple Choice Question] WHERE [Question ID] = @question_id
-	END				
+	END
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionDetails' 
+EXEC [LOG] @log
+
 
 
 --QUERY SHOW ALL COMPANY'S QUESTIONNAIRES --
@@ -199,6 +208,11 @@ WHERE [Creator ID] in (
 		)
 	)
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionnaires' 
+EXEC [LOG] @log
+
+
 
 --QUERY SHOW ALL COMPANY USERS--
 GO
@@ -214,6 +228,10 @@ CONVERT(varchar(30), [Company ID]) as [Company ID], CONVERT(varchar(30), [Manage
 FROM [T1-User] u
 WHERE u.[Company ID] = @admin_company_id
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQUsers' 
+EXEC [LOG] @log
+
 
 
 --INSERT ANSWER TO MULTIPLE CHOICE--
@@ -226,6 +244,11 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 INSERT INTO [T1-Multiple Choice Answers]([Question ID], [Answer]) VALUES (@question_id, @answer)
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query InsertAnswerMultChoice' 
+EXEC [LOG] @log
+
+
 
 --EDIT ANSWER TO MULTIPLE CHOICE--
 GO
@@ -236,6 +259,11 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 UPDATE [T1-Multiple Choice Answers] SET [Answer] = @new_answer WHERE @answer = [Answer] AND @question_id = [Question ID]
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query EditAnswerMultChoice' 
+EXEC [LOG] @log
+
 
 
 --REMOVE ANSWER FROM MULT CHOICE--
@@ -248,6 +276,11 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 DELETE FROM [T1-Multiple Choice Answers] WHERE @answer = [Answer] AND @question_id = [Question ID]
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query RemoveAnswerMultChoice' 
+EXEC [LOG] @log
+
+
 
 --SHOW ALL ANSWERS OF MULT CHOICE
 GO
@@ -259,13 +292,9 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 SELECT [Answer] FROM [T1-Multiple Choice Answers] WHERE @question_id = [Question ID]
 
-
---SET QUESTIONNAIRE TO 'NOT DONE'--
-GO
-CREATE PROCEDURE dbo.setQuestionnaireNotDone @caller_id int, @questionnaire_id int
-AS
-IF dbo.canUserSeeQuestion(@caller_id, @questionnaire_id) = 0 RETURN
-UPDATE [T1-Questionnaire] SET [URL] = NULL
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowAnswerMultChoice' 
+EXEC [LOG] @log
 
 
 --QUERY 1--
@@ -280,6 +309,10 @@ INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date])
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id, @IDCard)
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'An observer added company with registration number ' +  CONVERT(varchar, @company_reg_num)
+EXEC [LOG] @log
 
 --QUERY 2a--
 GO
@@ -303,6 +336,10 @@ IF @action = 'show'
 	FROM [T1-Company]
 	WHERE @company_id = [Registration Number]
 	END
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'An observer edited company ' +  CONVERT(varchar, @brand_name)
+EXEC [LOG] @log
 
 
 --QUERY 2b--
@@ -341,6 +378,10 @@ IF  @action = 'show'
 	WHERE @username = U.Username
 	END
 
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'An observer edited company admin with username  ' +  CONVERT(varchar, @username)
+EXEC [LOG] @log
+
 
 --QUERY 3--
 GO
@@ -352,6 +393,11 @@ SELECT @admin_company_id = u.[Company ID]
 FROM [T1-User] u
 WHERE u.[User ID] = @admin_id 
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id, @idcard)
+
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'Admin with ID ' + CONVERT(varchar, @admin_id) + 'added user with username ' + CONVERT(varchar, @username)
+EXEC [LOG] @log
 
 
 --QUERY 4--
@@ -503,6 +549,7 @@ exec Q6d @caller_id = '1', @questionnaire_id = '1', @question_id = '1'
 GO
 CREATE PROCEDURE dbo.Q6d @caller_id int, @questionnaire_id int, @question_id int
 AS
+IF (SELECT [URL] FROM [T1-Questionnaire] q WHERE @questionnaire_id = q.[Questionnaire ID]) <> NULL RETURN
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 DELETE FROM [T1-Question Questionnaire Pairs] WHERE [Question ID] = @question_id AND [Questionnaire ID] = @questionnaire_id
@@ -513,7 +560,13 @@ GO
 CREATE PROCEDURE dbo.Q6e @caller_id int, @questionnaire_id int
 AS
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
-UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL
+	BEGIN
+	UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+	RETURN
+	END
+UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionnaire_id
+
 --exec Q6e @caller_id='1', @questionnaire_id='6'
 
 
@@ -539,7 +592,7 @@ BEGIN
 	SET @qid = (SELECT TOP 1 QID FROM @temp)
 	INSERT INTO [T1-Question Questionnaire Pairs]([Questionnaire ID], [Question ID]) VALUES (@new_questionnaire_id, @qid)
 	DELETE TOP(1) FROM @temp 
-END
+END 
 
 
 --QUERY 7-- WORKS
@@ -835,13 +888,19 @@ GO
 CREATE PROCEDURE dbo.Q17 @user_id int, @qn_id int 
 AS
 
- --for testing 
- /*
-DECLARE @qn_id int
-SET @qn_id = 63
-DECLARE @user_id int
-SET @user_id = 88
-*/
+;WITH Result AS(
+        SELECT  *
+        FROM	[T1-Questionnaire] Qnnaire
+        WHERE   Qnnaire.[Questionnaire ID] = @qn_id 
+        UNION ALL
+        SELECT  Qnnaire.*
+        FROM	[T1-Questionnaire] Qnnaire INNER JOIN Result ON Qnnaire.[Parent ID] = Result.[Questionnaire ID]
+		--WHERE	Qnnaire.URL <> NULL
+		)
+
+SELECT [Questionnaire ID] AS 'IDs of children Questionnaires'
+FROM Result
+WHERE [Questionnaire ID] <> @qn_id
 
 ;WITH Result AS(
         SELECT  *
@@ -853,56 +912,13 @@ SET @user_id = 88
 		--WHERE	Qnnaire.URL <> NULL
 		)
 
-
-
 SELECT  SUM(QpQ.noOfQuestions) as 'Total Number of Questions'
 FROM Result, [Questions per Questionnaire] QpQ
-		WHERE QpQ.[Questionnaire ID] =	Result.[Questionnaire ID] AND Result.[Creator ID] IN (
+		WHERE QpQ.[Questionnaire ID] =	Result.[Questionnaire ID] AND Result.[Questionnaire ID] <> @qn_id  AND Result.[Creator ID] IN (
 				SELECT [User ID]
 				FROM [T1-User] U
 				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 				)
-
-
-
-
-
-/*
-DECLARE @Table TABLE(
-        ID INT,
-        ParentID INT,
-        NAME VARCHAR(20)
-)
-
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 1, NULL, 'A'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 2, 1, 'B-1'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 3, 1, 'B-2'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 4, 2, 'C-1'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 5, 2, 'C-2'
-
-
-DECLARE @ID INT
-
-SELECT @ID = 2;
-
-WITH ret AS(
-        SELECT  *
-        FROM    @Table
-        WHERE   ID = @ID
-        UNION ALL
-        SELECT  t.*
-        FROM    @Table t INNER JOIN
-                ret r ON t.ParentID = r.ID
-)
-
-SELECT  *
-FROM    ret
-
-SELECT *
-FROM @Table
-
-*/
-
 
 
 
