@@ -327,19 +327,19 @@ IF  @action = 'show'
 
 --QUERY 3--
 GO
-CREATE PROCEDURE dbo.Q3 @admin_id int, @name varchar(50), @bday date, @sex char(1), 
+CREATE PROCEDURE dbo.Q3 @admin_id int, @idcard int, @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
 AS
 DECLARE @admin_company_id int
 SELECT @admin_company_id = u.[Company ID]
 FROM [T1-User] u
 WHERE u.[User ID] = @admin_id 
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id, @idcard)
 
 
 --QUERY 4--
 GO
-CREATE PROCEDURE dbo.Q4 @admin_id int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
+CREATE PROCEDURE dbo.Q4 @admin_id int, @idcard int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
 AS
 DECLARE @admin_company_id int
@@ -348,7 +348,7 @@ FROM [T1-User] u
 WHERE u.[User ID] = @admin_id 
 IF  @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id)
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id, @idcard)
 	END
 
 DECLARE @caller_usernme varchar(30)
@@ -363,10 +363,12 @@ IF @action = 'update'
 	IF @position <>'' BEGIN UPDATE [T1-User] SET [Position] = @position WHERE Username = @username END
 	IF @password <>'' BEGIN UPDATE [T1-User] SET [Password] = @password WHERE Username = @username END
 	IF @manager_id <>'' BEGIN UPDATE [T1-User] SET [Manager ID] = @manager_id WHERE Username = @username END
+	IF @idcard <> '' BEGIN UPDATE [T1-User] SET [IDCard] = @idcard WHERE Username = @username END
 	END
 IF  @action = 'show'
 	BEGIN
-	SELECT 
+	SELECT
+	CAST([IDCard] AS varchar(30)) as [IDCard],
 	CAST([Name] AS varchar(30)) as [Name],
 	CAST([Birth Date] AS varchar(30)) as [Birth Date],
 	CAST([Sex] AS varchar(30)) as [Sex],
@@ -382,13 +384,13 @@ IF  @action = 'show'
 
 --QUERY 5--
 GO
-CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @type varchar(30),
+CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @code varchar(30), @type varchar(30),
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @arithm_min int, @arithm_max int
 AS
 IF @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text]) VALUES(@caller_id, @type, @description, @text)
+	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text], [Question Code]) VALUES(@caller_id, @type, @description, @text, @code)
 	DECLARE @new_question_id int = SCOPE_IDENTITY()
 	IF @type = 'Free Text'
 		BEGIN
@@ -412,6 +414,7 @@ IF @action = 'update'
 	BEGIN
 	IF @description <>'' BEGIN UPDATE [T1-Question] SET [Description] = @description WHERE [Question ID] = @question_id END
 	IF @text <>'' BEGIN UPDATE [T1-Question] SET [Text] = @text WHERE [Question ID] = @question_id END
+	IF @code <>'' BEGIN UPDATE [T1-Question] SET [Question Code] = @code WHERE [Question ID] = @question_id END
 	IF @type = 'Free Text'
 		BEGIN
 		IF @free_text_restriction <>'' BEGIN UPDATE [T1-Free Text Question] SET [Restriction] = @free_text_restriction WHERE [Question ID] = @question_id END
@@ -828,16 +831,16 @@ exec Q2b @action='update', @name = 'KAS', @bday='2000/6/26', @sex='F',
 exec Q2b @action='show', @name = '', @bday='', @sex='', 
 @position='', @username='ckasou02', @password='', @manager_id=NULL, @company_id = '', @IDCard = ''
 
-exec Q3 @admin_id='3', @name='Kostis', @bday='2000/6/26', @sex='M', 
+exec Q3 @admin_id='6',@idcard=11111111, @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
-exec Q4 @action='show', @admin_id='2', @name='Kostis', @bday='2000/6/26', @sex='M', 
-@position='Sales', @username='kost06', @password='hehehe', @manager_id='4'
+exec Q4 @action='show', @idcard = 100000001, @admin_id='6', @name='Kosteassss', @bday='2000/6/26', @sex='F', 
+@position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
 
-exec Q5 @caller_id = '3', @action='insert', @question_id = NULL, @type= 'Multiple Choice',
-@description='test question', @text='do u liek db?', @free_text_restriction='<=100', @mult_choice_selectable_amount='3',
-@mult_choice_answers='Answer 1, Answer 2, Answer 3', @arithm_min='10', @arithm_max='100'
+exec Q5 @caller_id=6, @action='insert', @question_id=10, @code='CODE', @type='Arithmetic',
+@description='pejesi', @text='ekourastika?', @free_text_restriction=NULL, @mult_choice_selectable_amount=NULL,
+@arithm_min=1, @arithm_max=1
 
 exec Q7 @user_id = '276' --sosto
 
@@ -908,45 +911,4 @@ exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
 */
 
---Query 16 testing 
-
-exec Q16 @user_id = '6'
-exec Q16 @user_id = '20'
-exec Q16 @user_id = '31'
-exec Q16 @user_id = '44'
-exec Q16 @user_id = '58'
-exec Q16 @user_id = '71'
-exec Q16 @user_id = '82'
-exec Q16 @user_id = '93'
-exec Q16 @user_id = '108'
-exec Q16 @user_id = '123'
-exec Q16 @user_id = '140'
-exec Q16 @user_id = '152'
-exec Q16 @user_id = '164'
-exec Q16 @user_id = '179'
-exec Q16 @user_id = '194'
-exec Q16 @user_id = '209'
-exec Q16 @user_id = '223'
-exec Q16 @user_id = '236'
-exec Q16 @user_id = '253'
-exec Q16 @user_id = '268'
-exec Q16 @user_id = '279'
-exec Q16 @user_id = '293'
-exec Q16 @user_id = '308'
-exec Q16 @user_id = '320'
-exec Q16 @user_id = '333'
-exec Q16 @user_id = '349'
-exec Q16 @user_id = '362'
-exec Q16 @user_id = '374'
-exec Q16 @user_id = '384'
-exec Q16 @user_id = '394'
-
-
-exec Q14 @user_id = '35', @qn_id = '23'
-exec Q14 @user_id = '35', @qn_id = '27'
-
-
-
-
-*/
 
