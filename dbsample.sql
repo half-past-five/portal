@@ -141,6 +141,12 @@ DECLARE @log varchar(30) = '   '
 SET @log = @log + 'Login attempt with username: ' + @username
 EXEC [LOG] @log
 
+--QUERY SHOW ALL TABLES
+GO
+CREATE PROCEDURE dbo.ShowTable @vTableName varchar(30)
+AS
+EXECUTE('SELECT * FROM [' + @vTableName + ']')
+
 
 --QUERY SHOW ALL QUESTIONS--
 GO
@@ -903,6 +909,8 @@ FROM @Table
 /*
 ---------- TESTING ----------
 
+exec ShowTable @vTableName = 'T1-User'
+
 exec Q1 @name='Konstantinos Larkos', @bday='2000/6/26', @sex='M', 
 @position='Employee', @username='klarko03', @password='hihi', @manager_id=NULL, 
 @company_reg_num ='988', @company_brand_name='Test Company', @IDCard = '988'
@@ -948,9 +956,6 @@ exec Q15 @user_id = '276', @k_min = '15'
 
 exec Q16 @user_id = '276' --oi
 
-
-
-
 exec Q17
 
 select *
@@ -995,4 +1000,5 @@ exec Q13 @user_id = '362'
 exec Q13 @user_id = '374'
 exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
+
 */
