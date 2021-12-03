@@ -792,7 +792,7 @@ DECLARE @noOfQuestionnaires int
 
 set @noOfQuestionnaires =(SELECT    COUNT( Qnnaire.[Questionnaire ID])
 		FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
-		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID]   AND Qnnaire.URL <> 'NULL' AND Qnnaire.[Creator ID] IN (
 				SELECT [User ID]
 				FROM [T1-User] U
 				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
@@ -860,6 +860,8 @@ exec Q15 @user_id = '276', @k_min = '15'
 exec Q16 @user_id = '276' --oi
 
 
+
+
 exec Q17
 
 select *
@@ -905,6 +907,46 @@ exec Q13 @user_id = '374'
 exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
 */
+
+--Query 16 testing 
+
+exec Q16 @user_id = '6'
+exec Q16 @user_id = '20'
+exec Q16 @user_id = '31'
+exec Q16 @user_id = '44'
+exec Q16 @user_id = '58'
+exec Q16 @user_id = '71'
+exec Q16 @user_id = '82'
+exec Q16 @user_id = '93'
+exec Q16 @user_id = '108'
+exec Q16 @user_id = '123'
+exec Q16 @user_id = '140'
+exec Q16 @user_id = '152'
+exec Q16 @user_id = '164'
+exec Q16 @user_id = '179'
+exec Q16 @user_id = '194'
+exec Q16 @user_id = '209'
+exec Q16 @user_id = '223'
+exec Q16 @user_id = '236'
+exec Q16 @user_id = '253'
+exec Q16 @user_id = '268'
+exec Q16 @user_id = '279'
+exec Q16 @user_id = '293'
+exec Q16 @user_id = '308'
+exec Q16 @user_id = '320'
+exec Q16 @user_id = '333'
+exec Q16 @user_id = '349'
+exec Q16 @user_id = '362'
+exec Q16 @user_id = '374'
+exec Q16 @user_id = '384'
+exec Q16 @user_id = '394'
+
+
+exec Q14 @user_id = '35', @qn_id = '23'
+exec Q14 @user_id = '35', @qn_id = '27'
+
+
+
 
 */
 
