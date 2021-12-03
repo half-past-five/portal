@@ -497,6 +497,7 @@ exec Q6d @caller_id = '1', @questionnaire_id = '1', @question_id = '1'
 GO
 CREATE PROCEDURE dbo.Q6d @caller_id int, @questionnaire_id int, @question_id int
 AS
+IF (SELECT [URL] FROM [T1-Questionnaire] q WHERE @questionnaire_id = q.[Questionnaire ID]) <> NULL RETURN
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 DELETE FROM [T1-Question Questionnaire Pairs] WHERE [Question ID] = @question_id AND [Questionnaire ID] = @questionnaire_id
@@ -507,7 +508,13 @@ GO
 CREATE PROCEDURE dbo.Q6e @caller_id int, @questionnaire_id int
 AS
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
-UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL
+	BEGIN
+	UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
+	RETURN
+	END
+UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionnaire_id
+
 --exec Q6e @caller_id='1', @questionnaire_id='6'
 
 
