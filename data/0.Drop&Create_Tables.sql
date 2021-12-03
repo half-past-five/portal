@@ -157,8 +157,8 @@ CREATE TABLE [dbo].[T1-Log](
 --RUN 1.[T1-Company]
 --RUN 2.[T1-User]
 --RUN 3.[T1-Question]
---RUN 7.[T1-Questionnaire]
---RUN 7.[T1-Question Questionnaire Pairs]
+--RUN 4.[T1-Questionnaire]
+--RUN 5.[T1-Question Questionnaire Pairs]
 ---------- INSERTS ----------
 
 --FOREIGN KEYS 
