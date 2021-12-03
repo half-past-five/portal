@@ -49,19 +49,20 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                 //Read Stored proc with param
                 $UserID = $_SESSION["User ID"];
-                $tsql = "{call Q3(?,?,?,?,?,?,?,?)}";
-                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . "<br/>";
+                $tsql = "{call Q3(?,?,?,?,?,?,?,?,?)}";
+                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["name"] . $_POST["idcard"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . "<br/>";
 
                 //Initialize Parameters
                 $params = array(
                     array($UserID, SQLSRV_PARAM_IN),
+                    array($_POST["idcard"], SQLSRV_PARAM_IN),
                     array($_POST["name"], SQLSRV_PARAM_IN),
                     array($_POST["bday"], SQLSRV_PARAM_IN),
                     array($_POST["sex"], SQLSRV_PARAM_IN),
                     array($_POST["position"], SQLSRV_PARAM_IN),
                     array($_POST["username"], SQLSRV_PARAM_IN),
                     array($_POST["password"], SQLSRV_PARAM_IN),
-                    array($_POST["manager_id"], SQLSRV_PARAM_IN)
+                    array($_POST["manager_id"], SQLSRV_PARAM_IN)                    
                 );
 
                 sqlsrv_query($conn, $tsql, $params);

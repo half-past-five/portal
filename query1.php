@@ -47,8 +47,8 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
                 //Read Stored proc with param
-                $tsql = "{call Q1(?,?,?,?,?,?,?,?,?)}";
-                echo "Executing query: " . $tsql . ") with parameter " . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . $_POST["company_reg_num"] . $_POST["company_brand_name"] . "<br/>";
+                $tsql = "{call Q1(?,?,?,?,?,?,?,?,?,?)}";
+                echo "Executing query: " . $tsql . ") with parameter " . $_POST["name"] . $_POST["bday"] . $_POST["sex"] . $_POST["position"] . $_POST["username"] . $_POST["password"] . $_POST["manager_id"] . $_POST["company_reg_num"] . $_POST["company_brand_name"] . $_POST["IDCard"] . "<br/>";
 
                 $params = array(
                     array($_POST["name"], SQLSRV_PARAM_IN),
@@ -59,7 +59,8 @@ $connectionOptions = $_SESSION["connectionOptions"];
                     array($_POST["password"], SQLSRV_PARAM_IN),
                     array($_POST["manager_id"], SQLSRV_PARAM_IN),
                     array($_POST["company_reg_num"], SQLSRV_PARAM_IN),
-                    array($_POST["company_brand_name"], SQLSRV_PARAM_IN)
+                    array($_POST["company_brand_name"], SQLSRV_PARAM_IN),
+                    array($_POST["IDCard"], SQLSRV_PARAM_IN)
                 );
 
                 sqlsrv_query($conn, $tsql, $params);

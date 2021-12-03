@@ -173,7 +173,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <form action="query3.php" method="post">
                                     <h3>3 (Add Simple User)</h3>
                                     <h4>Parameter:</h4>
-                                    <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
+                                    <div class="form-group"><input type="text" name="idcard" placeholder="ID Card" class="form-control"></div>
                                     <input type="text" name="name" placeholder="Name" class="form-control">
                                     <div class="form-group">
                                         Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
@@ -330,6 +330,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                     <div class="form-group"><input class="form-control" type="text" name="question_id" placeholder="Question ID"></div>
                                 </div>
                                 <div id="q5_insert" class="divShow">
+                                    <div class="form-group"><input class="form-control" type="text" name="code" placeholder="Question Code"></div>
                                     <div class="form-group"><input class="form-control" type="text" name="description" placeholder="Description"></div>
                                     <div class="form-group"><input class="form-control" type="text" name="text" placeholder="Text"></div>
                                     <div class="form-group">Type <select class="default" id="type" name="type" onchange="showHideQuery5b(this.value);">
