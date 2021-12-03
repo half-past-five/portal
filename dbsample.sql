@@ -816,6 +816,80 @@ GROUP BY QQP.[Question ID]) as  array
 WHERE array.noOfQuestionAppearances = @noOfQuestionnaires
 
 
+--QUERY 17--
+GO
+CREATE PROCEDURE dbo.Q17 @user_id int, @qn_id int 
+AS
+
+ --for testing 
+/*
+DECLARE @qn_id int
+SET @qn_id = 63
+DECLARE @user_id int
+SET @user_id = 88
+*/
+
+;WITH result AS(
+        SELECT  *
+        FROM	[T1-Questionnaire] Qnnaire
+        WHERE   Qnnaire.[Questionnaire ID] = @qn_id 
+        UNION ALL
+        SELECT  Qnnaire.*
+        FROM	[T1-Questionnaire] Qnnaire INNER JOIN result ON Qnnaire.[Parent ID] = result.[Questionnaire ID]
+		--WHERE	Qnnaire.URL <> NULL
+		)
+
+/*SELECT  *
+FROM    result
+*/
+SELECT  SUM(QpQ.noOfQuestions) as 'Total Number of Questions'
+FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
+		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+				SELECT [User ID]
+				FROM [T1-User] U
+				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
+				)
+
+
+/*
+DECLARE @Table TABLE(
+        ID INT,
+        ParentID INT,
+        NAME VARCHAR(20)
+)
+
+INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 1, NULL, 'A'
+INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 2, 1, 'B-1'
+INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 3, 1, 'B-2'
+INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 4, 2, 'C-1'
+INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 5, 2, 'C-2'
+
+
+DECLARE @ID INT
+
+SELECT @ID = 2;
+
+WITH ret AS(
+        SELECT  *
+        FROM    @Table
+        WHERE   ID = @ID
+        UNION ALL
+        SELECT  t.*
+        FROM    @Table t INNER JOIN
+                ret r ON t.ParentID = r.ID
+)
+
+SELECT  *
+FROM    ret
+
+SELECT *
+FROM @Table
+
+*/
+
+
+
+
 /*
 ---------- TESTING ----------
 
