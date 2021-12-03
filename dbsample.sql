@@ -127,8 +127,7 @@ GO
 CREATE PROCEDURE dbo.[Log] @event varchar(100)
 AS
 INSERT INTO [T1-Log]([Event]) VALUES (CAST( GETDATE() AS varchar ) + @event)
-exec [Log] 'aaaaaa'
-select * from [T1-Log]
+
 
 --QUERY AUTHENTICATE--
 GO
@@ -137,6 +136,10 @@ AS
 SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as Privilages
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
+
+DECLARE @log varchar(30) = '   '
+SET @log = @log + 'Login attempt with username: ' + @username
+EXEC [LOG] @log
 
 
 --QUERY SHOW ALL QUESTIONS--
@@ -919,9 +922,10 @@ exec Q4 @action='show', @idcard = 100000001, @admin_id='6', @name='Kosteassss', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
 
-exec Q5 @caller_id=6, @action='update', @question_id=1443, @code='CODE111', @type='Arithmetic',
+exec Q5 @caller_id=6, @action='update', @question_id=1, @code='CODE999', @type='Arithmetic',
 @description='pejesi', @text='ekourastika?', @free_text_restriction=NULL, @mult_choice_selectable_amount=NULL,
 @arithm_min=1, @arithm_max=1
+
 select * from [T1-Question]
 
 exec Q7 @user_id = '276' --sosto
@@ -991,7 +995,4 @@ exec Q13 @user_id = '362'
 exec Q13 @user_id = '374'
 exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
-*/
-
-
 */
