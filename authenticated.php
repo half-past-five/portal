@@ -52,6 +52,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <form action="query1.php" method="post">
                                 <h3>1 (Add Company Admin with Company)</h3>
                                 <h4>Parameter:</h4>
+                                <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
                                 <div class="form-group">
                                     <input type="text" name="name" placeholder="Admin Name" class="form-control">
                                     Birth Date <input type="date" name="bday" class="form-control">
@@ -142,6 +143,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         <option value="update">Update</option>
                                         <option value="show">Show</option>
                                     </select></div>
+                                <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
                                 <div id="q2b_show" class="divShow">
                                     <div class="form-group"><input type="text" name="username" class="form-control" placeholder="Username"></div>
                                 </div>
@@ -171,6 +173,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <form action="query3.php" method="post">
                                     <h3>3 (Add Simple User)</h3>
                                     <h4>Parameter:</h4>
+                                    <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
                                     <input type="text" name="name" placeholder="Name" class="form-control">
                                     <div class="form-group">
                                         Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
@@ -219,6 +222,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         <div class="form-group"><input class="form-control" type="text" name="username" placeholder="Username"></div>
                                     </div>
                                     <div id="q4_insert" class="divShow">
+                                        <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
                                         <div class="form-group"><input class="form-control" type="text" name="name" placeholder="Name"></div>
                                         <div class="form-group">
                                             Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">

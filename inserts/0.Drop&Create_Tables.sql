@@ -85,6 +85,7 @@ CREATE TABLE dbo.[T1-User] (
 	[Company ID] int,
 	[Manager ID] int DEFAULT NULL,
 	UNIQUE(Username),
+	UNIQUE(IDCard),
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
 	CHECK ([Privilages] in ('1', '2', '3'))
 )
@@ -97,6 +98,7 @@ CREATE TABLE dbo.[T1-Question] (
 	[Type] varchar(30),
 	[Description] varchar(50) DEFAULT 'This is decription' not null,
 	[Text] varchar(100) not null,
+	UNIQUE([Question Code]),
 	CONSTRAINT [PK-Question] PRIMARY KEY NONCLUSTERED ([Question ID]),
 	CHECK ([Type] in ('Free Text','Multiple Choice','Arithmetic'))
 )
@@ -104,17 +106,17 @@ CREATE TABLE dbo.[T1-Question] (
 
 CREATE TABLE dbo.[T1-Free Text Question] (
 	[Question ID] int not null,
-	[Question Code] varchar(30) not null,
 	[Restriction] varchar(30) DEFAULT null
 	UNIQUE([Question ID])
 )	
 
 CREATE TABLE dbo.[T1-Arithmetic Question] (
 	[Question ID] int not null,
-	[Question Code] varchar(30) not null,
 	[MIN value] int DEFAULT null, 
-	[MAX value] int DEFAULT null, --min & max value added for range	
-	CHECK ([MAX value] > [MIN value])
+	[MAX value] int DEFAULT null,--min & max value added for range
+	UNIQUE([Question ID]),
+	CHECK ([MAX value] >= [MIN value])
+	
 )
 
 CREATE TABLE dbo.[T1-Multiple Choice Question] (
