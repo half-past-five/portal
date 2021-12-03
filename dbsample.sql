@@ -822,33 +822,35 @@ CREATE PROCEDURE dbo.Q17 @user_id int, @qn_id int
 AS
 
  --for testing 
-/*
+ /*
 DECLARE @qn_id int
 SET @qn_id = 63
 DECLARE @user_id int
 SET @user_id = 88
 */
 
-;WITH result AS(
+;WITH Result AS(
         SELECT  *
         FROM	[T1-Questionnaire] Qnnaire
         WHERE   Qnnaire.[Questionnaire ID] = @qn_id 
         UNION ALL
         SELECT  Qnnaire.*
-        FROM	[T1-Questionnaire] Qnnaire INNER JOIN result ON Qnnaire.[Parent ID] = result.[Questionnaire ID]
+        FROM	[T1-Questionnaire] Qnnaire INNER JOIN Result ON Qnnaire.[Parent ID] = Result.[Questionnaire ID]
 		--WHERE	Qnnaire.URL <> NULL
 		)
 
-/*SELECT  *
-FROM    result
-*/
+
+
 SELECT  SUM(QpQ.noOfQuestions) as 'Total Number of Questions'
-FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
-		WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND Qnnaire.[Creator ID] IN (
+FROM Result, [Questions per Questionnaire] QpQ
+		WHERE QpQ.[Questionnaire ID] =	Result.[Questionnaire ID] AND Result.[Creator ID] IN (
 				SELECT [User ID]
 				FROM [T1-User] U
 				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 				)
+
+
+
 
 
 /*
@@ -986,3 +988,4 @@ exec Q13 @user_id = '394'
 */
 
 
+*/
