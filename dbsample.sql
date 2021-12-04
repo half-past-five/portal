@@ -401,7 +401,7 @@ IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN
 ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
 ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ))
-INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @manager_id, @IDCard)
+INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_reg_num, @IDCard)
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
@@ -448,7 +448,7 @@ AS
 IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 IF  @action = 'insert'
 	BEGIN
-	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @IDCard)
+	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @IDCard)
 	END
 
 IF @action = 'update'
