@@ -1070,7 +1070,7 @@ set @noOfQuestionnaires =(SELECT    COUNT( Qnnaire.[Questionnaire ID])
 				)
 				)
 
-	print @noOfQuestionnaires
+	--print @noOfQuestionnaires
 
 SELECT *
 FROM ( SELECT QQP.[Question ID], COUNT(QQP.[Questionnaire ID]) AS noOfQuestionAppearances 
