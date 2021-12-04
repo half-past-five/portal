@@ -58,15 +58,18 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         <option value="T1-Company">T1-Company</option>
                                         <option value="T1-User">T1-User</option>
                                         <option value="T1-Question">T1-Question</option>
-                                        <option value="T1-Free Text Question">T1-Free Text Question</option>
-                                        <option value="T1-Arithmetic Question">T1-Arithmetic Question</option>
-                                        <option value="T1-Multiple Choice Question">T1-Multiple Choice Question</option>
-                                        <option value="T1-Multiple Choice Answer">T1-Multiple Choice Answer</option>
                                         <option value="T1-Questionnaire">T1-Questionnaire</option>
                                         <option value="T1-Question Questionnaire Pairs">T1-Questionnaire Questionnaire Pairs</option>
-                                        <option value="T1-Log">T1-Log</option>
                                     </select></div>
                                 <input type="submit" name="Query Show Table" class="form-control btn btn-primary submit px-3" value="QUERY SHOW TABLE">
+                            </form>
+
+			  <!-- Show Questionnaire Log -->
+                            <hr>
+                            <form action="queryShowQuestionnaireLog.php" method="post">
+                                <h3>Show Questionnaire Log</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="qn_id"></div>
+                                <input type="submit" name="Query Show Questionnaire Log" class="form-control btn btn-primary submit px-3" value="QUERY SHOW QUESTIONNAIRE LOG">
                             </form>
 
 
