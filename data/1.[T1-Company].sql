@@ -24,7 +24,7 @@ INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VA
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (314761,'Compelling Convo','2020/02/20');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (830305,'Files and Firewalls','2021/09/11');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (201463,'InDesign','2021/07/13');
-INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (164419,'Turner’s Tech Helpers','2020/06/09');
+INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (164419,'Turners Tech Helpers','2020/06/09');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (218264,'Techware','2020/08/12');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (695397,'Will Thrill','2021/10/20');
 INSERT INTO [T1-Company]([Registration Number],[Brand Name],[Induction Date]) VALUES (217528,'The Lonely Traveler','2021/06/13');
