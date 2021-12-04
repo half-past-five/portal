@@ -47,7 +47,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
                 //Read Stored proc with param
-                $tsql = "{call Q2a(?,?,?,?)} ";
+                $tsql = "{call Q2a(?,?,?,?,?)} ";
                 echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["action"] . $_POST["company_id"] . $_POST["brand_name"] . $_POST["new_date"] . $UserID . "<br/>";
 
                 $params = array(
