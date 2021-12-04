@@ -157,6 +157,7 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.ShowTable @vTableName varchar(30)
 AS
+
 IF @vTableName = 'T1-Company'
 BEGIN
 EXECUTE
@@ -167,6 +168,7 @@ EXECUTE
 	CAST([Induction Date] AS varchar(30)) as [Induction Date]
 	FROM [T1-Company]
 ')
+RETURN
 END
 
 IF @vTableName = 'T1-User'
@@ -186,6 +188,7 @@ EXECUTE
 	CAST([Manager ID] AS varchar(30)) as [Manager ID]
 	FROM [T1-User]
 ')
+RETURN
 END
 
 IF @vTableName = 'T1-Question'
@@ -193,14 +196,15 @@ BEGIN
 EXECUTE
 ('
 	SELECT 
-	CAST([Question ID] AS varchar(30) as [Question ID]),
-	CAST([Question Code] AS varchar(30) as [Question Code]),
-	CAST([Creator ID] AS varchar(30) as [Creator ID]),
-	CAST([Type] AS varchar(30) as [Type]),
-	CAST([Description] AS varchar(30) as [Description]),
-	CAST([Text] AS varchar(30) as [Text])
+	CAST([Question ID] AS varchar(30)) as [Question ID],
+	CAST([Question Code] AS varchar(30)) as [Question Code],
+	CAST([Creator ID] AS varchar(30)) as [Creator ID],
+	CAST([Type] AS varchar(30)) as [Type],
+	CAST([Description] AS varchar(100)) as [Description],
+	CAST([Text] AS varchar(100)) as [Text]
 	FROM [T1-Question]
 ')
+RETURN
 END
 
 IF @vTableName = 'T1-Questionnaire'
@@ -208,23 +212,24 @@ BEGIN
 EXECUTE
 ('
 	SELECT 
-	CAST([Questionnaire ID] AS varchar(30) as [Questionnaire ID]),
-	CAST([Title] AS varchar(30) as [Title]),
-	CAST([Version] AS varchar(30) as [Version]),
-	CAST([Parent ID] AS varchar(30) as [Parent ID]),
-	CAST([Creator ID] AS varchar(30) as [Creator ID]),
-	CAST([URL] AS varchar(30) as [URL])
+	CAST([Questionnaire ID] AS varchar(30)) as [Questionnaire ID],
+	CAST([Title] AS varchar(30)) as [Title],
+	CAST([Version] AS varchar(30)) as [Version],
+	CAST([Parent ID] AS varchar(30)) as [Parent ID],
+	CAST([Creator ID] AS varchar(30)) as [Creator ID],
+	CAST([URL] AS varchar(30)) as [URL]
 	FROM [T1-Questionnaire]
 ')
+RETURN
 END
 
-IF @vTableName = 'T1-Question Questionnaire Pairs'
+--IF @vTableName = 'T1-Question Questionnaire Pairs'
 BEGIN
 EXECUTE
 ('
-	SELECT 
-	CAST([Question ID] AS varchar(30) as [Question ID]),
-	CAST([Questionnaire ID] AS varchar(30) as [Questionnaire ID])
+	SELECT
+	CAST([Question ID] AS varchar(30)) as [Question ID],
+	CAST([Questionnaire ID] AS varchar(30)) as [Questionnaire ID]
 	FROM [T1-Question Questionnaire Pairs]
 ')
 END
