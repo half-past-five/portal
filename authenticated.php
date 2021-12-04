@@ -68,6 +68,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <hr>
                             <form action="queryShowQuestionnaireLog.php" method="post">
                                 <h3>Show Questionnaire Log</h3>
+				<div class="form-group"><input class="form-control" type="text" name="user_id" placeholder="user_id"></div>
                                 <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="qn_id"></div>
                                 <input type="submit" name="Query Show Questionnaire Log" class="form-control btn btn-primary submit px-3" value="QUERY SHOW QUESTIONNAIRE LOG">
                             </form>
