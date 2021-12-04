@@ -471,7 +471,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query 8-->
                             <hr>
                             <form action="query8.php" method="post">
-                                <h3>8 (Most Popular Questionnaires)</h3>
+                                <h3>8 (Most Popular Questions)</h3>
                                 <input type="submit" name="Query 8" class="form-control btn btn-primary submit px-3" value="QUERY 8">
                             </form>
 
