@@ -69,10 +69,6 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 /* Free connection resources. */
                 sqlsrv_close($conn);
 
-                $time_end = microtime(true);
-                $execution_time = round((($time_end - $time_start) * 1000), 2);
-                echo ('<br>QueryTime: ' . $execution_time . ' ms');
-
                 function PrintResultSet($resultSet)
                 {
                     echo ("<table style='color: white'><tr >");
