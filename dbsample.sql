@@ -1088,9 +1088,9 @@ SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q16'
 EXEC [LOG] @log
 
 
---QUERY 17--
+--QUERY 17a--
 GO
-CREATE PROCEDURE dbo.Q17 @user_id int, @qn_id int 
+CREATE PROCEDURE dbo.Q17a @user_id int, @qn_id int 
 AS
 
 ;WITH Result AS(
@@ -1106,6 +1106,15 @@ AS
 SELECT [Questionnaire ID] AS 'IDs of children Questionnaires'
 FROM Result
 WHERE [Questionnaire ID] <> @qn_id
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q17a'
+EXEC [LOG] @log
+
+--QUERY 17b--
+GO
+CREATE PROCEDURE dbo.Q17b @user_id int, @qn_id int 
+AS
 
 ;WITH Result AS(
         SELECT  *
@@ -1126,7 +1135,7 @@ FROM Result, [Questions per Questionnaire] QpQ
 				)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q17'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q17b'
 EXEC [LOG] @log
 
 
@@ -1180,49 +1189,6 @@ exec Q15 @user_id = '276', @k_min = '15'
 
 exec Q16 @user_id = '276' --oi
 
-exec Q17
-
-select *
-from [T1-Question Questionnaire Pairs] q
-where q.[Question ID] = '948'
-
-select * from [T1-Questionnaire] where [Questionnaire ID] = 197
-
-@description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
-@mult_choice_answers varchar(1000), @arithm_min int, @arithm_max int
-
-
---Query 13 testing 
-
-exec Q13 @user_id = '6'
-exec Q13 @user_id = '20'
-exec Q13 @user_id = '31'
-exec Q13 @user_id = '44'
-exec Q13 @user_id = '58'
-exec Q13 @user_id = '71'
-exec Q13 @user_id = '82'
-exec Q13 @user_id = '93'
-exec Q13 @user_id = '108'
-exec Q13 @user_id = '123'
-exec Q13 @user_id = '140'
-exec Q13 @user_id = '152'
-exec Q13 @user_id = '164'
-exec Q13 @user_id = '179'
-exec Q13 @user_id = '194'
-exec Q13 @user_id = '209'
-exec Q13 @user_id = '223'
-exec Q13 @user_id = '236'
-exec Q13 @user_id = '253'
-exec Q13 @user_id = '268'
-exec Q13 @user_id = '279'
-exec Q13 @user_id = '293'
-exec Q13 @user_id = '308'
-exec Q13 @user_id = '320'
-exec Q13 @user_id = '333'
-exec Q13 @user_id = '349'
-exec Q13 @user_id = '362'
-exec Q13 @user_id = '374'
-exec Q13 @user_id = '384'
-exec Q13 @user_id = '394'
-
+exec Q17a 6, 1
+exec Q17b 6, 1
 */
