@@ -153,6 +153,11 @@ CREATE TABLE [dbo].[T1-Log](
 	[Event]	varchar(100) not null,
 	)
 
+CREATE TABLE [dbo].[T1-Questionnaire Log](
+	[Event]	varchar(100) not null,
+	[Questionnaire ID] int not null,
+	[User ID] int not null
+)
 ---------- INSERTS ----------
 --RUN 1.[T1-Company]
 --RUN 2.[T1-User]
@@ -188,3 +193,8 @@ CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES 
 ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
 CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])--TRIGGER
+
+ALTER TABLE dbo.[T1-Questionnaire Log] ADD
+CONSTRAINT [FK-Log-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES dbo.[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE
+CONSTRAINT [FK-Log-User] FOREIGN KEY ([User ID]) REFERENCES dbo.[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE CASCADE
+

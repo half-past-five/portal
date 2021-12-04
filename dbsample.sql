@@ -308,10 +308,10 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q1 @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
-@company_reg_num int, @company_brand_name varchar(50), @IDCard int
+@company_reg_num int, @company_brand_name varchar(50), @IDCard int, @caller_id int
 AS
 --only observer can do
---IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
 ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ))
@@ -325,10 +325,10 @@ EXEC [LOG] @log
 
 --QUERY 2a--
 GO
-CREATE PROCEDURE dbo.Q2a @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30)
+CREATE PROCEDURE dbo.Q2a @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30), @caller_id int
 AS
 --only observer can do
---IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 IF @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_id, @brand_name, CAST( GETDATE() AS Date ))
@@ -356,10 +356,10 @@ EXEC [LOG] @log
 --QUERY 2b--
 GO
 CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
-@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int, @IDCard int
+@position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int, @IDCard int, @caller_id int
 AS
 --only observer can do
---IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @IDCard)
