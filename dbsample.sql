@@ -141,6 +141,12 @@ DECLARE @log varchar(100) = '   '
 SET @log = @log + 'Login attempt with username: ' + @username
 EXEC [LOG] @log
 
+--QUERY SHOW ALL TABLES
+GO
+CREATE PROCEDURE dbo.ShowTable @vTableName varchar(30)
+AS
+EXECUTE('SELECT * FROM [' + @vTableName + ']')
+
 
 --QUERY SHOW ALL QUESTIONS--
 GO
@@ -732,8 +738,7 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q11 @user_id int
 AS
---declare @user_id int
---@user_id = '6'
+
 DECLARE @avgNoOfQuestions int;
 
 SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) 
@@ -745,7 +750,7 @@ SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions)
 					)
 					)
 
-print @avgNoOfQuestions 	
+--print @avgNoOfQuestions 	
 
 SELECT  Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
 FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
@@ -952,13 +957,19 @@ GO
 CREATE PROCEDURE dbo.Q17 @user_id int, @qn_id int 
 AS
 
- --for testing 
- /*
-DECLARE @qn_id int
-SET @qn_id = 63
-DECLARE @user_id int
-SET @user_id = 88
-*/
+;WITH Result AS(
+        SELECT  *
+        FROM	[T1-Questionnaire] Qnnaire
+        WHERE   Qnnaire.[Questionnaire ID] = @qn_id 
+        UNION ALL
+        SELECT  Qnnaire.*
+        FROM	[T1-Questionnaire] Qnnaire INNER JOIN Result ON Qnnaire.[Parent ID] = Result.[Questionnaire ID]
+		--WHERE	Qnnaire.URL <> NULL
+		)
+
+SELECT [Questionnaire ID] AS 'IDs of children Questionnaires'
+FROM Result
+WHERE [Questionnaire ID] <> @qn_id
 
 ;WITH Result AS(
         SELECT  *
@@ -970,11 +981,9 @@ SET @user_id = 88
 		--WHERE	Qnnaire.URL <> NULL
 		)
 
-
-
 SELECT  SUM(QpQ.noOfQuestions) as 'Total Number of Questions'
 FROM Result, [Questions per Questionnaire] QpQ
-		WHERE QpQ.[Questionnaire ID] =	Result.[Questionnaire ID] AND Result.[Creator ID] IN (
+		WHERE QpQ.[Questionnaire ID] =	Result.[Questionnaire ID] AND Result.[Questionnaire ID] <> @qn_id  AND Result.[Creator ID] IN (
 				SELECT [User ID]
 				FROM [T1-User] U
 				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
@@ -985,49 +994,10 @@ SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q17'
 EXEC [LOG] @log
 
 
-
-
-/*
-DECLARE @Table TABLE(
-        ID INT,
-        ParentID INT,
-        NAME VARCHAR(20)
-)
-
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 1, NULL, 'A'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 2, 1, 'B-1'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 3, 1, 'B-2'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 4, 2, 'C-1'
-INSERT INTO @Table (ID,ParentID,[NAME]) SELECT 5, 2, 'C-2'
-
-
-DECLARE @ID INT
-
-SELECT @ID = 2;
-
-WITH ret AS(
-        SELECT  *
-        FROM    @Table
-        WHERE   ID = @ID
-        UNION ALL
-        SELECT  t.*
-        FROM    @Table t INNER JOIN
-                ret r ON t.ParentID = r.ID
-)
-
-SELECT  *
-FROM    ret
-
-SELECT *
-FROM @Table
-
-*/
-
-
-
-
 /*
 ---------- TESTING ----------
+
+exec ShowTable @vTableName = 'T1-User'
 
 exec Q1 @name='Konstantinos Larkos', @bday='2000/6/26', @sex='M', 
 @position='Employee', @username='klarko03', @password='hihi', @manager_id=NULL, 
@@ -1073,9 +1043,6 @@ exec Q15 @user_id = '276', @k_min = '15'
 
 exec Q16 @user_id = '276' --oi
 
-
-
-
 exec Q17
 
 select *
@@ -1120,4 +1087,5 @@ exec Q13 @user_id = '362'
 exec Q13 @user_id = '374'
 exec Q13 @user_id = '384'
 exec Q13 @user_id = '394'
+
 */
