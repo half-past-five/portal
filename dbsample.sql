@@ -706,7 +706,7 @@ AS
 --observer cannot do
 IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
-IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) IS NULL
 	BEGIN
 	UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
 	RETURN
@@ -728,7 +728,7 @@ AS
 --observer cannot do
 IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN
-IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL RETURN --cannot be cloned because its not completed
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) IS NULL RETURN --cannot be cloned because its not completed
 DECLARE @title varchar(30)
 SET @title = (SELECT [Title] q FROM [T1-Questionnaire] q WHERE [Questionnaire ID] = @questionnaire_id)
 DECLARE @version int
