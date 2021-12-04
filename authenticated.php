@@ -170,11 +170,12 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                         <option value="update">Update</option>
                                         <option value="show">Show</option>
                                     </select></div>
-                                <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
+                               
                                 <div id="q2b_show" class="divShow">
                                     <div class="form-group"><input type="text" name="username" class="form-control" placeholder="Username"></div>
                                 </div>
                                 <div id="q2b_insert" class="divShow">
+				    <div class="form-group"><input type="text" name="IDCard" placeholder="ID Card" class="form-control"></div>
                                     <div class="form-group"><input type="text" name="name" class="form-control" placeholder="Name"></div>
                                     <div class="form-group">
                                         Birth Date<input type="date" name="bday" class="form-control" placeholder="Birth Date">
