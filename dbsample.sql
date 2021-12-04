@@ -691,8 +691,7 @@ SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions'
 GO
 CREATE PROCEDURE dbo.Q11 @user_id int
 AS
---declare @user_id int
---@user_id = '6'
+
 DECLARE @avgNoOfQuestions int;
 
 SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions) 
@@ -704,7 +703,7 @@ SET @avgNoOfQuestions  = (SELECT AVG(QpQ.noOfQuestions)
 					)
 					)
 
-print @avgNoOfQuestions 	
+--print @avgNoOfQuestions 	
 
 SELECT  Qnnaire.Title, Qnnaire.Version, QPQ.noOfQuestions
 FROM [Questions per Questionnaire] QpQ, [T1-Questionnaire] Qnnaire 
