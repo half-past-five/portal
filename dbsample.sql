@@ -137,7 +137,7 @@ SELECT CONVERT(varchar, [User ID]) as [User ID], CONVERT(varchar, Privilages) as
 FROM [T1-User]
 WHERE Username = @username and [Password] = @password
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'Login attempt with username: ' + @username
 EXEC [LOG] @log
 
@@ -156,7 +156,7 @@ WHERE [Creator ID] in (
 		)
 	)
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestions' 
 EXEC [LOG] @log
 
@@ -182,7 +182,7 @@ IF @q_type = 'Multiple Choice'
 	SELECT * FROM [T1-Multiple Choice Question] WHERE [Question ID] = @question_id
 	END
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionDetails' 
 EXEC [LOG] @log
 
@@ -202,7 +202,7 @@ WHERE [Creator ID] in (
 		)
 	)
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionnaires' 
 EXEC [LOG] @log
 
@@ -222,7 +222,7 @@ CONVERT(varchar(30), [Company ID]) as [Company ID], CONVERT(varchar(30), [Manage
 FROM [T1-User] u
 WHERE u.[Company ID] = @admin_company_id
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQUsers' 
 EXEC [LOG] @log
 
@@ -238,7 +238,7 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 INSERT INTO [T1-Multiple Choice Answers]([Question ID], [Answer]) VALUES (@question_id, @answer)
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query InsertAnswerMultChoice' 
 EXEC [LOG] @log
 
@@ -254,7 +254,7 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 UPDATE [T1-Multiple Choice Answers] SET [Answer] = @new_answer WHERE @answer = [Answer] AND @question_id = [Question ID]
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query EditAnswerMultChoice' 
 EXEC [LOG] @log
 
@@ -270,7 +270,7 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 DELETE FROM [T1-Multiple Choice Answers] WHERE @answer = [Answer] AND @question_id = [Question ID]
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query RemoveAnswerMultChoice' 
 EXEC [LOG] @log
 
@@ -286,7 +286,7 @@ IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id = [Question ID]) RETURN
 SELECT [Answer] FROM [T1-Multiple Choice Answers] WHERE @question_id = [Question ID]
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowAnswerMultChoice' 
 EXEC [LOG] @log
 
@@ -304,7 +304,7 @@ INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Pas
 ALTER TABLE [T1-User] CHECK CONSTRAINT ALL
 ALTER TABLE [T1-Company] CHECK CONSTRAINT ALL
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'An observer added company with registration number ' +  CONVERT(varchar, @company_reg_num)
 EXEC [LOG] @log
 
@@ -331,7 +331,7 @@ IF @action = 'show'
 	WHERE @company_id = [Registration Number]
 	END
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'An observer edited company ' +  CONVERT(varchar, @brand_name)
 EXEC [LOG] @log
 
@@ -372,7 +372,7 @@ IF  @action = 'show'
 	WHERE @username = U.Username
 	END
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'An observer edited company admin with username  ' +  CONVERT(varchar, @username)
 EXEC [LOG] @log
 
@@ -389,7 +389,7 @@ WHERE u.[User ID] = @admin_id
 INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'3', @admin_company_id, @manager_id, @idcard)
 
 
-DECLARE @log varchar(30) = '   '
+DECLARE @log varchar(100) = '   '
 SET @log = @log + 'Admin with ID ' + CONVERT(varchar, @admin_id) + 'added user with username ' + CONVERT(varchar, @username)
 EXEC [LOG] @log
 
@@ -438,6 +438,10 @@ IF  @action = 'show'
 	WHERE @username = U.Username AND [Company ID] = @admin_company_id
 	END
 
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'Admin with ID ' + CONVERT(varchar, @admin_id) + 'edit user with username ' + CONVERT(varchar, @username)
+EXEC [LOG] @log
 
 --QUERY 5--
 GO
@@ -488,13 +492,22 @@ IF @action = 'delete'
 	DELETE FROM [T1-Question] WHERE [Question ID] = @question_id --cascades to specific question types
 	END
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'edited question with id ' + CONVERT(varchar, @question_id)
+EXEC [LOG] @log
+
 
 
 --QUERY 6a (CREATE NEW)--
 GO
 CREATE PROCEDURE dbo.Q6a @caller_id int, @title varchar(30)
 AS
-INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL) 
+INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL)
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'created new quesitonnaire '
+EXEC [LOG] @log
+
 
 
 --QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)-- 
@@ -513,6 +526,10 @@ WHERE qr.[Creator ID] in (
 	)
 AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Question ID] AND qr.[Questionnaire ID]=@questionnaire_id
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'executed Show Questionnaires '
+EXEC [LOG] @log
+
 /*
 exec Q6b @caller_id='1', @questionnaire_id='1'
 exec Q6a @caller_id = '1', @title = 'newquest'
@@ -530,6 +547,9 @@ IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user h
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 INSERT INTO [T1-Question Questionnaire Pairs]([Questionnaire ID], [Question ID]) VALUES (@questionnaire_id, @question_id)
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'added question with ID ' + CONVERT(varchar, @question_id) + 'to questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
+EXEC [LOG] @log
 /*
 exec ShowQuestions @caller_id = '1'
 exec ShowQuestionnaires @caller_id = '1'
@@ -548,6 +568,10 @@ IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user h
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 DELETE FROM [T1-Question Questionnaire Pairs] WHERE [Question ID] = @question_id AND [Questionnaire ID] = @questionnaire_id
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'removed question with ID ' + CONVERT(varchar, @question_id) + 'to questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
+EXEC [LOG] @log
+
 
 --QUERY 6e (CHANGE QUERY STATE)--
 GO
@@ -561,6 +585,9 @@ IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnai
 	END
 UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionnaire_id
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'changed state of questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
+EXEC [LOG] @log
 --exec Q6e @caller_id='1', @questionnaire_id='6'
 
 
@@ -588,6 +615,11 @@ BEGIN
 	DELETE TOP(1) FROM @temp 
 END 
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'cloned questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
+EXEC [LOG] @log
+
+
 
 --QUERY 7-- WORKS
 GO
@@ -604,6 +636,10 @@ WHERE [Creator ID] in (
 					)
 AND QPQ.[Questionnaire ID] = Q.[Questionnaire ID]
 ORDER BY QPQ.noOfQuestions ASC
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q7'
+EXEC [LOG] @log
 
 
 
@@ -642,6 +678,9 @@ FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
 		) as QuestionnaireCount
 WHERE QuestionnaireCount.noOfAppearances = @maxNoOfQuestionnaires 	
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q8'
+EXEC [LOG] @log
 
 
 --QUERY 9 
@@ -654,6 +693,10 @@ WHERE
 q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 
 GROUP BY Title, [Version]
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q9'
+EXEC [LOG] @log
 
 
 --Query 10 
@@ -679,6 +722,10 @@ SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions'
 		)
 	)
 	GROUP BY C.[Brand Name]
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q10'
+EXEC [LOG] @log
 	
 
 --Query 11 
@@ -708,6 +755,10 @@ WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions 
 		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 		)
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q11'
+EXEC [LOG] @log
+
 
 
 --Query 12 
@@ -732,6 +783,9 @@ WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions 
 		WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 					)
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q12'
+EXEC [LOG] @log
 
 
 --Query 13 
@@ -778,6 +832,10 @@ FROM (	SELECT   Qnnaire.[Questionnaire ID],Qnnaire.Title, Qnnaire.Version, QPQ.n
 		AND CompanyQuestionnaires1.noOfQuestions = CompanyQuestionnaires2.noOfQuestions
 		AND CompanyQuestionnaires1.[Questionnaire ID] <> CompanyQuestionnaires2.[Questionnaire ID]
 		ORDER BY CompanyQuestionnaires1.noOfQuestions ASC
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q13'
+EXEC [LOG] @log
 	
 
 --QUERY 14--
@@ -816,6 +874,10 @@ WHERE  NOT EXISTS
 	))
 )AND Qn.URL <> 'NULL' AND Qn.[Questionnaire ID] <> @qn_id
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q14'
+EXEC [LOG] @log
+
 
 --QUERY 15--
 
@@ -841,6 +903,10 @@ FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUN
 						ORDER BY q_COUNT ASC
 					) MinimumQ
 WHERE Q.[Question ID] = MinimumQ.[Question ID] 
+
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q15'
+EXEC [LOG] @log
 
 
 
@@ -876,6 +942,10 @@ FROM [T1-Question Questionnaire Pairs] QQP, [T1-Questionnaire] Qnnaire
 GROUP BY QQP.[Question ID]) as  array
 WHERE array.noOfQuestionAppearances = @noOfQuestionnaires
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q16'
+EXEC [LOG] @log
+
 
 --QUERY 17--
 GO
@@ -910,6 +980,9 @@ FROM Result, [Questions per Questionnaire] QpQ
 				WHERE U.[Company ID] = (SELECT [Company ID] FROM [T1-User] WHERE [User ID] = @user_id )
 				)
 
+DECLARE @log varchar(100) = '   '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q17'
+EXEC [LOG] @log
 
 
 
@@ -966,14 +1039,13 @@ exec Q2b @action='update', @name = 'KAS', @bday='2000/6/26', @sex='F',
 @position='Katotatos', @username='ckasou02', @password='hihi', @manager_id=NULL, @company_id = '1', @IDCard = '55556'
 
 exec Q2b @action='show', @name = '', @bday='', @sex='', 
-@position='', @username='ckasou02', @password='', @manager_id=NULL, @company_id = '', @IDCard = ''
-
+@position='', @username='ckasou01', @password='', @manager_id=NULL, @company_id = '', @IDCard = ''
+select * from [T1-Log]
 exec Q3 @admin_id='6',@idcard=11111111, @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
 exec Q4 @action='show', @idcard = 100000001, @admin_id='6', @name='Kosteassss', @bday='2000/6/26', @sex='F', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
-
 
 exec Q5 @caller_id=6, @action='update', @question_id=1, @code='CODE999', @type='Arithmetic',
 @description='pejesi', @text='ekourastika?', @free_text_restriction=NULL, @mult_choice_selectable_amount=NULL,
