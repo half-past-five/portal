@@ -497,14 +497,14 @@ $connectionOptions = $_SESSION["connectionOptions"];
                             <!--Query 11-->
                             <hr>
                             <form action="query11.php" method="post">
-                                <h3>11 (Large Questionnaires)</h3>
+                                <h3>11 (Above Avergage [Questions per Questionnaire ratio] Questionnaires)</h3>
                                 <input type="submit" name="Query 11" class="form-control btn btn-primary submit px-3" value="QUERY 11">
                             </form>
 
                             <!--Query 12-->
                             <hr>
                             <form action="query12.php" method="post">
-                                <h3>12 (Small Questionnaires)</h3>
+                                <h3>12 (Smallest Questionnaire/Questionnaires)</h3>
                                 <input type="submit" name="Query 12" class="form-control btn btn-primary submit px-3" value="QUERY 12">
                             </form>
 
