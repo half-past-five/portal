@@ -141,6 +141,7 @@ DECLARE @log varchar(100) = '   '
 SET @log = @log + 'Login attempt with username: ' + @username
 EXEC [LOG] @log
 
+
 --QUERY SHOW ALL TABLES
 GO
 CREATE PROCEDURE dbo.ShowTable @vTableName varchar(30)
@@ -238,6 +239,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.InsertAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50)
 AS
+--observer cannot edit questions
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 --check if caller is correct
 IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
@@ -254,6 +257,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.EditAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50), @new_answer varchar(50)
 AS
+--observer cannot edit questions
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 --check if caller is correct
 IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
@@ -270,6 +275,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.RemoveAnswerMultChoice @caller_id int, @question_id int, @answer varchar(50)
 AS
+--observer cannot edit questions
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 --check if caller is correct
 IF dbo.canUserSeeQuestion(@caller_id, @question_id) = 0 RETURN
 --check if multiple choice
@@ -303,6 +310,8 @@ CREATE PROCEDURE dbo.Q1 @name varchar(50), @bday date, @sex char(1),
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, 
 @company_reg_num int, @company_brand_name varchar(50), @IDCard int
 AS
+--only observer can do
+--IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 ALTER TABLE [T1-User] NOCHECK CONSTRAINT ALL;
 ALTER TABLE [T1-Company] NOCHECK CONSTRAINT ALL;
 INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_reg_num, @company_brand_name, CAST( GETDATE() AS Date ))
@@ -318,6 +327,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q2a @action varchar(30), @company_id  varchar(30), @brand_name varchar(30), @new_date varchar(30)
 AS
+--only observer can do
+--IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 IF @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-Company] ([Registration Number], [Brand Name], [Induction Date]) VALUES (@company_id, @brand_name, CAST( GETDATE() AS Date ))
@@ -347,6 +358,8 @@ GO
 CREATE PROCEDURE dbo.Q2b @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int, @company_id int, @IDCard int
 AS
+--only observer can do
+--IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN 
 IF  @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-User] ([Name], [Birth Date], [Sex], [Position], [Username], [Password], [Privilages], [Company ID], [Manager ID], [IDCard]) VALUES (@name, @bday, @sex, @position, @username, @password,'2', @company_id, @manager_id, @IDCard)
@@ -388,6 +401,8 @@ GO
 CREATE PROCEDURE dbo.Q3 @admin_id int, @idcard int, @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
 AS
+--only admin can do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @admin_id) <> 2 RETURN 
 DECLARE @admin_company_id int
 SELECT @admin_company_id = u.[Company ID]
 FROM [T1-User] u
@@ -405,6 +420,8 @@ GO
 CREATE PROCEDURE dbo.Q4 @admin_id int, @idcard int, @action varchar(30), @name varchar(50), @bday date, @sex char(1), 
 @position varchar(30), @username varchar(30), @password varchar(30), @manager_id int
 AS
+--only admin can do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @admin_id) <> 2 RETURN 
 DECLARE @admin_company_id int
 SELECT @admin_company_id = u.[Company ID]
 FROM [T1-User] u
@@ -455,6 +472,8 @@ CREATE PROCEDURE dbo.Q5 @caller_id int, @action varchar(20), @question_id int, @
 @description varchar(50), @text varchar(100), @free_text_restriction varchar(30), @mult_choice_selectable_amount int,
 @arithm_min int, @arithm_max int
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF @action = 'insert'
 	BEGIN
 	INSERT INTO [T1-Question]([Creator ID], [Type], [Description], [Text], [Question Code]) VALUES(@caller_id, @type, @description, @text, @code)
@@ -508,6 +527,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q6a @caller_id int, @title varchar(30)
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 INSERT INTO [T1-Questionnaire]([Title], [Version], [Parent ID], [Creator ID], [URL]) VALUES (@title, '1', NULL, @caller_id, NULL)
 
 DECLARE @log varchar(100) = '   '
@@ -548,6 +569,8 @@ exec Q6c @caller_id = '1', @questionnaire_id = '13', @question_id = '1'
 GO
 CREATE PROCEDURE dbo.Q6c @caller_id int, @questionnaire_id int, @question_id int
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT [URL] FROM [T1-Questionnaire] q WHERE @questionnaire_id = q.[Questionnaire ID]) <> NULL RETURN 
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
@@ -569,6 +592,8 @@ exec Q6d @caller_id = '1', @questionnaire_id = '1', @question_id = '1'
 GO
 CREATE PROCEDURE dbo.Q6d @caller_id int, @questionnaire_id int, @question_id int
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT [URL] FROM [T1-Questionnaire] q WHERE @questionnaire_id = q.[Questionnaire ID]) <> NULL RETURN
 IF (SELECT dbo.canUserSeeQuestion(@caller_id, @question_id)) = 0 RETURN --user has access to question
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
@@ -583,6 +608,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q6e @caller_id int, @questionnaire_id int
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN --user has access to questionnaire
 IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL
 	BEGIN
@@ -601,6 +628,8 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.Q6f @caller_id int, @questionnaire_id int
 AS
+--observer cannot do
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) = 1 RETURN 
 IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETURN
 IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) = NULL RETURN --cannot be cloned because its not completed
 DECLARE @title varchar(30)
