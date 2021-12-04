@@ -198,3 +198,5 @@ ALTER TABLE dbo.[T1-Questionnaire Log] ADD
 CONSTRAINT [FK-Log-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES dbo.[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE,
 CONSTRAINT [FK-Log-User] FOREIGN KEY ([User ID]) REFERENCES dbo.[T1-User]([User ID])
 
+CREATE INDEX index_name ON [T1-User] ([Company ID]) 
+
