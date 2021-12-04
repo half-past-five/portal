@@ -49,10 +49,11 @@ $connectionOptions = $_SESSION["connectionOptions"];
                 //Read Stored proc with param
                 $tsql = "{call ShowQuestionnaireLog(?, ?)}";
                 $UserID = $_SESSION["User ID"];
-                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["qn_id"] . "<br/>";
+                echo "Executing query: " . $tsql . ") with parameter " . $UserID . $_POST["user_id"] . $_POST["qn_id"] . "<br/>";
 
                 $params = array(
                     array($UserID, SQLSRV_PARAM_IN),
+                    array($_POST["user_id"], SQLSRV_PARAM_IN),
                     array($_POST["qn_id"], SQLSRV_PARAM_IN)
                 );
 
