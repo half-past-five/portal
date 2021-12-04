@@ -539,12 +539,20 @@ $connectionOptions = $_SESSION["connectionOptions"];
                                 <input type="submit" name="Query 16" class="form-control btn btn-primary submit px-3" value="QUERY 16">
                             </form>
 
-                            <!--Query 17-->
+                            <!--Query 17a-->
                             <hr>
-                            <form action="query17.php" method="post">
+                            <form action="query17a.php" method="post">
                                 <h3>17 (Find New Versions)</h3>
                                 <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
-                                <input type="submit" name="Query 17" class="form-control btn btn-primary submit px-3" value="QUERY 17">
+                                <input type="submit" name="Query 17a" class="form-control btn btn-primary submit px-3" value="QUERY 17a">
+                            </form>
+					
+				<!--Query 17b-->
+                            <hr>
+                            <form action="query17b.php" method="post">
+                                <h3>17 (Find New Versions)</h3>
+                                <div class="form-group"><input class="form-control" type="text" name="qn_id" placeholder="Questionnaire ID"></div>
+                                <input type="submit" name="Query 17b" class="form-control btn btn-primary submit px-3" value="QUERY 17b">
                             </form>
 
                         <?php endif; ?>
