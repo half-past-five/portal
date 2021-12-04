@@ -155,7 +155,7 @@ CREATE TABLE [dbo].[T1-Log](
 
 CREATE TABLE [dbo].[T1-Questionnaire Log](
 	[Event]	varchar(100) not null,
-	[Questionnaire ID] int not null,
+	[Questionnaire ID] int DEFAULT null,
 	[User ID] int not null
 )
 ---------- INSERTS ----------
@@ -168,7 +168,7 @@ CREATE TABLE [dbo].[T1-Questionnaire Log](
 
 --FOREIGN KEYS 
 ALTER TABLE dbo.[T1-User] WITH NOCHECK ADD
-CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]), --TRIGGER
+CONSTRAINT [FK-User-Manager] FOREIGN KEY ([Manager ID]) REFERENCES [T1-User]([User ID]), --DONT CARE FROM REJECT CLAUSE
 CONSTRAINT [FK-User-Company] FOREIGN KEY ([Company ID]) REFERENCES [dbo].[T1-Company]([Company ID]) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE dbo.[T1-Question] ADD
@@ -192,9 +192,9 @@ CONSTRAINT [FK-Questionnaire-CreatorUser] FOREIGN KEY ([Creator ID]) REFERENCES 
 
 ALTER TABLE dbo.[T1-Question Questionnaire Pairs] ADD
 CONSTRAINT [FK-Question-ID] FOREIGN KEY ([Question ID]) REFERENCES [dbo].[T1-Question]([Question ID]) ON UPDATE CASCADE ON DELETE CASCADE,
-CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])--TRIGGER
+CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [dbo].[T1-Questionnaire]([Questionnaire ID])--DONT CARE FROM REJECT CLAUSE
 
 ALTER TABLE dbo.[T1-Questionnaire Log] ADD
-CONSTRAINT [FK-Log-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES dbo.[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE
-CONSTRAINT [FK-Log-User] FOREIGN KEY ([User ID]) REFERENCES dbo.[T1-User]([User ID]) ON UPDATE CASCADE ON DELETE CASCADE
+CONSTRAINT [FK-Log-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES dbo.[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE,
+CONSTRAINT [FK-Log-User] FOREIGN KEY ([User ID]) REFERENCES dbo.[T1-User]([User ID])
 

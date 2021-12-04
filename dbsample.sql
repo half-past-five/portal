@@ -129,6 +129,16 @@ AS
 INSERT INTO [T1-Log]([Event]) VALUES (CAST( GETDATE() AS varchar ) + @event)
 
 
+--SEE QUESTIONNAIRE LOG--
+GO
+CREATE PROCEDURE dbo.[ShowQuestionnaireLog] @caller_id int, @questionnaire_id int
+AS
+IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN
+IF @caller_id <> '' AND @questionnaire_id <> '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[User ID] = @caller_id AND ql.[Questionnaire ID] = @questionnaire_id)
+IF @caller_id <> '' AND @questionnaire_id = '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[User ID] = @caller_id)
+IF @caller_id = '' AND @questionnaire_id <> '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[Questionnaire ID] = @questionnaire_id)
+
+
 --QUERY AUTHENTICATE--
 GO
 CREATE PROCEDURE dbo.Authenticate @username varchar(30), @password varchar(30)
@@ -146,7 +156,77 @@ EXEC [LOG] @log
 GO
 CREATE PROCEDURE dbo.ShowTable @vTableName varchar(30)
 AS
-EXECUTE('SELECT * FROM [' + @vTableName + ']')
+IF @vTableName = 'T1-Company'
+BEGIN
+EXECUTE
+('
+	SELECT
+	CAST([Registration Number] AS varchar(30)) as [Registration Number],
+	CAST([Brand Name] AS varchar(30)) as [Brand Name],
+	CAST([Induction Date] AS varchar(30)) as [Induction Date]
+	FROM [T1-Company]
+')
+END
+
+IF @vTableName = 'T1-User'
+BEGIN
+EXECUTE
+('
+	SELECT
+	CAST([User ID] AS varchar(30)) as [User ID],
+	CAST([Name] AS varchar(30)) as [Name],
+	CAST([IDCard] AS varchar(30)) as [IDCard],
+	CAST([Birth Date] AS varchar(30)) as [Birth Date],
+	CAST([Sex] AS varchar(30)) as [Sex],
+	CAST([Position] AS varchar(30)) as [Position],
+	CAST([Username] AS varchar(30)) as [Username],
+	CAST([Password] AS varchar(30)) as [Password],
+	CAST([Company ID]  AS varchar(30)) as [Company ID],
+	CAST([Manager ID] AS varchar(30)) as [Manager ID]
+	FROM [T1-User]
+')
+END
+
+IF @vTableName = 'T1-Question'
+BEGIN
+EXECUTE
+('
+	SELECT 
+	CAST([Question ID] AS varchar(30) as [Question ID]),
+	CAST([Question Code] AS varchar(30) as [Question Code]),
+	CAST([Creator ID] AS varchar(30) as [Creator ID]),
+	CAST([Type] AS varchar(30) as [Type]),
+	CAST([Description] AS varchar(30) as [Description]),
+	CAST([Text] AS varchar(30) as [Text])
+	FROM [T1-Question]
+')
+END
+
+IF @vTableName = 'T1-Questionnaire'
+BEGIN
+EXECUTE
+('
+	SELECT 
+	CAST([Questionnaire ID] AS varchar(30) as [Questionnaire ID]),
+	CAST([Title] AS varchar(30) as [Title]),
+	CAST([Version] AS varchar(30) as [Version]),
+	CAST([Parent ID] AS varchar(30) as [Parent ID]),
+	CAST([Creator ID] AS varchar(30) as [Creator ID]),
+	CAST([URL] AS varchar(30) as [URL])
+	FROM [T1-Questionnaire]
+')
+END
+
+IF @vTableName = 'T1-Question Questionnaire Pairs'
+BEGIN
+EXECUTE
+('
+	SELECT 
+	CAST([Question ID] AS varchar(30) as [Question ID]),
+	CAST([Questionnaire ID] AS varchar(30) as [Questionnaire ID])
+	FROM [T1-Question Questionnaire Pairs]
+')
+END
 
 
 --QUERY SHOW ALL QUESTIONS--
@@ -535,6 +615,8 @@ DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'created new quesitonnaire '
 EXEC [LOG] @log
 
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES ('Questionnaire added', SCOPE_IDENTITY(), @caller_id)
+
 
 
 --QUERY 6b (SHOW QUESTIONS OF QUESTIONNAIRE)-- 
@@ -556,6 +638,9 @@ AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Qu
 DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + ' executed Show Questionnaires '
 EXEC [LOG] @log
+
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES ('Questionnaire viewed', @questionnaire_id, @caller_id)
+
 
 /*
 exec Q6b @caller_id='1', @questionnaire_id='1'
@@ -579,6 +664,11 @@ INSERT INTO [T1-Question Questionnaire Pairs]([Questionnaire ID], [Question ID])
 DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'added question with ID ' + CONVERT(varchar, @question_id) + 'to questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
 EXEC [LOG] @log
+
+SET @log = 'Added question ' + CONVERT(varchar, @question_id) + ' to questionnaire'
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES (@log, @questionnaire_id, @caller_id)
+
+
 /*
 exec ShowQuestions @caller_id = '1'
 exec ShowQuestionnaires @caller_id = '1'
@@ -603,6 +693,10 @@ DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'removed question with ID ' + CONVERT(varchar, @question_id) + 'to questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
 EXEC [LOG] @log
 
+SET @log = 'Removed question ' + CONVERT(varchar, @question_id) + ' from questionnaire'
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES (@log, @questionnaire_id, @caller_id)
+
+
 
 --QUERY 6e (CHANGE QUERY STATE)--
 GO
@@ -621,7 +715,9 @@ UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionn
 DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'changed state of questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
 EXEC [LOG] @log
---exec Q6e @caller_id='1', @questionnaire_id='6'
+
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES ('Changed state of questionnaire', @questionnaire_id, @caller_id)
+
 
 
 --QUERY 6f (CLONE)--
@@ -653,6 +749,9 @@ END
 DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'cloned questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
 EXEC [LOG] @log
+
+INSERT INTO [T1-Questionnaire Log]([Event],[Questionnaire ID], [User ID]) VALUES ('Cloned questionnaire', @questionnaire_id, @caller_id)
+
 
 
 
