@@ -701,7 +701,7 @@ q.URL <> 'NULL' AND qqp.[Questionnaire ID] = q.[Questionnaire ID]
 GROUP BY Title, [Version]
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q9'
+SET @log = @log + 'Q9 executed'
 EXEC [LOG] @log
 
 
