@@ -714,9 +714,11 @@ IF (SELECT dbo.canUserSeeQuestionnaire(@caller_id, @questionnaire_id)) = 0 RETUR
 IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) IS NULL
 	BEGIN
 	UPDATE [T1-Questionnaire] SET [URL] = dbo.generateURL(@questionnaire_id) WHERE [Questionnaire ID] = @questionnaire_id
-	RETURN
 	END
-UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionnaire_id
+IF (SELECT [URL] FROM [T1-Questionnaire] WHERE [Questionnaire ID] = @questionnaire_id) IS NOT NULL
+	BEGIN
+	UPDATE [T1-Questionnaire] SET [URL] = NULL WHERE [Questionnaire ID] = @questionnaire_id
+	END
 
 DECLARE @log varchar(100) = '   '
 SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'changed state of questuonnaire with ID ' + CONVERT(varchar, @questionnaire_id)
@@ -1145,9 +1147,10 @@ exec Q2b @action='update', @name = 'KAS', @bday='2000/6/26', @sex='F',
 exec Q2b @action='show', @name = '', @bday='', @sex='', 
 @position='', @username='ckasou01', @password='', @manager_id=NULL, @company_id = '', @IDCard = ''
 select * from [T1-Log]
+
 exec Q3 @admin_id='6',@idcard=11111111, @name='Kostis', @bday='2000/6/26', @sex='M', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
-
+select * from [T1-User]
 exec Q4 @action='show', @idcard = 100000001, @admin_id='6', @name='Kosteassss', @bday='2000/6/26', @sex='F', 
 @position='Sales', @username='kost05', @password='hehehe', @manager_id='4'
 
