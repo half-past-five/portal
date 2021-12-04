@@ -163,7 +163,7 @@ WHERE [Creator ID] in (
 	)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestions' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query ShowQuestions' 
 EXEC [LOG] @log
 
 
@@ -189,7 +189,7 @@ IF @q_type = 'Multiple Choice'
 	END
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionDetails' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + '  executed query ShowQuestionDetails' 
 EXEC [LOG] @log
 
 
@@ -209,7 +209,7 @@ WHERE [Creator ID] in (
 	)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQuestionnaires' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query ShowQuestionnaires' 
 EXEC [LOG] @log
 
 
@@ -229,7 +229,7 @@ FROM [T1-User] u
 WHERE u.[Company ID] = @admin_company_id
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowQUsers' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query ShowQUsers' 
 EXEC [LOG] @log
 
 
@@ -245,7 +245,7 @@ IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id
 INSERT INTO [T1-Multiple Choice Answers]([Question ID], [Answer]) VALUES (@question_id, @answer)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query InsertAnswerMultChoice' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query InsertAnswerMultChoice' 
 EXEC [LOG] @log
 
 
@@ -261,7 +261,7 @@ IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id
 UPDATE [T1-Multiple Choice Answers] SET [Answer] = @new_answer WHERE @answer = [Answer] AND @question_id = [Question ID]
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query EditAnswerMultChoice' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query EditAnswerMultChoice' 
 EXEC [LOG] @log
 
 
@@ -277,7 +277,7 @@ IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id
 DELETE FROM [T1-Multiple Choice Answers] WHERE @answer = [Answer] AND @question_id = [Question ID]
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query RemoveAnswerMultChoice' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query RemoveAnswerMultChoice' 
 EXEC [LOG] @log
 
 
@@ -293,7 +293,7 @@ IF 'Multiple Choice' NOT IN (SELECT [Type] FROM [T1-Question] WHERE @question_id
 SELECT [Answer] FROM [T1-Multiple Choice Answers] WHERE @question_id = [Question ID]
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + 'executed query ShowAnswerMultChoice' 
+SET @log = @log + 'User ID ' + CONVERT(varchar, @caller_id) + ' executed query ShowAnswerMultChoice' 
 EXEC [LOG] @log
 
 
@@ -533,7 +533,7 @@ WHERE qr.[Creator ID] in (
 AND qr.[Questionnaire ID] = qqp.[Questionnaire ID] AND q.[Question ID] = qqp.[Question ID] AND qr.[Questionnaire ID]=@questionnaire_id
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + 'executed Show Questionnaires '
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @caller_id) + ' executed Show Questionnaires '
 EXEC [LOG] @log
 
 /*
@@ -644,7 +644,7 @@ AND QPQ.[Questionnaire ID] = Q.[Questionnaire ID]
 ORDER BY QPQ.noOfQuestions ASC
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q7'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q7'
 EXEC [LOG] @log
 
 
@@ -685,7 +685,7 @@ FROM  (	SELECT  QQP.[Question ID], COUNT(QQP.[Question ID]) as noOfAppearances
 WHERE QuestionnaireCount.noOfAppearances = @maxNoOfQuestionnaires 	
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q8'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q8'
 EXEC [LOG] @log
 
 
@@ -730,7 +730,7 @@ SELECT C.[Brand Name],AVG(QpQ.noOfQuestions) AS 'AVG number of Questions'
 	GROUP BY C.[Brand Name]
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q10'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q10'
 EXEC [LOG] @log
 	
 
@@ -761,7 +761,7 @@ WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions 
 		)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q11'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q11'
 EXEC [LOG] @log
 
 
@@ -789,7 +789,7 @@ WHERE QpQ.[Questionnaire ID] =	Qnnaire.[Questionnaire ID] AND QpQ.noOfQuestions 
 					)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q12'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q12'
 EXEC [LOG] @log
 
 
@@ -839,7 +839,7 @@ FROM (	SELECT   Qnnaire.[Questionnaire ID],Qnnaire.Title, Qnnaire.Version, QPQ.n
 		ORDER BY CompanyQuestionnaires1.noOfQuestions ASC
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q13'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q13'
 EXEC [LOG] @log
 	
 
@@ -880,7 +880,7 @@ WHERE  NOT EXISTS
 )AND Qn.URL <> 'NULL' AND Qn.[Questionnaire ID] <> @qn_id
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q14'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q14'
 EXEC [LOG] @log
 
 
@@ -910,7 +910,7 @@ FROM [T1-Question] Q,(	SELECT TOP (@k_min) QQP.[Question ID], COUNT(*) AS q_COUN
 WHERE Q.[Question ID] = MinimumQ.[Question ID] 
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q15'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q15'
 EXEC [LOG] @log
 
 
@@ -948,7 +948,7 @@ GROUP BY QQP.[Question ID]) as  array
 WHERE array.noOfQuestionAppearances = @noOfQuestionnaires
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q16'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q16'
 EXEC [LOG] @log
 
 
@@ -990,7 +990,7 @@ FROM Result, [Questions per Questionnaire] QpQ
 				)
 
 DECLARE @log varchar(100) = '   '
-SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + 'executed Q17'
+SET @log = @log + 'User with ID ' + CONVERT(varchar, @user_id) + ' executed Q17'
 EXEC [LOG] @log
 
 
