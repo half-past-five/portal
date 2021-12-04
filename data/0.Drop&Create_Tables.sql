@@ -89,7 +89,7 @@ CREATE TABLE dbo.[T1-User] (
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
 	CHECK ([Privilages] in ('1', '2', '3'))
 )
-
+CREATE INDEX index_name ON [T1-User] ([Company ID]) 
 
 CREATE TABLE dbo.[T1-Question] (
 	[Question ID] int IDENTITY(1,1) not null,
@@ -197,6 +197,3 @@ CONSTRAINT [FK-Questionnaire-ID] FOREIGN KEY ([Questionnaire ID]) REFERENCES [db
 ALTER TABLE dbo.[T1-Questionnaire Log] ADD
 CONSTRAINT [FK-Log-Questionnaire] FOREIGN KEY ([Questionnaire ID]) REFERENCES dbo.[T1-Questionnaire]([Questionnaire ID]) ON UPDATE CASCADE,
 CONSTRAINT [FK-Log-User] FOREIGN KEY ([User ID]) REFERENCES dbo.[T1-User]([User ID])
-
-CREATE INDEX index_name ON [T1-User] ([Company ID]) 
-
