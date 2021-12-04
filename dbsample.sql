@@ -131,12 +131,13 @@ INSERT INTO [T1-Log]([Event]) VALUES (CAST( GETDATE() AS varchar ) + @event)
 
 --SEE QUESTIONNAIRE LOG--
 GO
-CREATE PROCEDURE dbo.[ShowQuestionnaireLog] @caller_id int, @questionnaire_id int
+CREATE PROCEDURE dbo.[ShowQuestionnaireLog] @caller_id int, @user_id int, @questionnaire_id int
 AS
 IF (SELECT Privilages FROM [T1-User] WHERE [User ID] = @caller_id) <> 1 RETURN
-IF @caller_id <> '' AND @questionnaire_id <> '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[User ID] = @caller_id AND ql.[Questionnaire ID] = @questionnaire_id)
-IF @caller_id <> '' AND @questionnaire_id = '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[User ID] = @caller_id)
-IF @caller_id = '' AND @questionnaire_id <> '' (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[Questionnaire ID] = @questionnaire_id)
+IF @user_id <> '' AND @questionnaire_id <> '' BEGIN (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[Questionnaire ID] = @questionnaire_id AND ql.[User ID] = @user_id) RETURN END
+IF @user_id <> '' BEGIN (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[User ID] = @user_id) RETURN END
+IF @questionnaire_id <> '' BEGIN (SELECT * FROM [T1-Questionnaire Log] ql WHERE ql.[Questionnaire ID] = @questionnaire_id) RETURN END
+SELECT * FROM [T1-Questionnaire Log] 
 
 
 --QUERY AUTHENTICATE--
