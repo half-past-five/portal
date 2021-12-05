@@ -16,7 +16,7 @@ $_SESSION["connectionOptions"] = array(
 
 <head>
 	<title>Team 1</title>
-	<link rel="icon" href="https://i.imgur.com/rWjWE94.png">
+	<link rel="icon" href="https://i.imgur.com/70ln1bX.png">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">

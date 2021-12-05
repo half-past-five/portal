@@ -22,7 +22,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
         }
     </style>
     <title>Small Questionnaires</title>
-    <link rel="icon" href="https://i.imgur.com/rWjWE94.png">
+    <link rel="icon" href="https://i.imgur.com/70ln1bX.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                 //Establishes the connection
                 echo "Connecting to SQL server (" . $serverName . ")<br/>";
-                echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
+                echo "Database: " . $connectionOptions["Database"] . ", SQL User: " . $connectionOptions["Uid"] . "<br/>";
                 //echo "Pass: " . $connectionOptions[PWD] . "<br/>";
                 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
