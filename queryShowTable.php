@@ -42,7 +42,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                 //Establishes the connection
                 echo "Connecting to SQL server (" . $serverName . ")<br/>";
-                echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
+                echo "Database: " . $connectionOptions["Database"] . ", SQL User: " . $connectionOptions["Uid"] . "<br/>";
                 //echo "Pass: " . $connectionOptions[PWD] . "<br/>";
                 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
@@ -103,16 +103,8 @@ $connectionOptions = $_SESSION["connectionOptions"];
                         echo "Message: " . $error['message'] . "";
                     }
                 }
-                sqlsrv_query($conn, $tsql, $params);
-
-                /* Free connection resources. */
-                sqlsrv_close($conn);
-
-                $time_end = microtime(true);
-                $execution_time = round((($time_end - $time_start) * 1000), 2);
-                echo ('<br>QueryTime: ' . $execution_time . ' ms');
                 ?>
-
+                <hr>
                 <form method="post">
                     <div class="form-group">
                         <input type="submit" value="Menu" class="form-control btn btn-primary submit px-3" formaction="authenticated.php">
