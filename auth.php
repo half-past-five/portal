@@ -34,7 +34,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 							<?php
 							$time_start = microtime(true);
 							echo "Connecting to SQL server (" . $serverName . ")<br/>";
-							echo "Database: " . $connectionOptions[Database] . ", SQL User: " . $connectionOptions[Uid] . "<br/>";
+							echo "Database: " . $connectionOptions["Database"] . ", SQL User: " . $connectionOptions["Uid"] . "<br/>";
 							//echo "Pass: " . $connectionOptions[PWD] . "<br/>";
 
 							//Establishes the connection
