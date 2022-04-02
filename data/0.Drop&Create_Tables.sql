@@ -72,18 +72,15 @@ CREATE TABLE [dbo].[T1-Company](
 )
 
 
-CREATE TABLE dbo.[T1-User] (
+CREATE TABLE dbo.[T1-Doctor] (
 	[User ID] int IDENTITY(1,1) not null, --IDENTITY added 
 	[IDCard] int not null, --ADD DEFAULT
 	[Name] varchar(30) not null,
 	[Birth Date] date not null,
 	Sex char(1) not null,
-	Position varchar(30) DEFAULT 'employee' not null,
 	Username varchar(30) not null,
 	[Password] varchar(30) not null,
 	Privilages int not null,
-	[Company ID] int,
-	[Manager ID] int DEFAULT NULL,
 	UNIQUE(Username),
 	UNIQUE(IDCard),
 	CONSTRAINT [PK-User] PRIMARY KEY NONCLUSTERED ([User ID]),
