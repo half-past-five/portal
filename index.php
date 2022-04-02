@@ -15,8 +15,8 @@ $_SESSION["connectionOptions"] = array(
 <html>
 
 <head>
-	<title>Team 1</title>
-	<link rel="icon" href="https://i.imgur.com/70ln1bX.png">
+	<title>HPF Portal</title>
+	<link rel="icon" href="images/logo.png">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -74,10 +74,10 @@ $_SESSION["connectionOptions"] = array(
 						<div class="center-image">
 							<img class="logo" src="images/logo.png" alt="LOGO IMAGE">
 						</div>
-						<h3 class="mb-4 text-center">Observers System <br>Sign In</h3>
+						<h3 class="mb-4 text-center">HPF Portal <br>Sign In</h3>
 						<form action="auth.php" method="post" class="signin-form">
 							<div class="form-group">
-								<input name="username" type="text" class="form-control" placeholder="Username" required>
+								<input name="email" type="text" class="form-control" placeholder="Email" required>
 							</div>
 							<div class="form-group">
 								<input name="password" id="password-field" type="password" class="form-control" placeholder="Password" required>

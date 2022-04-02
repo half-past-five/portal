@@ -9,7 +9,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
 <head>
 	<title>Log In</title>
-	<link rel="icon" href="https://i.imgur.com/70ln1bX.png">
+	<link rel="icon" href="images/logo.png">
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@ $connectionOptions = $_SESSION["connectionOptions"];
 	}
 </style>
 
-<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
+<body class="img js-fullheight" style="background-image: url(images/background.jpg);">
 	<section class="ftco-section">
 		<div class="container">
 			<div class="row justify-content-center">
@@ -41,18 +41,18 @@ $connectionOptions = $_SESSION["connectionOptions"];
 							$conn = sqlsrv_connect($serverName, $connectionOptions);
 
 							if (isset($_POST['connect'])) {
-								echo "<br/>Trying to authenticate to T1-Users!<br/>";
+								echo "<br/>Trying to authenticate doctor!<br/>";
 								$tsql = "{call Authenticate(?,?)}";
-								if (empty($_POST["username"]))
-									echo "Username is empty!<br/>";
+								if (empty($_POST["email"]))
+									echo "Email is empty!<br/>";
 								if (empty($_POST["password"]))
 									echo "Password is empty!<br/>";
-								echo "Executing query: " . $tsql . ") with Username: " . $_POST["username"] . "<br/>";
+								echo "Executing query: " . $tsql . ") with email: " . $_POST["email"] . "<br/>";
 								//echo "Pass: " . $_POST["password"] . "<br/>";
 
 								// Getting parameter from the http call and setting it for the SQL call
 								$params = array(
-									array($_POST["username"], SQLSRV_PARAM_IN),
+									array($_POST["email"], SQLSRV_PARAM_IN),
 									array($_POST["password"], SQLSRV_PARAM_IN)
 								);
 
