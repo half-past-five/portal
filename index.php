@@ -24,7 +24,7 @@ $_SESSION["connectionOptions"] = array(
 	<link rel="stylesheet" href="css/style.css">
 </head>
 
-<body class="img js-fullheight" style="background-image: url(https://images.saymedia-content.com/.image/t_share/MTc4NzM1OTc4MzE0MzQzOTM1/how-to-create-cool-website-backgrounds-the-ultimate-guide.png);">
+<body class="img js-fullheight" style="background-image: url(images/background.jpg);">
 	<script>
 		function myFunction() {
 			var x = document.getElementById("password-field");
@@ -56,6 +56,13 @@ $_SESSION["connectionOptions"] = array(
 			display: flex;
 			justify-content: center;
 		}
+
+		.logo {
+			width: 300px;
+			border-radius: 100%;
+			margin-top: -5%;
+			margin-bottom: 0%;
+		}
 	</style>
 
 
@@ -65,7 +72,7 @@ $_SESSION["connectionOptions"] = array(
 				<div class="col-md-6 col-lg-4">
 					<div class="login-wrap p-0">
 						<div class="center-image">
-							<img src="https://i.imgur.com/70ln1bX.png" alt="LOGO IMAGE">
+							<img class="logo" src="images/logo.png" alt="LOGO IMAGE">
 						</div>
 						<h3 class="mb-4 text-center">Observers System <br>Sign In</h3>
 						<form action="auth.php" method="post" class="signin-form">
