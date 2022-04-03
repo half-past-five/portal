@@ -77,7 +77,7 @@ $_SESSION["connectionOptions"] = array(
 						<h3 class="mb-4 text-center">HPF Portal <br>Sign In</h3>
 						<form action="auth.php" method="post" class="signin-form">
 							<div class="form-group">
-								<input name="email" type="text" class="form-control" placeholder="Email" required>
+								<input name="username" type="text" class="form-control" placeholder="Username" required>
 							</div>
 							<div class="form-group">
 								<input name="password" id="password-field" type="password" class="form-control" placeholder="Password" required>

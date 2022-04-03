@@ -43,16 +43,16 @@ $connectionOptions = $_SESSION["connectionOptions"];
 							if (isset($_POST['connect'])) {
 								echo "<br/>Trying to authenticate doctor!<br/>";
 								$tsql = "{call Authenticate(?,?)}";
-								if (empty($_POST["email"]))
-									echo "Email is empty!<br/>";
+								if (empty($_POST["username"]))
+									echo "Username is empty!<br/>";
 								if (empty($_POST["password"]))
 									echo "Password is empty!<br/>";
-								echo "Executing query: " . $tsql . ") with email: " . $_POST["email"] . "<br/>";
+								echo "Executing query: " . $tsql . ") with username: " . $_POST["username"] . "<br/>";
 								//echo "Pass: " . $_POST["password"] . "<br/>";
 
 								// Getting parameter from the http call and setting it for the SQL call
 								$params = array(
-									array($_POST["email"], SQLSRV_PARAM_IN),
+									array($_POST["username"], SQLSRV_PARAM_IN),
 									array($_POST["password"], SQLSRV_PARAM_IN)
 								);
 
@@ -63,12 +63,10 @@ $connectionOptions = $_SESSION["connectionOptions"];
 								$result = sqlsrv_fetch_array($getResults, SQLSRV_FETCH_ASSOC);
 								/* Arrays in PHP work like objects */
 								if (isset($result["UID"])) {
-									$UserID = $result["UID"];
-									/* $Privilages = $result["Privilages"]; */
+									$UID = $result["UID"];
 									/* Add authorised User credentials in SESSION */
-									$_SESSION["User ID"] = $UserID;
-									/* $_SESSION["Privilages"] = $Privilages; */
-									echo ("<hr>Authentication Successful!</br>User ID: " . $UserID . "</br>Privilages: " . $Privilages);
+									$_SESSION["UID"] = $UID;
+									echo ("<hr>Authentication Successful!</br>User ID: " . $UID);
 								} else {
 									echo ("<hr>Authentication Unsuccessful!");
 								}

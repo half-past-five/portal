@@ -30,17 +30,13 @@ $connectionOptions = $_SESSION["connectionOptions"];
                     <div class="login-wrap p-0">
 
                         <?php
-                        if (isset($_SESSION["User ID"]) && isset($_SESSION["Privilages"])) {
-                            $UserID = $_SESSION["User ID"];
-                            /* $Privilages = $_SESSION["Privilages"]; */
-                            //echo ("<hr>User ID: " . $UserID . "<br>Privilages: " . $Privilages);
+                        if (isset($_SESSION["UID"])) {
+                            $UID = $_SESSION["UID"];
                         } else {
                             session_unset();
                             session_destroy();
                             echo "You are not authorised! Redirecting you to the home page<br/>";
                             die('<meta http-equiv="refresh" content="3; url=index.php" />');
-                            //header('Location: index.php');
-                            //die();
                         }
                         ?>
 
@@ -49,19 +45,9 @@ $connectionOptions = $_SESSION["connectionOptions"];
 
                         <!-- VIEW TABLES -->
                         <hr>
-                        <form action="queryShowTable.php" method="post">
-                            <h3>0 View Every Table</h3>
-                            <h4>Parameters:</h4>
-                            <label for="action">Table</label>
-                            <div class="form-group"><select id="action" name="action">
-                                    <option value="" selected>Select table...</option>
-                                    <option value="T1-Company">T1-Company</option>
-                                    <option value="T1-User">T1-User</option>
-                                    <option value="T1-Question">T1-Question</option>
-                                    <option value="T1-Questionnaire">T1-Questionnaire</option>
-                                    <option value="T1-Question Questionnaire Pairs">T1-Questionnaire Questionnaire Pairs</option>
-                                </select></div>
-                            <input type="submit" name="Query Show Table" class="form-control btn btn-primary submit px-3" value="QUERY SHOW TABLE">
+                        <form action="queryShowPatients.php" method="post">
+                            <h3>View Patients Table</h3>
+                            <input type="submit" name="Query Show Patients" class="form-control btn btn-primary submit px-3" value="QUERY SHOW Patients">
                         </form>
 
                         <hr>
